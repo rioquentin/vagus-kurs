@@ -1,0 +1,103 @@
+// Willkommens-Anleitung: erscheint beim ersten Besuch, später über „Anleitung“ wieder aufrufbar.
+// Sieben kurze Schritte mit kleinen, sanft animierten Nachbildungen der echten Werkzeuge.
+(function () {
+  var K = window.Kurs; if (!K) return;
+  var state = K.state;
+  function $(s, r) { return (r || document).querySelector(s); }
+  function $$(s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); }
+  var hasSync = !!(window.KURS_SYNC && window.KURS_SYNC.url);
+
+  var STEPS = [
+    { t: 'Willkommen', lead: 'Der N. vagus und die Stimme, in neun Einheiten zu je etwa zwanzig Minuten.',
+      body: 'Lies die Einheiten der Reihe nach. Was du geschafft hast, wird gespeichert, und die Seite merkt sich, wo du aufgehört hast.',
+      art: '<div class="tv-path">' + [1, 2, 3, 4, 5, 6, 7, 8, '9–10'].map(function (n, i) { return '<span style="--i:' + i + '">' + n + '</span>'; }).join('') + '</div><p class="tv-cap">❦</p>' },
+    { t: 'Erst denken, dann prüfen', lead: 'Neben jeder Frage im Text liegt die Lösung bereit.',
+      body: 'Antworte zuerst selbst, laut oder im Kopf. Dann „Antwort prüfen“ und ehrlich bewerten: Deine Bewertung bestimmt, wann die Frage wiederkommt.',
+      art: '<div class="tv-card"><p class="tv-q"><b>F1.</b> Zwischen welchen zwei Punkten spannt sich jede Stimmlippe?</p><span class="tv-pill tv-a1">Antwort prüfen</span>' +
+        '<div class="tv-ans tv-a2"><i></i><i class="short"></i></div><div class="tv-rate tv-a3"><span>Nochmal</span><span>Unsicher</span><span class="tv-on">Gewusst</span></div></div>' },
+    { t: 'Abbildungen', lead: 'Tippe auf eine Abbildung, um sie groß zu sehen.',
+      body: '„Beschriftung verdecken“ macht jede Abbildung zum Test: erst benennen, dann antippen. Über „Anatomie“ siehst du dieselbe Stelle in einer echten Zeichnung.',
+      art: '<div class="tv-card tv-fig"><div class="tv-sw"><span class="tv-s1">Schema</span><span class="tv-s2">Anatomie</span></div>' +
+        '<svg viewBox="0 0 220 120" aria-hidden="true"><path class="tv-cart" d="M110 14 L40 90 L52 96 L110 34 L168 96 L180 90 Z"/><path class="tv-fold" d="M108 36 L102 100 M112 36 L118 100"/>' +
+        '<line class="tv-lead" x1="150" y1="60" x2="182" y2="44"/><line class="tv-lead" x1="70" y1="62" x2="34" y2="50"/><line class="tv-lead" x1="104" y1="92" x2="70" y2="108"/>' +
+        '<rect class="tv-lbl l1" x="184" y="36" width="32" height="14" rx="3"/><rect class="tv-lbl l2" x="4" y="42" width="30" height="14" rx="3"/><rect class="tv-lbl l3" x="34" y="100" width="36" height="14" rx="3"/>' +
+        '<text class="tv-txt l1" x="186" y="46">Schild</text><text class="tv-txt l2" x="6" y="52">Lippe</text><text class="tv-txt l3" x="36" y="110">Stell</text></svg></div>' },
+    { t: 'Quiz und Schwachstellen', lead: 'Am Ende jedes Abschnitts wartet ein kurzes Quiz.',
+      body: 'Was du verpasst, landet unter „Schwachstellen“ im Merkheft, mit Lösung und Weg zurück zur Stelle. Es verschwindet erst, wenn du es zweimal hintereinander richtig hast.',
+      art: '<div class="tv-card"><p class="tv-q">Der linke N. laryngeus recurrens schlingt sich um …</p><div class="tv-opts"><span class="tv-bad">✕ die A. subclavia</span><span class="tv-ok">✓ den Aortenbogen</span><span>die A. thyroidea inferior</span></div>' +
+        '<div class="tv-weak"><b>Schwachstellen</b><span>1</span></div></div>' },
+    { t: 'Jeden Tag: Heute', lead: 'Auf der Startseite liegt jeden Tag eine Runde von etwa fünfzehn Minuten.',
+      body: 'Sie mischt deine Schwachstellen, fällige Karten und Neues aus den gelernten Abschnitten, und am Ende eine Abbildung zum Beschriften. Du musst nichts planen; kurze tägliche Runden halten länger als lange vor der Prüfung.',
+      art: '<div class="tv-card"><p class="tv-title">Deine Runde</p><div class="tv-chips"><span style="--i:0">2 Schwachstellen</span><span style="--i:1">5 fällig</span><span style="--i:2">4 neu</span><span style="--i:3">1 Abbildung</span></div><span class="tv-pill tv-solid">Runde starten</span></div>' },
+    { t: 'Merkheft und Zeichnen', lead: 'Markiere einen Satz, dann „★ Merken“.',
+      body: 'Er wird im Text unterstrichen und im Merkheft gesammelt, gern mit eigener Notiz. In jedem Kasten „Aus dem Gedächtnis zeichnen“ kannst du direkt auf dem Bildschirm zeichnen und danach die echte Abbildung darüberlegen.',
+      art: '<div class="tv-card"><p class="tv-line">Die Muskeln stellen die Stimmlippen nur ein: <mark class="tv-hl">den Rest erledigen Luftdruck und Elastizität.</mark></p><span class="tv-pop">★ Merken</span>' +
+        '<svg class="tv-draw" viewBox="0 0 220 60" aria-hidden="true"><path d="M10 40 C40 10, 70 10, 90 34 S140 58, 170 26 S205 12, 212 30"/></svg></div>' },
+    { t: 'Ganz für dich', lead: 'Oben unter „Aa“ stellst du Schrift und Größe ein.',
+      body: 'Für lange Abende gibt es eine ruhigere, serifenlose Schrift. Unter jeder Überschrift kann dir die Seite den Abschnitt vorlesen.' + (hasSync ? ' Mit einem Konto ist alles auf jedem Gerät gleich.' : ' Alles bleibt in diesem Browser gespeichert.'),
+      art: '<div class="tv-card tv-set"><span class="tv-aa">Aa</span><div class="tv-sizes"><span style="--s:.8">a</span><span style="--s:1">a</span><span style="--s:1.25">a</span><span style="--s:1.5">a</span></div>' +
+        '<span class="tv-pill tv-voice"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 9v6h4l5 4V5L9 9z"/><path class="w1" d="M17 9a4 4 0 0 1 0 6"/><path class="w2" d="M19.5 6.5a8 8 0 0 1 0 11"/></svg>Vorlesen</span></div>' },
+  ];
+
+  var dlg, i = 0;
+  function build() {
+    dlg = document.createElement('dialog');
+    dlg.className = 'tour'; dlg.id = 'tour'; dlg.setAttribute('aria-labelledby', 'tour-t');
+    dlg.innerHTML = '<i class="orn tl" aria-hidden="true">❦</i><i class="orn tr" aria-hidden="true">❦</i><i class="orn bl" aria-hidden="true">❦</i><i class="orn br" aria-hidden="true">❦</i>' +
+      '<button class="tbtn tour-x" type="button" data-tour="skip" aria-label="Anleitung schließen"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>' +
+      '<div class="tour-art" aria-hidden="true"></div><div class="tour-text"><span class="eyebrow tour-k"></span><h2 id="tour-t"></h2><p class="tour-lead"></p><p class="tour-body"></p></div>' +
+      '<div class="tour-nav"><button type="button" class="linkbtn" data-tour="skip">Überspringen</button><div class="tour-dots" role="tablist" aria-label="Schritte">' +
+      STEPS.map(function (s, k) { return '<button type="button" role="tab" data-dot="' + k + '" aria-label="Schritt ' + (k + 1) + ': ' + s.t + '"></button>'; }).join('') +
+      '</div><div class="tour-btns"><button type="button" class="cta ghost" data-tour="prev">Zurück</button><button type="button" class="cta" data-tour="next">Weiter</button></div></div>';
+    document.body.appendChild(dlg);
+    dlg.addEventListener('click', function (e) {
+      var a = e.target.closest('[data-tour]'), d = e.target.closest('[data-dot]');
+      if (d) go(+d.getAttribute('data-dot'));
+      if (!a) return;
+      var act = a.getAttribute('data-tour');
+      if (act === 'next') { if (i < STEPS.length - 1) go(i + 1); else finish(true); }
+      else if (act === 'prev') go(i - 1);
+      else if (act === 'skip') finish(false);
+    });
+    dlg.addEventListener('keydown', function (e) {
+      if (e.key === 'ArrowRight') { e.preventDefault(); if (i < STEPS.length - 1) go(i + 1); }
+      else if (e.key === 'ArrowLeft') { e.preventDefault(); go(i - 1); }
+    });
+    dlg.addEventListener('cancel', function () { finish(false); });
+  }
+  function go(k) {
+    k = Math.max(0, Math.min(STEPS.length - 1, k));
+    var s = STEPS[k], box = $('.tour-text', dlg), art = $('.tour-art', dlg);
+    i = k;
+    // Inhalt austauschen und neu einblenden (Animationen der Abbildung starten so von vorn)
+    box.classList.remove('tour-in'); art.classList.remove('tour-in'); void box.offsetWidth;
+    $('.tour-k', dlg).textContent = 'Schritt ' + (k + 1) + ' von ' + STEPS.length;
+    $('#tour-t', dlg).textContent = s.t;
+    $('.tour-lead', dlg).textContent = s.lead;
+    $('.tour-body', dlg).textContent = s.body;
+    art.innerHTML = s.art;
+    box.classList.add('tour-in'); art.classList.add('tour-in');
+    $$('[data-dot]', dlg).forEach(function (d, n) { d.setAttribute('aria-selected', n === k); d.classList.toggle('on', n === k); d.classList.toggle('seen', n < k); });
+    $('[data-tour="prev"]', dlg).style.visibility = k ? 'visible' : 'hidden';
+    var last = k === STEPS.length - 1, started = state.done && Object.keys(state.done).length;
+    $('[data-tour="next"]', dlg).textContent = last ? (started ? 'Los geht’s' : 'Mit Abschnitt 1 beginnen') : 'Weiter';
+  }
+  function open() { if (!dlg) build(); go(0); dlg.showModal(); $('[data-tour="next"]', dlg).focus(); }
+  function finish(toStart) {
+    state.tour = Date.now(); K.save();
+    if (dlg.open) dlg.close();
+    var started = state.done && Object.keys(state.done).length;
+    if (toStart && !started && K.page === 'home') location.href = '01-gelenke-muskeln.html';
+  }
+
+  $$('[data-open-tour]').forEach(function (b) { b.addEventListener('click', function () {
+    var side = $('#sidebar'); if (side) { side.classList.remove('open'); var sc = $('.scrim'); if (sc) sc.classList.remove('open'); }
+    var other = $('dialog[open]'); if (other) other.close();
+    open(); }); });
+  // Erster Besuch: kurz nach dem Laden, aber nicht über einen Link aus einer E-Mail oder einen Sprung zu einer Stelle
+  var q = new URLSearchParams(location.search);
+  if (!state.tour && !/access_token|error_description/.test(location.hash) && !q.get('note') && !q.get('fig') && !q.get('hl')) {
+    setTimeout(function () { if (!document.querySelector('dialog[open]')) open(); }, 700);
+  }
+  window.KursTour = { open: open };
+})();

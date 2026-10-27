@@ -26,7 +26,7 @@
       var a = prev[p[0]] || {}, b = state[p[0]] || {}, t = state[p[1]] = state[p[1]] || {};
       Object.keys(a).concat(Object.keys(b)).forEach(function (k) { if (!same(a[k], b[k])) t[k] = now; });
     });
-    ['theme', 'last', 'scroll', 'view', 'read'].forEach(function (k) { if (!same(prev[k], state[k])) state._mt = now; });
+    ['theme', 'last', 'scroll', 'view', 'read', 'tour'].forEach(function (k) { if (!same(prev[k], state[k])) state._mt = now; });
   }
   function save() {
     stamp();
