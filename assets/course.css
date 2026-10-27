@@ -1285,6 +1285,34 @@ dialog.tour[open]{display:grid;grid-template-rows:auto auto auto}
 }
 @media print{dialog.tour{display:none!important}}
 
+/* ---------- Willkommen (erster Besuch): eigene, ruhige Startseite vor allem anderen ---------- */
+dialog.gate{width:100%;max-width:100%;height:100dvh;max-height:none;margin:0;padding:0;border:0;inset:0;background:var(--paper);color:var(--ink);overflow:auto}
+dialog.gate[open]{display:grid;place-items:center;animation:fade-in .45s ease both}
+dialog.gate::backdrop{background:var(--paper)}
+dialog.gate.gate-out{animation:gate-out .38s ease both}
+@keyframes gate-out{to{opacity:0}}
+.gate-in{width:min(560px,calc(100% - 32px));display:grid;gap:26px;padding:36px 0 44px}
+.gate-poster{padding:12px 20px 0;border-radius:26px}
+.gate-poster span{font-size:clamp(3.4rem,15vw,6.4rem)}
+.gate-body{display:grid;gap:16px}
+.gate-body h1{margin:0;font:400 clamp(2.4rem,8vw,3.4rem)/1.02 var(--f-black);font-size-adjust:none}
+.gate-lead{margin:0;font:italic 500 20px/1.5 var(--f-body)}
+.gate-tabs{display:inline-flex;justify-self:start;padding:3px;border:1.5px solid var(--rose-deep);border-radius:999px;flex-wrap:wrap}
+.gate-tabs button{padding:8px 14px;border:0;border-radius:999px;background:transparent;color:var(--ink);font:italic 500 16px/1.1 var(--f-body);cursor:pointer}
+.gate-tabs button[aria-selected="true"]{background:var(--rose-deep);color:var(--paper)}
+.gate-form{display:grid;gap:12px}
+.gate-form[hidden],.gate-tabs[hidden],.gate-skip[hidden],.gate-done[hidden]{display:none!important}
+.gate-form label{display:grid;gap:6px;font:600 13px/1.3 var(--f-label);letter-spacing:.03em;color:var(--ink-2)}
+.gate-form input{padding:13px 14px;border:1.5px solid var(--rule);border-radius:14px;background:var(--plate);color:var(--ink);font:400 17px/1.3 var(--f-body)}
+.gate-form input:focus{border-color:var(--rose-deep)}
+.gate-form .cta{justify-self:start;padding:13px 22px;font-size:17px}
+.gate-done{display:grid;gap:12px;padding:18px 20px;border-left:3px solid var(--rose-deep);border-radius:0 14px 14px 0;background:var(--plate);animation:fade-in .35s ease both}
+.gate-done .cta{justify-self:start}
+.gate-skip{display:grid;gap:4px;margin:4px 0 0}
+.gate-skip .linkbtn{justify-self:start;font:italic 500 17px/1.3 var(--f-body);color:var(--rose-text)}
+.gate-privacy{margin:0;padding-top:14px;border-top:1px solid var(--rule)}
+@media (prefers-reduced-motion:reduce){dialog.gate[open],dialog.gate.gate-out{animation:none}}
+
 /* ---------- 14 · Ruhe und Luft (Lesbarkeit vor Dekor) ----------
    Gemessen vorher: Zeilenabstand effektiv ≈ 1,4 (Cormorant wird auf ≈ 19 px vergrößert, der Abstand
    aber von 16 px berechnet), ≈ 74 Zeichen pro Zeile, 14 px zwischen Absätzen, 16 umrandete Knöpfe

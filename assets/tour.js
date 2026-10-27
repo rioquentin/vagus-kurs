@@ -94,10 +94,90 @@
     var side = $('#sidebar'); if (side) { side.classList.remove('open'); var sc = $('.scrim'); if (sc) sc.classList.remove('open'); }
     var other = $('dialog[open]'); if (other) other.close();
     open(); }); });
-  // Erster Besuch: kurz nach dem Laden, aber nicht über einen Link aus einer E-Mail oder einen Sprung zu einer Stelle
-  var q = new URLSearchParams(location.search);
-  if (!state.tour && !/access_token|error_description/.test(location.hash) && !q.get('note') && !q.get('fig') && !q.get('hl')) {
-    setTimeout(function () { if (!document.querySelector('dialog[open]')) open(); }, 700);
+  // ---------- Willkommen: Konto zuerst, dann Anleitung, dann die Website ----------
+  var S = window.KursSync;
+  function gate() {
+    var g = document.createElement('dialog');
+    g.className = 'gate'; g.id = 'gate'; g.setAttribute('aria-labelledby', 'gate-t');
+    g.innerHTML =
+      '<div class="gate-in">' +
+      '<div class="poster gate-poster" aria-hidden="true"><span>vagus</span><span>vagus</span><span>vagus</span>' +
+      '<svg viewBox="0 0 89 55"><rect x="0" y="0" width="89" height="55"/><line x1="55" y1="0" x2="55" y2="55"/><line x1="55" y1="34" x2="89" y2="34"/><line x1="68" y1="34" x2="68" y2="55"/><line x1="55" y1="42" x2="68" y2="42"/><line x1="63" y1="34" x2="63" y2="42"/><line x1="63" y1="39" x2="68" y2="39"/><path stroke-width=".6" d="M0,55 A55,55 0 0 1 55,0 A34,34 0 0 1 89,34 A21,21 0 0 1 68,55 A13,13 0 0 1 55,42 A8,8 0 0 1 63,34 A5,5 0 0 1 68,39"/></svg></div>' +
+      '<div class="gate-body">' +
+        '<span class="eyebrow">N. vagus und Stimme · Lernkurs</span><h1 id="gate-t">Willkommen</h1>' +
+        '<p class="gate-lead">Bevor es losgeht: Mit einem Konto ist dein Lernstand sicher und auf jedem Gerät gleich, vom Handy bis zum Laptop.</p>' +
+        '<div class="gate-tabs" role="tablist"><button type="button" role="tab" data-gate-tab="signup" aria-selected="true">Konto anlegen</button><button type="button" role="tab" data-gate-tab="login" aria-selected="false">Ich habe schon ein Konto</button></div>' +
+        '<form class="gate-form" data-gate-form novalidate>' +
+          '<label>E-Mail<input name="email" type="email" autocomplete="username" required></label>' +
+          '<label>Passwort <span class="note" data-gate-hint>(mindestens 8 Zeichen)</span><input name="password" type="password" autocomplete="new-password" minlength="8" required></label>' +
+          '<p class="acc-err" role="alert"></p>' +
+          '<button class="cta" type="submit" data-gate-submit>Konto anlegen</button>' +
+        '</form>' +
+        '<div class="gate-done" data-gate-done hidden></div>' +
+        '<p class="gate-skip"><button type="button" class="linkbtn" data-gate-skip>Erst einmal ohne Konto</button><span class="note">Alles bleibt dann in diesem Browser. Ein Konto kannst du jederzeit oben unter „Anmelden“ anlegen.</span></p>' +
+        '<p class="note gate-privacy">Gespeichert werden nur dein Lernstand, Notizen und Einstellungen, auf Servern in der EU. Keine Werbung, keine Weitergabe.</p>' +
+      '</div></div>';
+    document.body.appendChild(g);
+    var mode = 'signup', form = g.querySelector('[data-gate-form]'), err = g.querySelector('.acc-err');
+    function setMode(m) {
+      mode = m;
+      $$('[data-gate-tab]', g).forEach(function (t) { t.setAttribute('aria-selected', t.getAttribute('data-gate-tab') === m); });
+      g.querySelector('[data-gate-submit]').textContent = m === 'signup' ? 'Konto anlegen' : 'Anmelden';
+      g.querySelector('[data-gate-hint]').hidden = m !== 'signup';
+      form.password.setAttribute('autocomplete', m === 'signup' ? 'new-password' : 'current-password');
+      err.textContent = '';
+    }
+    $$('[data-gate-tab]', g).forEach(function (t) { t.addEventListener('click', function () { setMode(t.getAttribute('data-gate-tab')); }); });
+    // Weiter: Willkommen blendet aus, die Anleitung blendet ein (oder direkt die Seite, wenn die Anleitung schon gesehen wurde)
+    function onward(reload) {
+      state.gate = Date.now(); K.save();
+      g.classList.add('gate-out');
+      setTimeout(function () {
+        g.close(); g.remove();
+        if (reload) { location.reload(); return; }
+        if (!state.tour) open();
+      }, 380);
+    }
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var email = form.email.value.trim(), pw = form.password.value;
+      if (!/^\S+@\S+\.\S+$/.test(email)) { err.textContent = 'Bitte eine gültige E-Mail-Adresse eingeben.'; form.email.focus(); return; }
+      if (mode === 'signup' && pw.length < 8) { err.textContent = 'Bitte mindestens 8 Zeichen.'; form.password.focus(); return; }
+      if (!pw) { err.textContent = 'Bitte das Passwort eingeben.'; form.password.focus(); return; }
+      $$('button, input', form).forEach(function (x) { x.disabled = true; });
+      err.textContent = '';
+      (mode === 'signup' ? S.signup(email, pw) : S.login(email, pw)).then(function (r) {
+        form.hidden = true; g.querySelector('.gate-tabs').hidden = true; g.querySelector('.gate-skip').hidden = true;
+        var done = g.querySelector('[data-gate-done]'); done.hidden = false;
+        if (r.confirm) {
+          done.innerHTML = '<p><b>Fast geschafft.</b> Wir haben dir eine E-Mail an <b>' + email.replace(/[<>&"]/g, '') + '</b> geschickt. Ein Klick auf den Link darin bestätigt dein Konto, auf diesem oder einem anderen Gerät.</p><p class="note">Bis dahin kannst du schon anfangen; dein Lernstand wird danach automatisch gesichert. Nichts angekommen? Schau im Spam-Ordner nach.</p><button class="cta" type="button" data-gate-go>Weiter zur Anleitung</button>';
+          done.querySelector('[data-gate-go]').addEventListener('click', function () { onward(false); });
+        } else {
+          // Angemeldet: Daten vom anderen Gerät sind schon da, die Seite baut sich einmal neu auf
+          done.innerHTML = '<p><b>Angemeldet.</b> Dein Lernstand ist gesichert.</p>';
+          setTimeout(function () { onward(mode === 'login'); }, 900);
+        }
+      }).catch(function (x) {
+        err.textContent = S.niceError(x);
+        $$('button, input', form).forEach(function (y) { y.disabled = false; });
+      });
+    });
+    g.querySelector('[data-gate-skip]').addEventListener('click', function () { onward(false); });
+    g.addEventListener('cancel', function (e) { e.preventDefault(); }); // nur über die Knöpfe weiter, nicht versehentlich per Esc
+    g.showModal();
+    setTimeout(function () { form.email.focus(); }, 60);
   }
-  window.KursTour = { open: open };
+
+  // Erster Besuch: zuerst Willkommen mit Konto (wenn eingerichtet und nicht angemeldet), dann Anleitung.
+  // Nicht über einen Link aus einer E-Mail oder einen Sprung zu einer bestimmten Stelle.
+  var q = new URLSearchParams(location.search);
+  var direct = /access_token|error_description/.test(location.hash) || q.get('note') || q.get('fig') || q.get('hl');
+  if (!direct) {
+    setTimeout(function () {
+      if (document.querySelector('dialog[open]')) return;
+      if (S && S.signup && !S.hasSession() && !state.gate) gate();
+      else if (!state.tour) open();
+    }, 500);
+  }
+  window.KursTour = { open: open, gate: gate };
 })();

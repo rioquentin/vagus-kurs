@@ -252,5 +252,18 @@
   }
   ui();
   setTimeout(function () { sessionStorage.removeItem('vagus-kurs:reloaded'); }, 5000);
-  window.KursSync = { sync: sync, merge: merge }; // für Tests
+  // Für den Willkommensbildschirm (tour.js): gleiche Wege wie im Konto-Dialog
+  function signup(email, password) {
+    return api('/auth/v1/signup?redirect_to=' + encodeURIComponent(redirect), { method: 'POST', auth: false, body: { email: email, password: password } })
+      .then(function (r) {
+        if (r && r.access_token) { setSession(r); return sync().then(function () { return { session: true }; }); }
+        return { confirm: true };
+      });
+  }
+  function login(email, password) {
+    return api('/auth/v1/token?grant_type=password', { method: 'POST', auth: false, body: { email: email, password: password } })
+      .then(function (s) { setSession(s); return sync().then(function () { return { session: true }; }); });
+  }
+  window.KursSync = { sync: sync, merge: merge, signup: signup, login: login, niceError: niceError,
+    hasSession: function () { return !!session; } };
 })();
