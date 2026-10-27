@@ -94,6 +94,7 @@ window.KURS_EN = {
   'Anatomische Ansicht.': 'Anatomical view.', 'Diese Zeichnungen folgen nicht dem Farbcode des Kurses. Erst das Schema verstehen, dann hier wiederfinden.': 'These drawings do not follow the course’s colour code. Understand the schema first, then find it again here.',
   'Worauf achten:': 'What to look for:',
 
+  '↔ Seitlich wischen · zum Vergrößern antippen': '↔ Swipe sideways · tap to enlarge',
   // ---- Zeichnen
   'Aus dem Gedächtnis zeichnen': 'Draw from memory', 'Auf dem Bildschirm zeichnen': 'Draw on screen',
   'Deine letzte Zeichnung ist gespeichert.': 'Your last drawing is saved.', 'Rückgängig': 'Undo', 'Neu': 'New',
@@ -110,7 +111,7 @@ window.KURS_EN = {
   'Nächster Abschnitt': 'Next section', 'Stopp': 'Stop',
 
   // ---- Lesemodus
-  'Lesemodus': 'Reading mode', 'Sprache der Oberfläche': 'Interface language', 'Deutsch': 'Deutsch', 'English': 'English',
+  'Lesemodus': 'Reading mode', 'Farbschema': 'Colour scheme', 'Sprache der Oberfläche': 'Interface language', 'Deutsch': 'Deutsch', 'English': 'English',
   'Menüs, Knöpfe und Hinweise. Der Kurstext bleibt auf Deutsch.': 'Menus, buttons and hints. The course text stays in German.',
   'Schrift': 'Font', 'Gentle (Cormorant)': 'Gentle (Cormorant)', 'Ruhig (Atkinson, serifenlos)': 'Calm (Atkinson, sans-serif)',
   'Für lange Lernsitzungen, am Handy oder abends ist die serifenlose Schrift oft angenehmer.': 'For long sessions, on a phone or in the evening, the sans-serif font is often easier.',

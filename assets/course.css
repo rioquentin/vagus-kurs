@@ -1407,3 +1407,19 @@ main>.wrap,:where(.wrap) :is(section,header){grid-template-columns:minmax(0,1fr)
 html[data-ui="en"]:not(.ui-ready) body{opacity:0}
 html[data-ui="en"].ui-ready body{animation:fade-in .2s ease both}
 .lang-btn .aa{font:600 13px/1 var(--f-label);letter-spacing:.06em}
+
+/* Breite Abbildungen auf dem Handy: in sich wischbar, mit weichem Schatten am Rand als Hinweis */
+.scroll.is-wide{overflow-x:auto;overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch;
+  background:linear-gradient(to right,var(--plate) 30%,transparent),linear-gradient(to left,var(--plate) 30%,transparent) 100% 0,
+    radial-gradient(farthest-side at 0 50%,rgb(58 34 38 / .16),transparent),radial-gradient(farthest-side at 100% 50%,rgb(58 34 38 / .16),transparent) 100% 0;
+  background-repeat:no-repeat;background-size:40px 100%,40px 100%,14px 100%,14px 100%;background-attachment:local,local,scroll,scroll}
+.scroll.is-wide svg{display:block}
+.swipe-hint{margin:-4px 0 0;font-style:italic;font-size:14px}
+.swipe-hint[hidden]{display:none}
+/* Pop-ups und schwebende Leisten nie breiter als der Bildschirm */
+.sel-pop{max-width:calc(100vw - 16px);box-sizing:border-box}
+.sel-pop:has(>button){grid-auto-flow:row;grid-template-columns:repeat(auto-fit,minmax(110px,1fr))}
+.tts-bar,.nb-undo{max-width:calc(100vw - 20px);box-sizing:border-box}
+@media print{.swipe-hint{display:none}}
+/* Kopfzeile auf dem Handy: Sprache und Farbschema wandern in „Aa“ (dort beide wählbar), damit der Titel Platz hat */
+@media (max-width:520px){.topbar [data-ui-toggle],.topbar [data-theme-toggle]{display:none}}

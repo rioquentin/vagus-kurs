@@ -169,6 +169,15 @@
       Z.fit = Math.min(W / Z.vb.width, H / Z.vb.height) * 0.96;
       Z.s = Z.fit; Z.x = (W - Z.vb.width * Z.s) / 2; Z.y = (H - Z.vb.height * Z.s) / 2; apply();
     }
+    // Beim Öffnen auf dem Handy gleich lesbar (kleinste Beschriftung ≈ 11 px) statt winzig eingepasst
+    function initial() {
+      fit();
+      var mf = +(Z.svg && Z.svg.getAttribute('data-minfont')) || 0, W = stage.clientWidth, H = stage.clientHeight;
+      if (W >= 700 || !mf) return;
+      var s = Math.min(8, 11 / mf);
+      if (s <= Z.fit) return;
+      Z.s = s; Z.x = 12; Z.y = Math.max(12, (H - Z.vb.height * s) / 2); apply();
+    }
     function zoomAt(f, cx, cy) {
       var ns = Math.max(Z.fit * 0.5, Math.min(8, Z.s * f));
       if (cx == null) { cx = stage.clientWidth / 2; cy = stage.clientHeight / 2; }
@@ -187,7 +196,7 @@
       $('#zoom-t').textContent = svg.tagName === 'IMG' ? svg.alt : t ? t.textContent : (svg.querySelector('title') || {}).textContent || 'Abbildung';
       $('.z-cap', dlg).textContent = cap ? cap.textContent : '';
       dlg.showModal();
-      requestAnimationFrame(fit);
+      requestAnimationFrame(initial);
     }
     $$('[data-zoom-img]').forEach(function (b) {
       b.addEventListener('click', function () { openZoom(b.querySelector('img'), b.closest('.atlas-card')); });
@@ -540,12 +549,15 @@
     var pending = null, lastPick = null; // lastPick überlebt, falls ein Tipp die Auswahl vor dem Klick aufhebt
     function place(rect) {
       var coarse = matchMedia('(pointer: coarse)').matches;
-      pop.hidden = false;
-      var w = pop.offsetWidth, h = pop.offsetHeight;
-      var x = Math.min(Math.max(8, rect.left + rect.width / 2 - w / 2), innerWidth - w - 8);
-      // Auf Touch unter die Auswahl, damit das Systemmenü oben frei bleibt
-      var y = coarse || rect.top - h - 10 < 60 ? rect.bottom + 10 : rect.top - h - 10;
-      pop.style.left = x + 'px'; pop.style.top = Math.min(y, innerHeight - h - 8) + 'px';
+      // Erst links oben messen: Am rechten Rand würde der Browser den Kasten schon schmaler machen
+      pop.style.left = '0px'; pop.style.top = '0px'; pop.hidden = false;
+      var vw = document.documentElement.clientWidth, vh = document.documentElement.clientHeight, m = 8;
+      var w = Math.min(pop.offsetWidth, vw - 2 * m), h = pop.offsetHeight;
+      var x = Math.min(Math.max(m, rect.left + rect.width / 2 - w / 2), vw - w - m);
+      // Auf Touch unter die Auswahl (das Systemmenü liegt oben); ist dort kein Platz, darüber
+      var below = rect.bottom + 10, above = rect.top - h - 10;
+      var y = (coarse || above < 60) ? (below + h <= vh - m ? below : Math.max(m, above)) : above;
+      pop.style.left = Math.round(x) + 'px'; pop.style.top = Math.round(Math.max(m, Math.min(y, vh - h - m))) + 'px';
     }
     function hide() { pop.hidden = true; pending = null; }
     function showSave(range) {

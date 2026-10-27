@@ -213,10 +213,13 @@
         var f = e.target.closest('[data-read-font]'), s = e.target.closest('[data-read-size]');
         if (f || s) { state.read = state.read || {}; if (f) state.read.font = f.getAttribute('data-read-font'); if (s) state.read.size = s.getAttribute('data-read-size'); K.save(); applyRead(); }
         var r = e.target.closest('[data-read-rate]'); if (r) { state.read = state.read || {}; state.read.rate = +r.getAttribute('data-read-rate'); K.save(); speakUI(); }
+        var th = e.target.closest('[data-theme-set]');
+        if (th) { var v = th.getAttribute('data-theme-set'); if (v) state.theme = v; else delete state.theme; K.save(); if (K.theme) K.theme(); themeChips(); }
       });
     }
-    applyRead();
+    applyRead(); themeChips();
   }
+  function themeChips() { $$('[data-theme-set]').forEach(function (b) { b.setAttribute('aria-pressed', (state.theme || '') === b.getAttribute('data-theme-set')); }); }
 
   // ---------- 4 · Vorlesen ----------
   var synth = window.speechSynthesis, voice = null, queue = [], qi = 0, playing = false, curSec = null;
@@ -287,6 +290,39 @@
     window.addEventListener('pagehide', function () { synth.cancel(); });
   }
 
-  readSetup(); labelSetup(); drawSetup(); ttsSetup();
+  // ---------- 5 · Abbildungen auf dem Handy lesbar ----------
+  // Auf schmalen Bildschirmen würde jede Abbildung auf Bildschirmbreite gestaucht (Beschriftungen 3–7 px).
+  // Stattdessen behält sie eine Mindestbreite, bei der die kleinste Beschriftung ≈ 9,5 px groß ist, höchstens
+  // das 2,6-Fache der Spaltenbreite (große Karten: dann in der Lupe lesen); der Rest lässt sich in der Abbildung seitlich wischen, die Seite bleibt fest.
+  var READ_PX = 9.5;
+  function figSvgs() {
+    return $$('.wrap svg[viewBox]').filter(function (s) {
+      return !s.closest('button, .fig-tools, .z-canvas, .dr-over') && s.viewBox.baseVal.width >= 280;
+    });
+  }
+  function phoneFigures() {
+    figSvgs().forEach(function (svg) {
+      if (!svg.hasAttribute('data-minfont')) {
+        var sizes = $$('text', svg).map(function (t) { return parseFloat(getComputedStyle(t).fontSize) || 0; }).filter(function (v) { return v > 0; });
+        if (!sizes.length) return;
+        svg.setAttribute('data-minfont', Math.min.apply(null, sizes).toFixed(2)); // Kopie in der Lupe nutzt das auch
+      }
+      var box = svg.parentElement;
+      if (!box.classList.contains('scroll')) { var wr = el('div', 'scroll'); box.insertBefore(wr, svg); wr.appendChild(svg); box = wr; }
+      svg.style.minWidth = '';
+      var avail = box.clientWidth, vbw = svg.viewBox.baseVal.width, mf = +svg.getAttribute('data-minfont');
+      var need = vbw * READ_PX / mf, target = Math.min(need, avail * 2.6, vbw);
+      var wide = avail < 700 && target > avail + 4;
+      if (wide) svg.style.minWidth = Math.round(target) + 'px';
+      box.classList.toggle('is-wide', wide);
+      var hint = box.nextElementSibling && box.nextElementSibling.classList.contains('swipe-hint') ? box.nextElementSibling : null;
+      if (wide && !hint) { hint = el('p', 'swipe-hint note', '↔ Seitlich wischen · zum Vergrößern antippen'); box.insertAdjacentElement('afterend', hint); }
+      if (hint) hint.hidden = !wide;
+    });
+  }
+  var rT;
+  window.addEventListener('resize', function () { clearTimeout(rT); rT = setTimeout(phoneFigures, 150); });
+
+  readSetup(); labelSetup(); drawSetup(); ttsSetup(); phoneFigures();
   window.KursTools = { cover: cover, uncover: uncover };
 })();

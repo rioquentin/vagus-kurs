@@ -164,7 +164,7 @@
     prev = JSON.parse(JSON.stringify(state));
     render(); theme();
   }
-  window.Kurs = { state: state, save: save, adopt: adopt, render: render, page: page, key: KEY };
+  window.Kurs = { state: state, save: save, adopt: adopt, render: render, page: page, key: KEY, theme: theme };
 
   if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')) {
     navigator.serviceWorker.register('sw.js').catch(function () {});
