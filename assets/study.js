@@ -18,7 +18,7 @@
   function data() {
     if (window.KURS) return Promise.resolve(window.KURS);
     if (!dataP) dataP = new Promise(function (ok, fail) {
-      var s = document.createElement('script'); s.src = 'assets/data.js';
+      var s = document.createElement('script'); s.src = 'assets/data.js?v=' + (window.KURS_BUILD || '');
       s.onload = function () { ok(window.KURS); }; s.onerror = fail;
       document.head.appendChild(s);
     });
