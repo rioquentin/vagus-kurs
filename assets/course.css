@@ -853,3 +853,164 @@ dialog.account::backdrop{background:rgb(10 14 17 / .5)}
 :where([data-page="00"] .wrap) .caption{font-size:14px;color:var(--ink-2);min-height:3em}
 :where([data-page="00"] .wrap) .refs{font-size:13px;color:var(--ink-2);display:grid;gap:4px}
 @media (prefers-reduced-motion:reduce){:where([data-page="00"] .wrap) #map *{transition:none!important}}
+
+/* ---------- 6 · Gestaltung „Gentle“ (Blush-Papier, Sepia, ein Poster, alte Ornamente) ----------
+   Wird nach allen Seitenregeln geladen. Grundsatz: Lernen geht vor.
+   - Anatomischer Farbcode (--c-*) und die Schrift der Abbildungen (--f-label) bleiben unverändert.
+   - Rosa nur im Rahmen der Website, nie in Abbildungen (Rosé liegt nah an Läsions-Magenta).
+   - Fraktur nur für kurze Titel, nie für Lektionsüberschriften oder Fließtext. */
+
+:root{
+  --paper:#f6e8e8; --paper-2:#eed5d8; --plate:#fbeff1; --ink:#3a2226; --ink-2:#7b5a5e;
+  --rule:#e3c6cb; --muted:#b39497; --muted-fill:#eed5d8; --q-fill:#f3dfe2; --action-fill:#fbeff1; --flag-fill:#f9e0e3;
+  --rose:#f4b9c8; --rose-deep:#c4637c; --rose-line:#f9e2e8; --sepia:#9c7a66;
+  --poster:linear-gradient(160deg,#8f7466,#5d4740 55%,#4a3833);
+  --f-display:"Cormorant Garamond",Georgia,"Times New Roman",serif;
+  --f-body:"Cormorant Garamond",Georgia,"Times New Roman",serif;
+  --f-black:"UnifrakturMaguntia",Georgia,serif;
+  --f-poster:"Anton",Impact,"Arial Narrow",sans-serif;
+  /* --f-label bleibt IBM Plex Sans Condensed: Abbildungen, Tabellenköpfe, Schilder */
+}
+/* Dunkel: Sepia-Braun des Posters als Grund, Rosa bleibt */
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --paper:#3b2b28; --paper-2:#4a3833; --plate:#45332f; --ink:#f9e2e8; --ink-2:#d6b5bb; --rule:#6a524c; --muted:#8f7466; --muted-fill:#54403b;
+  --q-fill:#4d3935; --action-fill:#45332f; --flag-fill:#5a3036; --rose-deep:#e08ea2}}
+:root[data-theme="dark"]{
+  --paper:#3b2b28; --paper-2:#4a3833; --plate:#45332f; --ink:#f9e2e8; --ink-2:#d6b5bb; --rule:#6a524c; --muted:#8f7466; --muted-fill:#54403b;
+  --q-fill:#4d3935; --action-fill:#45332f; --flag-fill:#5a3036; --rose-deep:#e08ea2}
+
+/* Cormorant hat eine kleine x-Höhe: automatisch auf Lesegröße angleichen (≈19 px statt 16 px),
+   damit alle Größen der Kursseiten lesbar bleiben, ohne jede Regel einzeln zu ändern. */
+body{font-family:var(--f-body);font-weight:500;font-size-adjust:.47;font-variant-numeric:lining-nums;background:var(--paper)}
+/* Mediävalziffern nur in kursiven Einleitungen: im Kurs sähe „1.1“ sonst wie „I.I“ aus */
+.home-hero p,.tool .wrap>header p{font-variant-numeric:oldstyle-nums}
+svg,svg text,th,table,.tag,kbd,.fc-count,.z-pct,.m-c,.segs a,.prog,input,textarea,select{font-variant-numeric:lining-nums}
+svg text{font-size-adjust:none}
+:where(table) td{font-variant-numeric:lining-nums tabular-nums}
+b,strong,.term{font-weight:700}
+
+/* Filmkorn über der ganzen Seite (fängt keine Klicks); dezenter als im Moodboard, damit Linien in Abbildungen scharf bleiben */
+body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:55;opacity:.16;mix-blend-mode:multiply;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .35 0 0 0 0 .2 0 0 0 0 .2 0 0 0 .9 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) body::after{mix-blend-mode:soft-light;opacity:.3}}
+:root[data-theme="dark"] body::after{mix-blend-mode:soft-light;opacity:.3}
+
+/* Fokus: Rosé statt Gelb (Gelb heißt im Kurs „Nerv“) */
+:focus-visible,:where(.wrap) :focus-visible{outline:2px solid var(--rose-deep)!important;outline-offset:3px}
+
+/* Überschriften und Kursetiketten */
+:where(.wrap) :is(h1,h2,h3){font-family:var(--f-display);font-weight:600;letter-spacing:.005em}
+:where(.wrap) h1{font-size:clamp(32px,5vw,44px);line-height:1.08}
+:where(.wrap) h2{font-size:27px}
+.eyebrow{font:600 15px/1.25 var(--f-body);font-variant:small-caps;text-transform:lowercase;letter-spacing:.06em;color:var(--ink-2)}
+:where(.wrap) .eyebrow{font:600 15px/1.25 var(--f-body);font-variant:small-caps;text-transform:lowercase;letter-spacing:.06em}
+.blackletter,.home-hero h1,.tool .wrap>header h1,.lg-head h2,.brand b{font-family:var(--f-black);font-weight:400;letter-spacing:0;font-size-adjust:none}
+.home-hero h1,.tool .wrap>header h1{font-size:clamp(2.3rem,5.4vw,3.4rem);line-height:1.05}
+.home-hero p,.tool .wrap>header p{font-style:italic}
+
+/* Kopfzeile und Inhaltsverzeichnis */
+.topbar{background:var(--plate);border-bottom:1.5px solid var(--rule)}
+.brand b{font-size:23px}
+.brand span{font:italic 500 14px/1 var(--f-body);text-transform:none;letter-spacing:0;color:var(--ink-2)}
+.tbtn{font:600 15px/1 var(--f-body);border-radius:14px}
+.tbtn:hover{background:var(--paper-2);border-color:transparent}
+.readbar{background:var(--rose-deep)}
+.prog i::after{background:var(--rose-deep)}
+.sidebar{background:var(--plate);border-right:1.5px solid var(--rule)}
+.ctoc-unit{font-size:16.5px;border-radius:12px}
+.ctoc-unit:hover,.ctoc-ref:hover{background:var(--paper-2)}
+.ctoc-unit[aria-current="page"]{background:var(--paper-2)}
+.ctoc-n{font:600 17px/1.3 var(--f-display)}
+.ctoc-sub a{font-size:15px}
+.ctoc-sub a.here{border-left-color:var(--rose-deep)}
+.ctoc-ref{font-size:16px}
+.is-done .mark,.done-btn[aria-pressed="true"] .mark{background:var(--rose-deep);border-color:var(--rose-deep)}
+.mark svg{stroke:var(--paper)}
+.due-pill{background:var(--ink);color:var(--rose)}
+.due-pill.soft{background:var(--paper-2);color:var(--ink)}
+
+/* Knöpfe: Hauptknopf Tinte mit rosa Schrift; sonst Papier mit Tintenrand */
+.cta,.done-btn{font:600 16px/1 var(--f-body);border-radius:14px;background:var(--ink);color:var(--rose);border:1.5px solid var(--ink)}
+.cta.ghost,.done-btn[aria-pressed="true"]{background:var(--paper);color:var(--ink);border:1.5px solid var(--ink)}
+.cta:hover{filter:none;opacity:.92}
+.linkbtn{font:inherit}
+.chip{font:italic 500 17px/1.2 var(--f-body);border:1.5px solid var(--rose-deep);border-radius:999px;background:transparent}
+.chip b{font-style:normal}
+.chip[aria-pressed="true"]{background:var(--rose-deep);border-color:var(--rose-deep);color:var(--paper)}
+.fc-deck,.view-sw{border:1.5px solid var(--rose-deep);border-radius:999px;background:transparent}
+.seg,.view-sw button{font:italic 500 16px/1 var(--f-body);border-radius:999px;letter-spacing:0}
+.seg[aria-checked="true"],.view-sw button[aria-pressed="true"]{background:var(--rose-deep);color:var(--paper)}
+.qa-btn{font:italic 500 15px/1.4 var(--f-body);letter-spacing:0;border:1.5px solid var(--rose-deep);border-radius:999px;color:var(--ink);background:transparent}
+.qa-btn[aria-expanded="true"]{background:var(--rose-deep);border-color:var(--rose-deep);color:var(--paper)}
+.qa{border-left-color:var(--rose-deep);border-radius:0 14px 14px 0}
+.qa-rate button{font:600 15px/1 var(--f-body);border-radius:999px;border:1.5px solid var(--ink)}
+.qa-rate button[aria-pressed="true"]{background:var(--ink);color:var(--rose)}
+.rate-b{font:600 17px/1.2 var(--f-body);border-radius:14px;border-width:1.5px}
+.rate-b small{font:italic 500 14px/1.2 var(--f-body)}
+.z-open{font:italic 500 14px/1 var(--f-body);border-radius:999px}
+kbd{font-family:var(--f-label)}
+
+/* Flächen: weich gerundet, keine Schatten */
+.unit,.stat,.review,.done-row,.practice,.nav2 a,.fc-stats div,.fc-mastery,.card-q,.fc-done,.gl-e,.nb-e,.nb-new,.atlas,.fc-answer,.cq-ctx{border-radius:18px}
+.unit,.stat,.review,.done-row,.nav2 a,.fc-stats div,.fc-mastery,.card-q,.fc-done,.gl-e,.nb-new,.atlas{border:1.5px solid var(--rule);background:var(--plate)}
+.unit:hover,.nav2 a:hover,.practice:hover{border-color:var(--rose-deep)}
+.unit .n{font:600 26px/1 var(--f-display);color:var(--rose-deep)}
+.unit .t{font-size:18px}
+.practice{background:var(--q-fill);border:1.5px solid var(--rule)}
+.howto{border-left:3px solid var(--rose-deep);border-radius:0 18px 18px 0}
+.segs a{border-radius:999px;font-family:var(--f-label)}
+.segs a.is-done{background:var(--rose-deep);border-color:var(--rose-deep);color:var(--paper)}
+.segs a.is-last{box-shadow:inset 0 0 0 2px var(--ink)}
+.review-n,.stat-top b{font:600 26px/1.15 var(--f-display)}
+.m-sit{background:var(--rose-deep)}
+.m-bau{background:repeating-linear-gradient(135deg,var(--rose-deep) 0 2px,transparent 2px 5px)}
+.m-key.m-sit{background:var(--rose-deep)}
+.fc-bar i,.ctoc-sub a.here{background:none}
+.fc-bar i{background:var(--rose-deep)}
+.cq-q{font-size:25px}
+.cq-term{font-size:34px}
+.fc-answer{border-left:4px solid var(--rose-deep)}
+.nb-e{border:1.5px solid var(--rule);border-left:4px solid var(--rule)}
+.nb-e.is-star{border-left-color:var(--rose-deep)}
+.nb-e blockquote{font:italic 500 19px/1.5 var(--f-body);border-left-color:var(--rose-deep)}
+mark.saved{border-bottom-color:var(--rose-deep);box-shadow:inset 0 -.45em 0 var(--paper-2)}
+mark.saved.star{border-bottom-color:var(--rose-deep)}
+.s-snip mark,.gl mark{background:var(--paper-2)}
+.gl-az a{border-radius:999px;font-family:var(--f-body);font-weight:600}
+.gl-g h2{font-family:var(--f-black);font-weight:400;font-size:34px;color:var(--rose-deep)}
+.gl-q,.nb-new textarea,.fc-try textarea,.acc-body input,.nb-row select{border:1.5px solid var(--rule);border-radius:14px;background:var(--plate);font-family:var(--f-body)}
+.nb-undo{border-radius:999px;background:var(--ink);color:var(--rose);font:italic 500 16px/1 var(--f-body)}
+.nb-undo button{color:var(--rose)}
+.sel-pop{border:1.5px solid var(--rose-deep);border-radius:14px;box-shadow:none}
+.sel-pop button{font:600 15px/1 var(--f-body);border-radius:999px}
+.sel-pop button:first-child{background:var(--ink);color:var(--rose);border-color:var(--ink)}
+.atlas-img{border-radius:14px}
+.atlas-note,.atlas-or{font-style:italic}
+
+/* Altes Druckbild: Dialoge mit Doppelrand und Fleurons in den Ecken */
+dialog.legend,dialog.account,dialog.search{border:2px solid var(--rose-deep);border-radius:6px;outline:1px solid var(--rose-deep);outline-offset:-10px;background:var(--plate)}
+dialog.legend::backdrop,dialog.account::backdrop,dialog.search::backdrop{background:rgb(58 34 38 / .7)}
+.lg-head{background:var(--plate);border-bottom:1px solid var(--rule);padding-inline:26px}
+.lg-head h2{font-size:30px}
+.lg-body,.acc-body{padding-inline:26px}
+.s-head{padding-left:22px}
+.orn{position:absolute;font:400 18px/1 var(--f-display);color:var(--rose-deep);pointer-events:none;z-index:2}
+.orn.tl{top:13px;left:14px}.orn.tr{top:13px;right:14px;transform:scaleX(-1)}
+.orn.bl{bottom:13px;left:14px;transform:scaleY(-1)}.orn.br{bottom:13px;right:14px;transform:scale(-1,-1)}
+
+/* Das eine laute Element: das Poster auf der Startseite */
+.poster{position:relative;overflow:hidden;border-radius:26px;background:var(--poster);color:var(--rose);padding:14px 22px 6px;user-select:none}
+.poster span{display:block;font:400 clamp(4rem,13vw,9.5rem)/.86 var(--f-poster);letter-spacing:-.01em;white-space:nowrap;text-transform:lowercase;font-size-adjust:none}
+.poster span:nth-child(2){opacity:.75}
+.poster svg{position:absolute;right:-2%;top:50%;height:112%;transform:translateY(-50%);opacity:.75;fill:none;stroke:var(--rose-line);stroke-width:.35}
+.fleuron{text-align:center;color:var(--rose-deep);font:400 22px/1 var(--f-display);margin:-6px 0}
+
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+@media print{body::after,.poster,.orn{display:none!important}body{background:#fff}}
+.poster{padding-bottom:0}
+.poster span:last-child{margin-bottom:-.16em}
+.poster svg{height:100%;top:0;right:0;transform:none}
+@media (max-width:720px){.brand span{display:none}}
+::marker{font-variant-numeric:lining-nums;font-feature-settings:"lnum" 1}
+body,:where(.wrap) *{font-feature-settings:"lnum" 1}
+.home-hero p,.tool .wrap>header p{font-feature-settings:"onum" 1}
