@@ -617,7 +617,7 @@
   function notebookPage() {
     var list = $('[data-nb-list]'); if (!list) return;
     var q = $('[data-nb-q]'), star = $('[data-nb-star]');
-    function date(ts) { return new Date(ts).toLocaleDateString('de-DE', { day: 'numeric', month: 'short', year: 'numeric' }); }
+    function date(ts) { return new Date(ts).toLocaleDateString(document.documentElement.dataset.ui === 'en' ? 'en-GB' : 'de-DE', { day: 'numeric', month: 'short', year: 'numeric' }); }
     function groups() {
       var order = COURSE.concat(['']), by = {};
       state.notes.forEach(function (n) { (by[n.unit || ''] = by[n.unit || ''] || []).push(n); });
@@ -800,7 +800,7 @@
         var mcN = all.filter(function (x) { return x.kind === 'mc'; }).length, openN = all.length - mcN;
         host.innerHTML = '<span class="eyebrow">Abschnittsquiz</span><h2 id="quiz-t">Teste dich</h2>' +
           '<p>' + (mcN ? mcN + ' Auswahlfrage' + (mcN > 1 ? 'n' : '') + ' aus der Wiederholung und ' : '') + openN + ' offene Fragen aus diesem Abschnitt, eine nach der anderen. Was du verpasst, landet unter <a href="merkheft.html#schwachstellen">Schwachstellen</a>.</p>' +
-          (last ? '<p class="note">Letztes Mal' + (last.mcN ? ': ' + last.mc + ' von ' + last.mcN + ' Auswahlfragen richtig' : '') + (last.open ? (last.mcN ? ', ' : ': ') + last.known + ' von ' + last.open + ' offenen gewusst' : '') + ' (' + new Date(last.t).toLocaleDateString('de-DE') + ').</p>' : '') +
+          (last ? '<p class="note">Letztes Mal' + (last.mcN ? ': ' + last.mc + ' von ' + last.mcN + ' Auswahlfragen richtig' : '') + (last.open ? (last.mcN ? ', ' : ': ') + last.known + ' von ' + last.open + ' offenen gewusst' : '') + ' (' + new Date(last.t).toLocaleDateString(document.documentElement.dataset.ui === 'en' ? 'en-GB' : 'de-DE') + ').</p>' : '') +
           '<div class="qz-act"><button class="cta" type="button" data-qz-all>Quiz starten</button>' +
           (miss.length ? '<button class="cta ghost" type="button" data-qz-miss>Nur Verpasstes (' + miss.length + ')</button>' : '') + '</div>';
         $('[data-qz-all]', host).onclick = function () { start(all); };

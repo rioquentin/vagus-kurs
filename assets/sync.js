@@ -137,7 +137,7 @@
   function ago(ts) {
     if (!ts) return 'noch nie';
     var m = Math.round((Date.now() - ts) / 60000);
-    return m < 1 ? 'gerade eben' : m < 60 ? 'vor ' + m + ' Min.' : m < 1440 ? 'vor ' + Math.round(m / 60) + ' Std.' : new Date(ts).toLocaleDateString('de-DE');
+    return m < 1 ? 'gerade eben' : m < 60 ? 'vor ' + m + ' Min.' : m < 1440 ? 'vor ' + Math.round(m / 60) + ' Std.' : new Date(ts).toLocaleDateString(document.documentElement.dataset.ui === 'en' ? 'en-GB' : 'de-DE');
   }
   function view(name) {
     $$('[data-acc-view]', dlg).forEach(function (v) { v.hidden = v.getAttribute('data-acc-view') !== name; });

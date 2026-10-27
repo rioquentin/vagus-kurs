@@ -1402,3 +1402,8 @@ main>.wrap,:where(.wrap) :is(section,header){grid-template-columns:minmax(0,1fr)
 :where(.wrap) :is(div,section,header,figure,details,li,p,ol,ul,dl,dd,dt,blockquote,article,aside,nav,form,label){min-width:0}
 :where(.wrap) .grid2{grid-template-columns:repeat(auto-fit,minmax(min(280px,100%),1fr))}
 :where(.wrap) .q .qhead{flex-wrap:wrap;row-gap:4px}
+
+/* Englische Oberfläche: kurz ausblenden, bis übersetzt ist (kein deutsches Aufblitzen) */
+html[data-ui="en"]:not(.ui-ready) body{opacity:0}
+html[data-ui="en"].ui-ready body{animation:fade-in .2s ease both}
+.lang-btn .aa{font:600 13px/1 var(--f-label);letter-spacing:.06em}

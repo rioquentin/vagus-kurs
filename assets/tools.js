@@ -263,7 +263,7 @@
   function play(h2) { synth.cancel(); curSec = h2; queue = blocks(h2); qi = 0; playing = true; speakNext(); speakUI(); }
   function stop() { playing = false; synth.cancel(); curSec = null; mark(null); speakUI(); }
   function ttsSetup() {
-    if (!synth || !window.SpeechSynthesisUtterance || !/^dd$/.test(K.page)) return; // nur auf Kursseiten
+    if (!synth || !window.SpeechSynthesisUtterance || !/^\d\d$/.test(K.page)) return; // nur auf Kursseiten
     pickVoice(); if (synth.onvoiceschanged !== undefined) synth.onvoiceschanged = pickVoice;
     var heads = $$('.wrap section > h2[id]');
     if (!heads.length) return;

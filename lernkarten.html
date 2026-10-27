@@ -4,21 +4,23 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Lernkarten · Vagus-Kurs</title>
-<script>try{var s=JSON.parse(localStorage.getItem('vagus-kurs:v1')||'{}'),d=document.documentElement,r=s.read||{};if(s.theme)d.dataset.theme=s.theme;d.dataset.size=r.size||'m';if(r.font==='sans'){d.dataset.font='sans';document.write('<link id="font-sans" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap">')}}catch(e){}</script>
+<script>try{var s=JSON.parse(localStorage.getItem('vagus-kurs:v1')||'{}'),d=document.documentElement,r=s.read||{};if(s.theme)d.dataset.theme=s.theme;if(s.ui==='en'){d.dataset.ui='en';setTimeout(function(){d.classList.add('ui-ready')},1500)}d.dataset.size=r.size||'m';if(r.font==='sans'){d.dataset.font='sans';document.write('<link id="font-sans" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap">')}}catch(e){}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=UnifrakturMaguntia&family=IBM+Plex+Sans+Condensed:wght@400;600&display=swap">
-<link rel="stylesheet" href="assets/course.css?v=mvqt0m2c">
-<script>window.KURS_BUILD='mvqt0m2c'</script>
+<link rel="stylesheet" href="assets/course.css?v=mvqtpizk">
+<script>window.KURS_BUILD='mvqtpizk'</script>
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="theme-color" content="#1B2329">
 <link rel="icon" href="assets/icon.svg" type="image/svg+xml">
-<script src="assets/app.js?v=mvqt0m2c" defer></script>
-<script src="assets/sync-config.js?v=mvqt0m2c" defer></script>
-<script src="assets/sync.js?v=mvqt0m2c" defer></script>
-<script src="assets/study.js?v=mvqt0m2c" defer></script>
-<script src="assets/tools.js?v=mvqt0m2c" defer></script>
-<script src="assets/tour.js?v=mvqt0m2c" defer></script>
+<script src="assets/app.js?v=mvqtpizk" defer></script>
+<script src="assets/sync-config.js?v=mvqtpizk" defer></script>
+<script src="assets/sync.js?v=mvqtpizk" defer></script>
+<script src="assets/study.js?v=mvqtpizk" defer></script>
+<script src="assets/tools.js?v=mvqtpizk" defer></script>
+<script src="assets/tour.js?v=mvqtpizk" defer></script>
+<script src="assets/i18n-en.js?v=mvqtpizk" defer></script>
+<script src="assets/i18n.js?v=mvqtpizk" defer></script>
 </head>
 <body data-page="cards" class="tool">
 <a class="skip" href="#main">Zum Inhalt springen</a>
@@ -29,6 +31,7 @@
   <button class="tbtn" type="button" data-open-search aria-keyshortcuts="/" aria-label="Kurs durchsuchen"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg><span class="lbl">Suchen</span></button>
   <button class="tbtn" type="button" data-open-legend aria-label="Farb- und Formcode"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="6" height="6" rx="1"/><rect x="4" y="14" width="6" height="6" rx="3"/><path d="M14 7h6M14 17h6"/></svg><span class="lbl">Legende</span></button>
   <button class="tbtn acc-btn" type="button" data-open-account hidden><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8.5" r="3.5"/><path d="M5 20c.8-3.6 3.6-5.5 7-5.5s6.2 1.9 7 5.5"/></svg><span class="lbl">Anmelden</span><i class="acc-dot" data-acc-dot aria-hidden="true"></i></button>
+  <button class="tbtn lang-btn" type="button" data-ui-toggle aria-label="Sprache der Oberfläche: English"><span class="aa" aria-hidden="true">EN</span></button>
   <button class="tbtn" type="button" data-open-reading aria-label="Lesemodus: Schrift und Größe"><span class="aa" aria-hidden="true">Aa</span><span class="lbl">Lesen</span></button>
   <button class="tbtn" type="button" data-theme-toggle aria-label="Farbschema: System"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="M12 4a8 8 0 0 0 0 16z" fill="currentColor"/></svg><span class="lbl" data-theme-label>System</span></button>
   <span class="readbar" aria-hidden="true"></span>
@@ -180,6 +183,7 @@
 <dialog class="legend reading" id="reading" aria-labelledby="rd-t"><i class="orn tl" aria-hidden="true">❦</i><i class="orn tr" aria-hidden="true">❦</i><i class="orn bl" aria-hidden="true">❦</i><i class="orn br" aria-hidden="true">❦</i>
   <div class="lg-head"><h2 id="rd-t">Lesemodus</h2><button class="tbtn" type="button" data-close-reading aria-label="Schließen"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
   <div class="lg-body">
+    <div class="rd-row"><span class="eyebrow">Sprache der Oberfläche</span><div class="rd-opts"><button type="button" class="chip" data-ui-set="de">Deutsch</button><button type="button" class="chip" data-ui-set="en">English</button></div><p class="note">Menüs, Knöpfe und Hinweise. Der Kurstext bleibt auf Deutsch.</p></div>
     <div class="rd-row"><span class="eyebrow">Schrift</span><div class="rd-opts"><button type="button" class="chip" data-read-font="serif">Gentle (Cormorant)</button><button type="button" class="chip rd-sans" data-read-font="sans">Ruhig (Atkinson, serifenlos)</button></div><p class="note">Für lange Lernsitzungen, am Handy oder abends ist die serifenlose Schrift oft angenehmer.</p></div>
     <div class="rd-row"><span class="eyebrow">Textgröße</span><div class="rd-opts"><button type="button" class="chip" data-read-size="s">klein</button><button type="button" class="chip" data-read-size="m">normal</button><button type="button" class="chip" data-read-size="l">groß</button><button type="button" class="chip" data-read-size="xl">sehr groß</button></div><p class="note">Abbildungen behalten ihre Größe; zum Vergrößern auf die Abbildung tippen.</p></div>
     <div class="rd-row"><span class="eyebrow">Vorlesen · Tempo</span><div class="rd-opts"><button type="button" class="chip" data-read-rate="0.85">ruhig</button><button type="button" class="chip" data-read-rate="1">normal</button><button type="button" class="chip" data-read-rate="1.2">zügig</button></div><p class="note">Zum Vorlesen unter jeder Abschnittsüberschrift auf „Vorlesen“ tippen. Die Stimme kommt vom Gerät.</p></div>
