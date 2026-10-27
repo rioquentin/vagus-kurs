@@ -1,0 +1,420 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>6 · Schutzfunktionen · Vagus-Kurs</title>
+<script>try{var t=JSON.parse(localStorage.getItem('vagus-kurs:v1')||'{}').theme;if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Spectral:wght@500;600&family=Public+Sans:ital,wght@0,400;0,600;0,700;1,400&family=IBM+Plex+Sans+Condensed:wght@400;600&display=swap">
+<link rel="stylesheet" href="assets/course.css">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#1B2329">
+<link rel="icon" href="assets/icon.svg" type="image/svg+xml">
+<script src="assets/app.js" defer></script>
+<script src="assets/sync-config.js" defer></script>
+<script src="assets/sync.js" defer></script>
+<script src="assets/study.js" defer></script>
+</head>
+<body data-page="06">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="topbar">
+  <button class="tbtn menu-btn" type="button" data-open-nav aria-controls="sidebar" aria-expanded="false" aria-label="Inhaltsverzeichnis öffnen"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+  <a class="brand" href="index.html"><b><i class="b-long">N. vagus und Stimme</i><i class="b-short">Vagus-Kurs</i></b><span>Lernkurs</span></a>
+  <a class="tbtn prog" href="index.html#fortschritt" title="Erledigte Abschnitte"><i></i><span data-prog>0 / 9</span></a>
+  <button class="tbtn" type="button" data-open-search aria-keyshortcuts="/" aria-label="Kurs durchsuchen"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg><span class="lbl">Suchen</span></button>
+  <button class="tbtn" type="button" data-open-legend aria-label="Farb- und Formcode"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="6" height="6" rx="1"/><rect x="4" y="14" width="6" height="6" rx="3"/><path d="M14 7h6M14 17h6"/></svg><span class="lbl">Legende</span></button>
+  <button class="tbtn acc-btn" type="button" data-open-account hidden><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8.5" r="3.5"/><path d="M5 20c.8-3.6 3.6-5.5 7-5.5s6.2 1.9 7 5.5"/></svg><span class="lbl">Anmelden</span><i class="acc-dot" data-acc-dot aria-hidden="true"></i></button>
+  <button class="tbtn" type="button" data-theme-toggle aria-label="Farbschema: System"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="M12 4a8 8 0 0 0 0 16z" fill="currentColor"/></svg><span class="lbl" data-theme-label>System</span></button>
+  <span class="readbar" aria-hidden="true"></span>
+</header>
+<div class="shell">
+<nav class="sidebar" id="sidebar" aria-label="Kursinhalt">
+  <div class="side-head"><span class="eyebrow">Kernpfad · 9 Einheiten</span><button class="tbtn side-close" type="button" data-close-nav aria-label="Schließen"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+  <ol class="ctoc">
+    <li><a class="ctoc-unit" href="01-gelenke-muskeln.html" data-unit="01"><span class="ctoc-n">1</span><span class="ctoc-t">Gelenke und innere Kehlkopfmuskeln</span><span class="mark"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 6.3l2.3 2.3 4.7-5"/></svg></span></a></li>
+    <li><a class="ctoc-unit" href="02-n-laryngeus-superior.html" data-unit="02"><span class="ctoc-n">2</span><span class="ctoc-t">N. laryngeus superior</span><span class="mark"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 6.3l2.3 2.3 4.7-5"/></svg></span></a></li>
+    <li><a class="ctoc-unit" href="03-n-laryngeus-recurrens.html" data-unit="03"><span class="ctoc-n">3</span><span class="ctoc-t">N. laryngeus recurrens</span><span class="mark"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 6.3l2.3 2.3 4.7-5"/></svg></span></a></li>
+    <li><a class="ctoc-unit" href="04-gesamtkarte.html" data-unit="04"><span class="ctoc-n">4</span><span class="ctoc-t">Die Gesamtkarte</span><span class="mark"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 6.3l2.3 2.3 4.7-5"/></svg></span></a></li>
+    <li><a class="ctoc-unit" href="05-stimmentstehung.html" data-unit="05"><span class="ctoc-n">5</span><span class="ctoc-t">Stimmentstehung</span><span class="mark"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 6.3l2.3 2.3 4.7-5"/></svg></span></a></li>
+    <li><a class="ctoc-unit" href="06-schutzfunktionen.html" data-unit="06" aria-current="page"><span class="ctoc-n">6</span><span class="ctoc-t">Schutzfunktionen</span><span class="mark"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 6.3l2.3 2.3 4.7-5"/></svg></span></a>
+      <ol class="ctoc-sub"><li><a href="#h-6-1-drei-verschlussebenen">6.1 · Drei Verschlussebenen</a></li><li><a href="#h-6-2-schlucken-der-anteil-des-kehlkopfs">6.2 · Schlucken: der Anteil des Kehlkopfs</a></li><li><a href="#h-6-3-husten-und-pressen">6.3 · Husten und Pressen</a></li><li><a href="#h-6-4-welcher-ausfall-gefaehrdet-was">6.4 · Welcher Ausfall gefährdet was?</a></li><li><a href="#h-6-5-zwei-mini-faelle">6.5 · Zwei Mini-Fälle</a></li><li><a href="#h-zusammenfassung-in-fuenf-zeilen">Zusammenfassung in fünf Zeilen</a></li><li><a href="#h-quellen">Quellen</a></li></ol></li>
+    <li><a class="ctoc-unit" href="07-laehmungen.html" data-unit="07"><span class="ctoc-n">7</span><span class="ctoc-t">Kehlkopflähmungen im Überblick</span><span class="mark"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 6.3l2.3 2.3 4.7-5"/></svg></span></a></li>
+    <li><a class="ctoc-unit" href="08-abgrenzung.html" data-unit="08"><span class="ctoc-n">8</span><span class="ctoc-t">Abgrenzung und Warnzeichen</span><span class="mark"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 6.3l2.3 2.3 4.7-5"/></svg></span></a></li>
+    <li><a class="ctoc-unit" href="09-10-wiederholung-pruefung.html" data-unit="09"><span class="ctoc-n">9–10</span><span class="ctoc-t">Wiederholung und Probeprüfung</span><span class="mark"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 6.3l2.3 2.3 4.7-5"/></svg></span></a></li>
+  </ol>
+  <div class="side-sep eyebrow">Üben und Nachschlagen</div>
+  <a class="ctoc-ref" href="index.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 11l8-7 8 7M6 9.5V20h12V9.5"/></svg>Kursübersicht</a>
+  <a class="ctoc-ref" href="lernkarten.html"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="6" width="14" height="13" rx="2"/><path d="M7 3h12a2 2 0 0 1 2 2v11"/></svg>Lernkarten<span class="due-pill" data-due hidden></span></a>
+  <a class="ctoc-ref" href="merkheft.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h10a1 1 0 0 1 1 1v17l-6-4-6 4V4a1 1 0 0 1 1-1z"/></svg>Merkheft<span class="due-pill soft" data-notes-n hidden></span></a>
+  <a class="ctoc-ref" href="begriffe.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h9M4 10h16M4 15h9M4 20h16"/></svg>Fachbegriffe</a>
+  <button class="ctoc-ref" type="button" data-open-search><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg>Im Kurs suchen</button>
+  <button class="ctoc-ref" type="button" data-open-legend><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="6" height="6" rx="1"/><rect x="4" y="14" width="6" height="6" rx="3"/><path d="M14 7h6M14 17h6"/></svg>Farb- und Formcode</button>
+  <a class="ctoc-ref" href="00-styleguide.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h10a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3z"/><path d="M5 17a3 3 0 0 1 3-3h10"/></svg>Visueller Styleguide (EN)</a>
+</nav>
+<div class="scrim" data-close-nav></div>
+<main id="main" lang="de">
+<div class="wrap">
+<header>
+  <span class="eyebrow">Kernpfad · Abschnitt 6 von 10</span>
+  <h1>Schutzfunktionen: Verschluss, Husten, Atmung und Schlucken</h1>
+  <div class="meta"><span>≈ 20 Minuten</span><span>Baut auf: Abschnitte 2–5</span><span>Weiter: Lähmungen im Überblick</span></div>
+  <div class="box">
+    <span class="eyebrow">Nach diesem Abschnitt kannst du</span>
+    <ol>
+      <li>Die drei Verschlussebenen des Kehlkopfs in der richtigen Reihenfolge nennen.</li>
+      <li>Den Kehlkopfanteil am Schluckablauf beschreiben und angeben, welche Schritte der N. vagus steuert.</li>
+      <li>Die drei Phasen des Hustens mit den beteiligten Muskeln erklären.</li>
+      <li>Vorhersagen, welches Schutzproblem bei welchem Nervenausfall entsteht, auch beim Säugling.</li>
+    </ol>
+  </div>
+  <div class="box hook">
+    <span class="eyebrow">Warum das für dich als Logopädin wichtig ist</span>
+    <p>Stammesgeschichtlich ist der Kehlkopf zuerst ein Schutzventil für die Lunge und erst danach ein Stimmorgan. Bei einer Nervenlähmung ist darum oft nicht die Stimme das gefährlichste Problem, sondern das Verschlucken mit Lungenentzündung. Schluckdiagnostik und Schlucktherapie gehören in Deutschland zum logopädischen Arbeitsfeld; die Logik dafür beginnt hier.</p>
+  </div>
+</header>
+
+<section>
+  <h2 id="h-6-1-drei-verschlussebenen">6.1 · Drei Verschlussebenen</h2>
+  <p>Der Kehlkopf kann sich auf drei Höhen verschließen, wie drei hintereinanderliegende Türen:</p>
+  <ol>
+    <li><b>Stimmlippen</b> (unterste Ebene): geschlossen von Lateralis, Transversus und Thyroarytänoid, versorgt vom N. laryngeus recurrens.</li>
+    <li><b>Taschenfalten</b> (mittlere Ebene): legen sich bei kräftigem Verschluss aneinander.</li>
+    <li><b>Kehlkopfeingang</b> (oberste Ebene): Die aryepiglottischen Falten ziehen sich zusammen, die Stellknorpel kippen nach vorn zum Kehldeckelstiel, und der Kehldeckel (Epiglottis) legt sich über den Eingang.</li>
+  </ol>
+  <p>Beim Schlucken läuft der Verschluss im Wesentlichen <b>von unten nach oben</b>: Die Stimmlippen schließen früh, zuletzt senkt sich der Kehldeckel. Wie früh und wie fest die Stimmlippen schließen, passt der Körper an: Bei großen oder flüssigen Bissen schließen sie früher. Der Kehldeckel kippt übrigens größtenteils <i>passiv</i>: Er wird umgelegt, wenn der Kehlkopf nach oben vorn gezogen und der Zungengrund nach hinten gedrückt wird.</p>
+  <div class="figure">
+    <div class="scroll">
+    <svg viewBox="0 0 560 380" width="560" role="img" aria-labelledby="f61t">
+      <title id="f61t">Frontalschnitt mit drei Verschlussebenen: Stimmlippen, Taschenfalten, Kehlkopfeingang</title>
+      <defs><marker id="aI" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="var(--ink)"/></marker></defs>
+      <text x="12" y="200" class="t-or">R</text><text x="420" y="200" class="t-or">L</text>
+      <polyline class="wall" points="150,20 140,90 185,140 160,168 200,200 150,232 155,340"/>
+      <polyline class="wall" points="270,20 280,90 235,140 260,168 220,200 270,232 265,340"/>
+      <polygon class="musc" points="150,186 200,200 150,216"/>
+      <polygon class="musc" points="270,186 220,200 270,216"/>
+      <!-- Pfeile -->
+      <path class="close" d="M110 200 H142" marker-end="url(#aI)"/><path class="close" d="M310 200 H278" marker-end="url(#aI)"/>
+      <path class="close" d="M128 140 H175" marker-end="url(#aI)"/><path class="close" d="M292 140 H245" marker-end="url(#aI)"/>
+      <path class="close" d="M100 30 H140" marker-end="url(#aI)"/><path class="close" d="M320 30 H280" marker-end="url(#aI)"/>
+      <circle cx="96" cy="200" r="11" fill="var(--ink)"/><text x="96" y="205" text-anchor="middle" class="t-l" style="fill:var(--plate)">1</text>
+      <circle cx="114" cy="140" r="11" fill="var(--ink)"/><text x="114" y="145" text-anchor="middle" class="t-l" style="fill:var(--plate)">2</text>
+      <circle cx="86" cy="30" r="11" fill="var(--ink)"/><text x="86" y="35" text-anchor="middle" class="t-l" style="fill:var(--plate)">3</text>
+      <text x="334" y="196" class="t-l">1 · Stimmlippen</text><text x="334" y="211" class="t-s">schließen zuerst · RLN</text>
+      <text x="334" y="136" class="t-l">2 · Taschenfalten</text><text x="334" y="151" class="t-s">bei kräftigem Verschluss</text>
+      <text x="334" y="26" class="t-l">3 · Kehlkopfeingang</text><text x="334" y="41" class="t-s">aryepiglottische Falten,</text><text x="334" y="55" class="t-s">Stellknorpel kippen, Kehldeckel</text>
+      <text x="210" y="300" text-anchor="middle" class="t-s">Luftröhre</text>
+    </svg>
+    </div>
+    <p class="figcap"><b>Abb. 6.1</b> Dieselbe Frontalschnitt-Darstellung wie Abb. 2.2 und 4.2, von vorn (R und L der Patientin). Die Zahlen zeigen die Reihenfolge beim Schlucken: von unten nach oben.</p>
+  </div>
+  <div class="atlas" data-atlas hidden><p class="atlas-note"><b>Anatomische Ansicht.</b> Diese Zeichnungen folgen nicht dem Farbcode des Kurses. Erst das Schema verstehen, dann hier wiederfinden.</p><div class="atlas-grid"><figure class="atlas-card"><button class="atlas-img" type="button" data-zoom-img aria-label="Frontalschnitt durch den Kehlkopf, vergrößern"><img src="assets/atlas/servier-kehlkopf-frontalschnitt.png" width="338" height="720" alt="Frontalschnitt durch den Kehlkopf" loading="lazy" decoding="async"></button>
+      <figcaption><p><b>Worauf achten:</b> Von oben nach unten: Kehldeckel, Taschenfalte, Stimmlippe. In dieser Reihenfolge schließt der Kehlkopf beim Schutz.</p><p class="atlas-or">Frontalschnitt von vorn.</p><p class="atlas-cr">Servier Medical Art, <a href="https://smart.servier.com/smart_image/larynx-front-cut/">smart.servier.com</a>, <a href="https://creativecommons.org/licenses/by/4.0/deed.de">CC BY 4.0</a></p></figcaption></figure></div></div>
+  <div class="box recall">
+    <span class="eyebrow">Abruf · ohne nachzusehen</span>
+    <ol>
+      <li><b>F1.</b> Nenne die drei Verschlussebenen von unten nach oben.</li>
+      <li><b>F2.</b> Warum kippt der Kehldeckel größtenteils passiv?</li>
+    </ol>
+  </div>
+</section>
+
+<section>
+  <h2 id="h-6-2-schlucken-der-anteil-des-kehlkopfs">6.2 · Schlucken: der Anteil des Kehlkopfs</h2>
+  <p>Der Schluckablauf hat eine orale, eine pharyngeale (Rachen-) und eine ösophageale (Speiseröhren-) Phase. Der Kehlkopf ist vor allem in der <span class="term">pharyngealen Phase</span> beteiligt, die in weniger als einer Sekunde abläuft und von einem Schluckzentrum im Hirnstamm gesteuert wird. Der N. vagus ist hier an mehreren Stellen beteiligt:</p>
+  <ul>
+    <li><b>Gaumensegel</b> schließt den Nasenrachen ab, damit nichts in die Nase läuft (Rachenäste des N. vagus).</li>
+    <li><b>Kehlkopf hebt sich</b> nach oben vorn, gezogen von Muskeln oberhalb des Zungenbeins. Diese werden <i>nicht</i> vom N. vagus versorgt, sondern von N. trigeminus, N. facialis und N. hypoglossus bzw. Halsnerven.</li>
+    <li><b>Kehlkopf schließt</b> von unten nach oben (6.1): N. laryngeus recurrens.</li>
+    <li><b>Atmung pausiert</b> kurz (Schluckapnoe); danach wird meist <i>aus</i>geatmet, was Reste vom Kehlkopfeingang wegbläst.</li>
+    <li><b>Rachenmuskeln</b> schieben den Bissen nach unten (Rachenäste des N. vagus).</li>
+    <li><b>Oberer Speiseröhrenschließmuskel</b> (M. cricopharyngeus) entspannt sich und wird durch die Kehlkopfhebung aufgezogen.</li>
+    <li><b>Empfindung</b> am Kehlkopfeingang meldet, ob etwas falsch läuft (R. internus des N. laryngeus superior).</li>
+  </ul>
+  <div class="figure">
+    <div class="scroll">
+    <svg viewBox="0 0 860 210" width="860" role="img" aria-labelledby="f62t">
+      <title id="f62t">Pharyngeale Schluckphase als Abfolge, Beteiligung des N. vagus markiert</title>
+      <defs><marker id="aI2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="var(--ink-2)"/></marker></defs>
+      <rect x="10" y="40" width="150" height="64" rx="32" class="action"/><text x="85" y="66" text-anchor="middle" class="t-l">Gaumensegel</text><text x="85" y="84" text-anchor="middle" class="t-s">schließt Nase ab</text>
+      <path class="ink-line" d="M160 72 H182" marker-end="url(#aI2)"/>
+      <rect x="184" y="40" width="150" height="64" rx="32" class="ctxbox"/><text x="259" y="66" text-anchor="middle" class="t-l">Kehlkopf hebt sich</text><text x="259" y="84" text-anchor="middle" class="t-s">nicht N. X</text>
+      <path class="ink-line" d="M334 72 H356" marker-end="url(#aI2)"/>
+      <rect x="358" y="40" width="150" height="64" rx="32" class="action focus"/><text x="433" y="66" text-anchor="middle" class="t-l">Kehlkopf schließt</text><text x="433" y="84" text-anchor="middle" class="t-s">von unten nach oben</text>
+      <path class="ink-line" d="M508 72 H530" marker-end="url(#aI2)"/>
+      <rect x="532" y="40" width="150" height="64" rx="32" class="action"/><text x="607" y="66" text-anchor="middle" class="t-l">Rachen schiebt</text><text x="607" y="84" text-anchor="middle" class="t-s">Schlundschnürer</text>
+      <path class="ink-line" d="M682 72 H704" marker-end="url(#aI2)"/>
+      <rect x="706" y="40" width="144" height="64" rx="32" class="action"/><text x="778" y="66" text-anchor="middle" class="t-l">Speiseröhre öffnet</text><text x="778" y="84" text-anchor="middle" class="t-s">M. cricopharyngeus</text>
+      <rect x="60" y="114" width="52" height="18" fill="#8A6D00"/><text x="86" y="127" text-anchor="middle" font-size="11" font-weight="600" class="t-w">N. X</text>
+      <rect x="407" y="114" width="52" height="18" fill="#6A4C9C"/><text x="433" y="127" text-anchor="middle" font-size="11" font-weight="600" class="t-w">RLN</text>
+      <rect x="581" y="114" width="52" height="18" fill="#8A6D00"/><text x="607" y="127" text-anchor="middle" font-size="11" font-weight="600" class="t-w">N. X</text>
+      <rect x="752" y="114" width="52" height="18" fill="#8A6D00"/><text x="778" y="127" text-anchor="middle" font-size="11" font-weight="600" class="t-w">N. X</text>
+      <rect x="10" y="150" width="840" height="40" class="ctxbox" fill-opacity=".5"/>
+      <rect x="16" y="157" width="52" height="18" fill="#13827E"/><text x="42" y="170" text-anchor="middle" font-size="11" font-weight="600" class="t-w">SLN</text>
+      <text x="80" y="174" class="t-s">Die ganze Zeit: Empfindung am Kehlkopfeingang überwacht, ob etwas falsch läuft (R. internus) · danach meist Ausatmen</text>
+    </svg>
+    </div>
+    <p class="figcap"><b>Abb. 6.2</b> Pharyngeale Phase, stark vereinfacht; einige Schritte überlappen zeitlich. Schild „N. X“ = Rachenäste des N. vagus; grau = ohne Beteiligung des N. vagus. Fett umrandet: der Kehlkopfverschluss, um den es in diesem Kurs geht.</p>
+  </div>
+  <div class="box kind">
+    <span class="eyebrow">Kinder</span>
+    <p>Beim Säugling steht der Kehlkopf hoch (bei Geburt etwa in Höhe des 3.–4. Halswirbels) und senkt sich bis zur Jugend ab. Der Kehldeckel liegt nahe am Gaumensegel, deshalb atmen Säuglinge beim Trinken durch die Nase und müssen Saugen, Schlucken und Atmen fein abstimmen. Eine Stimmlippenlähmung zeigt sich beim Säugling deshalb oft zuerst beim <b>Trinken</b>: Husten oder Verschlucken, lange Trinkzeiten, Atempausen, wiederkehrende Lungenentzündungen. Ein Teil dieser Kinder aspiriert still, also ohne zu husten.</p>
+  </div>
+  <div class="box recall">
+    <span class="eyebrow">Abruf</span>
+    <ol>
+      <li><b>F3.</b> Welche Schritte der pharyngealen Phase steuert der N. vagus, welcher Schritt gehört nicht zu ihm?</li>
+      <li><b>F4.</b> Warum ist das Ausatmen nach dem Schlucken ein Schutz?</li>
+      <li><b>F5.</b> Woran merkt man eine Stimmlippenlähmung beim Säugling oft zuerst?</li>
+    </ol>
+  </div>
+</section>
+
+<section>
+  <h2 id="h-6-3-husten-und-pressen">6.3 · Husten und Pressen</h2>
+  <p>Husten ist ein kontrollierter Luftstoß, der Material aus den Atemwegen schleudert. Er hat drei Phasen, und jede braucht andere Kehlkopfmuskeln:</p>
+  <ol>
+    <li><b>Einatmen</b>: Die Stimmritze ist weit offen (Postikus), die Lunge füllt sich.</li>
+    <li><b>Kompression</b>: Die Stimmritze schließt fest (Lateralis, Transversus, Thyroarytänoid), die Ausatemmuskeln drücken, der Druck unter den Stimmlippen steigt stark an.</li>
+    <li><b>Ausstoß</b>: Die Stimmritze öffnet sich schlagartig, die Luft schießt heraus.</li>
+  </ol>
+  <p>Ohne festen Schluss in Phase 2 baut sich kein Druck auf: Der Husten wird schwach und „verhaucht“. Das gleiche Prinzip nutzt das <span class="term">Pressen</span> (Heben, Stuhlgang, Geburt): Der Kehlkopf schließt, oft mit den Taschenfalten, damit der Brustkorb als feste Stütze dient.</p>
+  <div class="figure">
+    <div class="scroll">
+    <svg viewBox="0 0 600 220" width="600" role="img" aria-labelledby="f63t">
+      <title id="f63t">Drei Hustenphasen in der Aufsicht: offen, fest geschlossen, schlagartig offen</title>
+      <defs><marker id="aI3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="var(--ink-2)"/></marker></defs>
+      <g transform="translate(20,20)">
+        <text x="70" y="0" text-anchor="middle" class="t-l">1 · Einatmen</text>
+        <line class="fold" x1="68" y1="20" x2="30" y2="140"/><line class="fold" x1="72" y1="20" x2="110" y2="140"/>
+        <text x="70" y="172" text-anchor="middle" class="t-s">weit offen · Postikus</text>
+      </g>
+      <g transform="translate(220,20)">
+        <text x="70" y="0" text-anchor="middle" class="t-l">2 · Kompression</text>
+        <line class="fold" x1="68" y1="20" x2="68" y2="140"/><line class="fold" x1="72" y1="20" x2="72" y2="140"/>
+        <text x="70" y="172" text-anchor="middle" class="t-s">fest zu · Schließer</text>
+        <text x="70" y="188" text-anchor="middle" class="t-s">Druck steigt</text>
+      </g>
+      <g transform="translate(420,20)">
+        <text x="70" y="0" text-anchor="middle" class="t-l">3 · Ausstoß</text>
+        <line class="fold" x1="68" y1="20" x2="40" y2="140"/><line class="fold" x1="72" y1="20" x2="100" y2="140"/>
+        <path class="air" d="M70 135 V40" marker-end="url(#aI3)"/>
+        <text x="70" y="172" text-anchor="middle" class="t-s">schlagartig offen</text>
+      </g>
+    </svg>
+    </div>
+    <p class="figcap"><b>Abb. 6.3</b> Stimmritze von oben, vorne oben (wie Abb. 1.1). Ohne Phase 2 gibt es keinen kräftigen Husten.</p>
+  </div>
+  <div class="atlas" data-atlas hidden><p class="atlas-note"><b>Anatomische Ansicht.</b> Diese Zeichnungen folgen nicht dem Farbcode des Kurses. Erst das Schema verstehen, dann hier wiederfinden.</p><div class="atlas-grid"><figure class="atlas-card"><button class="atlas-img" type="button" data-zoom-img aria-label="Stimmlippen in Atemstellung, von oben, vergrößern"><img src="assets/atlas/servier-stimmlippen-offen.png" width="816" height="760" alt="Stimmlippen in Atemstellung, von oben" loading="lazy" decoding="async"></button>
+      <figcaption><p><b>Worauf achten:</b> Einatmen vor dem Husten: weit offen.</p><p class="atlas-or">Von oben, vorne oben.</p><p class="atlas-cr">Servier Medical Art, <a href="https://smart.servier.com/smart_image/vocal-cords/">smart.servier.com</a>, <a href="https://creativecommons.org/licenses/by/4.0/deed.de">CC BY 4.0</a></p></figcaption></figure><figure class="atlas-card"><button class="atlas-img" type="button" data-zoom-img aria-label="Stimmlippen in Phonationsstellung, von oben, vergrößern"><img src="assets/atlas/servier-stimmlippen-geschlossen.png" width="816" height="760" alt="Stimmlippen in Phonationsstellung, von oben" loading="lazy" decoding="async"></button>
+      <figcaption><p><b>Worauf achten:</b> Verschluss: Die Stimmlippen liegen fest aneinander, darunter baut sich Druck auf.</p><p class="atlas-or">Von oben, vorne oben.</p><p class="atlas-cr">Servier Medical Art, <a href="https://smart.servier.com/smart_image/vocal-cords-overview/">smart.servier.com</a>, <a href="https://creativecommons.org/licenses/by/4.0/deed.de">CC BY 4.0</a></p></figcaption></figure></div></div>
+  <p><b>Atmung:</b> Auch beim ruhigen Atmen ist der Kehlkopf aktiv. Bei jedem Einatmen weitet der Postikus die Stimmritze etwas, bei Anstrengung deutlich. Beim Ausatmen wird sie leicht enger und bremst den Luftstrom. Deshalb wird bei beidseitigem Ausfall der Postikusmuskeln gerade das <i>Ein</i>atmen laut und eng (inspiratorischer Stridor).</p>
+  <div class="box recall">
+    <span class="eyebrow">Abruf</span>
+    <ol>
+      <li><b>F6.</b> Welche Hustenphase fällt bei einer einseitigen Rekurrensparese am stärksten aus, und warum?</li>
+      <li><b>F7.</b> Warum ist bei beidseitigem Postikusausfall vor allem das Einatmen betroffen?</li>
+    </ol>
+  </div>
+</section>
+
+<section>
+  <h2 id="h-6-4-welcher-ausfall-gefaehrdet-was">6.4 · Welcher Ausfall gefährdet was?</h2>
+  <div class="scroll"><table>
+    <thead><tr><th>Ausfall</th><th>Schlucken</th><th>Husten</th><th>Atmung</th></tr></thead>
+    <tbody>
+      <tr><td><b>R. internus</b> <span class="tag sln">SLN</span></td><td>Stille Aspiration: Material im Kehlkopfeingang wird nicht bemerkt</td><td>Reflexhusten fehlt oder kommt zu spät; willkürlicher Husten möglich</td><td>Normal</td></tr>
+      <tr><td><b>N. recurrens, eine Seite</b> <span class="tag rln">RLN</span></td><td>Unvollständiger Verschluss: Verschlucken vor allem bei dünnen Flüssigkeiten</td><td>Schwach, weil sich kein Druck aufbaut</td><td>Meist ausreichend</td></tr>
+      <tr><td><b>N. recurrens, beide Seiten</b> <span class="tag rln">RLN</span></td><td>Oft weniger gestört als die Atmung</td><td>Kann erhalten sein</td><td><b>Eng</b>: inspiratorischer Stridor, Atemnot bei Belastung und Infekten</td></tr>
+      <tr><td><b>Hohe Vagusläsion</b> (oberhalb des N. laryngeus superior) <span class="tag x">N. X</span></td><td>Alles zusammen: Verschluss und Empfindung fehlen, Rachen schiebt schwach, Reste im Recessus piriformis, Flüssigkeit in die Nase</td><td>Schwach und verspätet</td><td>Meist ausreichend (eine Seite)</td></tr>
+    </tbody>
+  </table></div>
+  <p>In der Schluckdiagnostik wird das Eindringen von Material oft mit der <span class="term">Penetrations-Aspirations-Skala</span> (Rosenbek et al. 1996) beschrieben: <b>Penetration</b> heißt, Material gelangt in den Kehlkopfeingang, bleibt aber oberhalb der Stimmlippen; <b>Aspiration</b> heißt, es gelangt unter die Stimmlippen. Die Skala unterscheidet außerdem, ob das Material wieder herausbefördert wird.</p>
+  <div class="box flag">
+    <span class="eyebrow">! Warnzeichen für Aspiration</span>
+    <ul>
+      <li>Husten oder Räuspern während oder kurz nach dem Schlucken</li>
+      <li>„Nasse“, gurgelnde Stimme nach dem Schlucken</li>
+      <li>Wiederkehrende Lungenentzündungen oder unklares Fieber</li>
+      <li>Beim Säugling: Atempausen, Verfärbung oder Husten beim Trinken, sehr lange Trinkzeiten</li>
+    </ul>
+    <p>Fehlt der Husten, schließt das Aspiration <b>nicht</b> aus. Bei Verdacht ist eine instrumentelle Schluckdiagnostik (FEES oder Videofluoroskopie) nötig.</p>
+  </div>
+</section>
+
+<section>
+  <h2 id="h-6-5-zwei-mini-faelle">6.5 · Zwei Mini-Fälle</h2>
+  <div class="box">
+    <span class="eyebrow">Erwachsene · Frau R., 60, nach Operation am linken Lungenoberlappen</span>
+    <p>Seit der Operation ist Frau R. heiser. Beim Wassertrinken hustet sie oft, aber der Husten ist schwach und „verhaucht“. Joghurt schluckt sie problemlos. Die linke Stimmlippe steht still.</p>
+    <p><b>F8.</b> Welcher Nerv? Warum gerade dünne Flüssigkeiten, und warum ist ihr Husten schwach? Warum hustet sie überhaupt, statt still zu aspirieren?</p>
+  </div>
+  <div class="box kind">
+    <span class="eyebrow">Kind · Mia, jetzt 4 Monate (aus Abschnitt 3)</span>
+    <p>Mia hat eine linksseitige Rekurrensparese nach dem Verschluss des Ductus arteriosus. Sie trinkt sehr langsam, hustet beim Fläschchen, und hatte schon eine Lungenentzündung.</p>
+    <p><b>F9.</b> Welcher Teil des Schutzes fehlt Mia? Warum ist das bei einem Säugling, der nur Flüssigkeit trinkt, besonders problematisch, und wer sollte an der Abklärung beteiligt sein?</p>
+  </div>
+</section>
+
+<section>
+  <div class="box mis">
+    <span class="eyebrow">Häufige Fehlvorstellungen</span>
+    <ul>
+      <li><b>„Der Kehldeckel ist der wichtigste Schutz.“</b> Der Hauptschutz ist der Verschluss der Stimmlippen und des Kehlkopfeingangs. Menschen ohne Kehldeckel (z. B. nach Teilentfernung) können oft sicher schlucken lernen.</li>
+      <li><b>„Wer hustet, aspiriert; wer nicht hustet, ist sicher.“</b> Husten zeigt, dass der Schutz arbeitet. Gefährlicher ist die stille Aspiration ohne Husten.</li>
+      <li><b>„Der N. vagus hebt den Kehlkopf beim Schlucken.“</b> Die Hebung leisten die Muskeln oberhalb des Zungenbeins mit anderen Hirnnerven. Der N. vagus schließt, schiebt, öffnet die Speiseröhre und fühlt.</li>
+      <li><b>„Bei beidseitiger Rekurrensparese ist das Schlucken das Hauptproblem.“</b> Das Hauptproblem ist die Atmung.</li>
+      <li><b>„Breiige Kost ist bei Verschlucken immer sicherer.“</b> Bei schwachem Verschluss helfen dickere Konsistenzen oft, bei schwacher Rachenmuskulatur können sie aber mehr Reste hinterlassen. Das muss in der Diagnostik geprüft werden.</li>
+    </ul>
+  </div>
+</section>
+
+<section>
+  <h2 id="h-zusammenfassung-in-fuenf-zeilen">Zusammenfassung in fünf Zeilen</h2>
+  <ol>
+    <li>Drei Verschlussebenen: Stimmlippen, Taschenfalten, Kehlkopfeingang; beim Schlucken von unten nach oben.</li>
+    <li>Der N. vagus schließt das Gaumensegel, den Kehlkopf, schiebt den Rachen, öffnet die Speiseröhre und überwacht den Kehlkopfeingang; die Kehlkopfhebung gehört zu anderen Nerven.</li>
+    <li>Husten: einatmen (Postikus), komprimieren (Schließer), ausstoßen. Ohne Schluss kein kräftiger Husten.</li>
+    <li>R. internus aus = stille Aspiration; Rekurrens einseitig = Verschlucken bei Flüssigkeit und schwacher Husten; beidseitig = Atemnot.</li>
+    <li>Beim Säugling zeigt sich eine Stimmlippenlähmung oft zuerst beim Trinken.</li>
+  </ol>
+  <div class="box">
+    <span class="eyebrow">Aus dem Gedächtnis zeichnen · 5 Minuten, leeres Blatt</span>
+    <ol>
+      <li>Zeichne den Frontalschnitt des Kehlkopfs mit Stimmlippen und Taschenfalten und markiere die drei Verschlussebenen mit 1, 2, 3 von unten nach oben.</li>
+      <li>Zeichne daneben drei kleine Stimmritzen von oben für die drei Hustenphasen und schreib die Muskeln dazu.</li>
+      <li>Schreib eine Zeile mit den Schritten der pharyngealen Phase und markiere, welche der N. vagus steuert.</li>
+      <li>Vergleiche mit Abb. 6.1–6.3. Was fehlt, kommt auf eine Lernkarte.</li>
+    </ol>
+  </div>
+</section>
+
+<section>
+  <details>
+    <summary>Lösungen zu F1–F9 (erst nach eigenem Versuch öffnen)</summary>
+    <div>
+      <p><b>F1.</b> Stimmlippen, Taschenfalten, Kehlkopfeingang (aryepiglottische Falten, Stellknorpel, Kehldeckel).</p>
+      <p><b>F2.</b> Er wird umgelegt, wenn der Kehlkopf nach oben vorn gezogen wird und der Zungengrund nach hinten drückt.</p>
+      <p><b>F3.</b> N. vagus: Gaumensegelschluss, Kehlkopfverschluss, Rachenmuskeln, Öffnung des oberen Speiseröhrenschließmuskels, Empfindung am Kehlkopfeingang. Nicht: die Kehlkopfhebung (Muskeln oberhalb des Zungenbeins, andere Hirnnerven).</p>
+      <p><b>F4.</b> Die ausgeatmete Luft bläst Reste, die am Kehlkopfeingang liegen, nach oben weg, statt sie mit dem nächsten Atemzug in die Luftröhre zu ziehen.</p>
+      <p><b>F5.</b> Beim Trinken: Husten oder Verschlucken, lange Trinkzeiten, Atempausen, wiederkehrende Lungenentzündungen.</p>
+      <p><b>F6.</b> Die Kompressionsphase: Ohne festen Schluss baut sich kein Druck unter den Stimmlippen auf.</p>
+      <p><b>F7.</b> Beim Einatmen muss der Postikus die Stimmritze aktiv weiten; beim Ausatmen drückt die Luft die Stimmlippen von unten etwas auseinander.</p>
+      <p><b>F8.</b> Linker N. laryngeus recurrens (Operation in der Nähe des Aortenbogens). Dünne Flüssigkeiten fließen schnell und finden den Spalt der unvollständig schließenden Stimmritze; Joghurt fließt langsamer. Der Husten ist schwach, weil ohne Schluss kein Druck entsteht. Sie hustet, weil der R. internus des N. laryngeus superior intakt ist und die Empfindung oberhalb der Stimmlippen funktioniert.</p>
+      <p><b>F9.</b> Der vollständige Verschluss der Stimmritze auf der linken Seite. Säuglinge trinken nur dünne Flüssigkeit, also genau die Konsistenz, die am leichtesten durch den Spalt läuft, und sie trinken viele Male am Tag. An der Abklärung beteiligt sind Kinderärztin bzw. Kinder-HNO oder Phoniatrie, Logopädin mit Schwerpunkt Schlucken und gegebenenfalls Ernährungsberatung; die instrumentelle Diagnostik entscheidet über Maßnahmen wie angedickte Nahrung oder Haltung.</p>
+    </div>
+  </details>
+</section>
+
+<section>
+  <h2 id="h-quellen">Quellen</h2>
+  <div class="refs">
+    <p>Bartolome G, Schröter-Morasch H (Hrsg.). <em>Schluckstörungen: Interdisziplinäre Diagnostik und Rehabilitation</em>. Elsevier/Urban &amp; Fischer, aktuelle Auflage (Schluckablauf, Verschlussebenen, Diagnostik).</p>
+    <p>Inamoto Y, González-Fernández M, Saito E. Timing of true vocal cords closure for safe swallowing: a review. <em>Dysphagia</em> 2024;39(3):313–320. <a href="https://pure.fujita-hu.ac.jp/en/publications/timing-of-true-vocal-cords-closure-for-safe-swallowing-a-review-o/">Abstract</a> (Stimmlippenschluss passt sich Bolusgröße und Konsistenz an).</p>
+    <p>Rosenbek JC, Robbins JA, Roecker EB, Coyle JL, Wood JL. A penetration-aspiration scale. <em>Dysphagia</em> 1996;11:93–98.</p>
+    <p>Schünke M, Schulte E, Schumacher U. <em>PROMETHEUS LernAtlas: Kopf, Hals und Neuroanatomie</em>. 6. Aufl. Thieme; 2022 (Innervation von Gaumen, Rachen und Kehlkopf).</p>
+    <p>OpenAnesthesia. <a href="https://www.openanesthesia.org/aba_pediatric_airway_management">Pediatric airway management</a> (Kehlkopf bei Geburt in Höhe C3–C4, Absenkung bis zur Jugend).</p>
+    <p>Lechien JR. Management of pediatric bilateral vocal fold paralysis. <em>Children</em> 2024;11(4):398. doi:10.3390/children11040398.</p>
+    <p>DGPP. S2k-Leitlinie Diagnostik und Therapie von Störungen der Stimmfunktion (Dysphonien), AWMF 049-008, 2023.</p>
+  </div>
+</section>
+</div>
+<nav class="pager" aria-label="Abschnitte" lang="de" style="max-width:860px"><div class="done-row" lang="de"><p>Fertig mit diesem Abschnitt? Markiere ihn, dann siehst du auf der Startseite, wo du stehst.</p><button class="done-btn" type="button" data-done="06" aria-pressed="false"><span class="mark"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 6.3l2.3 2.3 4.7-5"/></svg></span><span>Als erledigt markieren</span></button></div><a class="practice" href="lernkarten.html?unit=06"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="6" width="14" height="13" rx="2"/><path d="M7 3h12a2 2 0 0 1 2 2v11"/></svg><span><b>Die 9 Fragen dieses Abschnitts als Lernkarten</b><span class="note">verteilt wiederholen, damit es bis zur Prüfung sitzt</span></span></a><div class="nav2"><a class="prev" href="05-stimmentstehung.html" rel="prev"><span class="eyebrow">← Zurück · 5</span><b>Stimmentstehung</b></a><a class="next" href="07-laehmungen.html" rel="next"><span class="eyebrow">Weiter · 7 →</span><b>Kehlkopflähmungen im Überblick</b></a></div></nav>
+</main>
+</div>
+<dialog class="legend" id="legend" aria-labelledby="lg-t">
+  <div class="lg-head"><h2 id="lg-t">Farb- und Formcode</h2><button class="tbtn" type="button" data-close-legend aria-label="Schließen"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+  <div class="lg-body">
+    <p>In jeder Abbildung gleich. Farbe ist nie das einzige Signal: Achte auch auf Schild, Beschriftung und Muster.</p>
+    <table><tbody>
+      <tr><td><span class="sw" style="background:var(--c-nerve)"></span></td><td><b>Nerv</b> allgemein, N. vagus</td><td>Beschriftung <code>N.</code> / <code>R.</code>, Linie mit Pfeil</td></tr>
+      <tr><td><span class="sw" style="background:var(--c-sln)"></span></td><td><b>N. laryngeus superior</b></td><td>Schild <code>SLN</code></td></tr>
+      <tr><td><span class="sw" style="background:var(--c-rln)"></span></td><td><b>N. laryngeus recurrens</b></td><td>Schild <code>RLN</code></td></tr>
+      <tr><td><span class="sw" style="background:var(--c-artery)"></span></td><td><b>Arterie</b> (nur als Landmarke)</td><td>Beschriftung <code>A.</code></td></tr>
+      <tr><td><svg width="46" height="26" aria-hidden="true"><rect x=".5" y=".5" width="45" height="25" rx="3" fill="var(--c-muscle)"/><path d="M6 23 L20 3 M16 23 L30 3 M26 23 L40 3" stroke="#fff" stroke-opacity=".45"/></svg></td><td><b>Muskel</b></td><td>Beschriftung <code>M.</code>, Faserlinien</td></tr>
+      <tr><td><span class="sw" style="background:var(--c-cart);border:2px solid var(--c-cart-line)"></span></td><td><b>Knorpel</b></td><td>fester blaugrauer Rand</td></tr>
+      <tr><td><svg width="46" height="26" aria-hidden="true"><rect x=".5" y=".5" width="45" height="25" rx="3" fill="var(--c-bone)"/><g fill="#8A7650"><circle cx="9" cy="8" r="1.3"/><circle cx="22" cy="13" r="1.3"/><circle cx="35" cy="7" r="1.3"/><circle cx="14" cy="20" r="1.3"/><circle cx="31" cy="20" r="1.3"/></g></svg></td><td><b>Knochen</b> (Zungenbein, Schädelbasis)</td><td>getüpfelt</td></tr>
+      <tr><td><svg width="46" height="26" aria-hidden="true"><defs><pattern id="lg-hl" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="6" height="6" fill="var(--c-lesion)" fill-opacity=".18"/><line x1="0" y1="0" x2="0" y2="6" stroke="var(--c-lesion)" stroke-width="2"/></pattern></defs><rect x=".5" y=".5" width="45" height="25" rx="3" fill="url(#lg-hl)" stroke="var(--c-lesion)"/><path d="M17 7 L29 19 M29 7 L17 19" stroke="var(--c-lesion)" stroke-width="3"/></svg></td><td><b>Läsion</b></td><td>Schraffur, ✕ und „Läsion“</td></tr>
+      <tr><td><span class="sw" style="background:var(--muted-fill);border-color:var(--muted)"></span></td><td><b>Kontext</b>, gerade nicht Thema</td><td>grau, kein Schild</td></tr>
+    </tbody></table>
+    <table><tbody>
+      <tr><td><svg width="46" height="26" aria-hidden="true"><rect x="1" y="3" width="44" height="20" fill="var(--muted-fill)" stroke="var(--ink-2)" stroke-width="1.5"/></svg></td><td><b>Rechteck</b></td><td>Struktur: Nerv, Muskel, Knorpel</td></tr>
+      <tr><td><svg width="46" height="26" aria-hidden="true"><rect x="1" y="3" width="44" height="20" rx="10" fill="var(--action-fill)" stroke="var(--ink-2)" stroke-width="1.5"/></svg></td><td><b>Abgerundet</b></td><td>Funktion oder Wirkung</td></tr>
+      <tr><td><svg width="46" height="26" aria-hidden="true"><path d="M23 2 L44 13 L23 24 L2 13 Z" fill="var(--action-fill)" stroke="var(--ink-2)" stroke-width="1.5"/></svg></td><td><b>Raute</b></td><td>Entscheidung, diagnostische Frage</td></tr>
+      <tr><td><svg width="46" height="26" aria-hidden="true"><rect x="1" y="3" width="44" height="20" rx="3" fill="var(--flag-fill)" stroke="var(--c-artery)" stroke-width="2.5"/><text x="23" y="18" text-anchor="middle" font-weight="700" font-size="14" fill="var(--c-artery)">!</text></svg></td><td><b>Warnzeichen</b></td><td>an HNO / Phoniatrie überweisen</td></tr>
+      <tr><td><svg width="46" height="26" aria-hidden="true"><path d="M3 13 H38" stroke="var(--ink-2)" stroke-width="2"/><path d="M36 8 L44 13 L36 18 Z" fill="var(--ink-2)"/></svg></td><td><b>Pfeil</b></td><td>Nervenverlauf, direkte Ursache. Zum Muskel = motorisch, zum Nerv = sensibel</td></tr>
+      <tr><td><svg width="46" height="26" aria-hidden="true"><path d="M3 13 H38" stroke="var(--ink-2)" stroke-width="2" stroke-dasharray="5 4"/><path d="M36 8 L44 13 L36 18 Z" fill="var(--ink-2)"/></svg></td><td><b>Gestrichelt</b></td><td>indirekt, gering oder umstritten</td></tr>
+      <tr><td><svg width="46" height="26" aria-hidden="true"><rect x="2" y="3" width="42" height="20" fill="var(--plate)" stroke="var(--ink)" stroke-width="3.5"/></svg></td><td><b>Dicker Rand</b></td><td>Fokus: das, was die Abbildung lehrt</td></tr>
+    </tbody></table>
+    <p>Ansichten: anatomisch von vorn (rechts der Patientin = links im Bild) oder von oben auf die Glottis, vorne oben. Endoskopische Bilder tragen die R/L-Marken der Quelle. <a href="00-styleguide.html">Ausführlich im Styleguide</a>.</p>
+  </div>
+</dialog>
+<dialog class="account" id="account" aria-labelledby="acc-t">
+  <div class="lg-head"><h2 id="acc-t">Konto</h2><button class="tbtn" type="button" data-close-account aria-label="Schließen"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+  <div class="acc-body">
+    <p class="acc-status" data-acc-status aria-live="polite"></p>
+    <form data-acc-view="login" data-acc-form="login">
+      <p>Mit einem Konto werden Fortschritt, Lernkarten, Merkheft und Einstellungen gesichert und sind auf jedem Gerät gleich.</p>
+      <label>E-Mail<input name="email" type="email" autocomplete="username" required></label>
+      <label>Passwort<input name="password" type="password" autocomplete="current-password" required></label>
+      <p class="acc-err" role="alert"></p>
+      <button class="cta" type="submit">Anmelden</button>
+      <p class="acc-alt"><button type="button" class="linkbtn" data-acc-go="signup">Neues Konto anlegen</button> · <button type="button" class="linkbtn" data-acc-go="forgot">Passwort vergessen?</button></p>
+    </form>
+    <form data-acc-view="signup" data-acc-form="signup" hidden>
+      <p>Konto anlegen. Was du auf diesem Gerät schon gelernt hast, wird übernommen.</p>
+      <label>E-Mail<input name="email" type="email" autocomplete="username" required></label>
+      <label>Passwort <span class="note">(mindestens 8 Zeichen)</span><input name="password" type="password" autocomplete="new-password" minlength="8" required></label>
+      <label>Passwort wiederholen<input name="password2" type="password" autocomplete="new-password" minlength="8" required></label>
+      <p class="acc-err" role="alert"></p>
+      <button class="cta" type="submit">Konto anlegen</button>
+      <p class="acc-alt"><button type="button" class="linkbtn" data-acc-go="login">Ich habe schon ein Konto</button></p>
+    </form>
+    <form data-acc-view="forgot" data-acc-form="forgot" hidden>
+      <p>Du bekommst eine E-Mail mit einem Link, über den du ein neues Passwort festlegst.</p>
+      <label>E-Mail<input name="email" type="email" autocomplete="username" required></label>
+      <p class="acc-err" role="alert"></p>
+      <button class="cta" type="submit">Link senden</button>
+      <p class="acc-alt"><button type="button" class="linkbtn" data-acc-go="login">Zurück zur Anmeldung</button></p>
+    </form>
+    <form data-acc-view="newpw" data-acc-form="newpw" hidden>
+      <p>Neues Passwort festlegen.</p>
+      <label>Neues Passwort<input name="password" type="password" autocomplete="new-password" minlength="8" required></label>
+      <p class="acc-err" role="alert"></p>
+      <button class="cta" type="submit">Speichern</button>
+    </form>
+    <div data-acc-view="check" hidden>
+      <p><b>Fast geschafft.</b> Wir haben eine E-Mail an <b data-acc-sent></b> geschickt. Öffne den Link darin auf diesem oder einem anderen Gerät.</p>
+      <p class="note">Nichts angekommen? Schau im Spam-Ordner nach.</p>
+      <p class="acc-alt"><button type="button" class="linkbtn" data-acc-go="login">Zur Anmeldung</button></p>
+    </div>
+    <div data-acc-view="in" hidden>
+      <p>Angemeldet als <b data-acc-email></b></p>
+      <p class="note">Zuletzt synchronisiert: <span data-acc-last></span>. Änderungen werden automatisch gesichert, auch offline Gelerntes, sobald du wieder online bist.</p>
+      <div class="acc-row"><button class="cta" type="button" data-acc-sync>Jetzt synchronisieren</button><button class="cta ghost" type="button" data-acc-logout>Abmelden</button></div>
+      <p class="acc-alt"><button type="button" class="linkbtn" data-acc-wipe>Meine Daten auf dem Server löschen</button></p>
+    </div>
+  </div>
+</dialog>
+<dialog class="search" id="search" aria-label="Kurs durchsuchen">
+  <div class="s-head"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg><input type="search" id="search-q" placeholder="Begriff, Muskel, Symptom …" autocomplete="off" spellcheck="false" aria-controls="search-r"><button class="tbtn" type="button" data-close-search aria-label="Schließen"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+  <ol class="s-results" id="search-r" role="listbox" aria-label="Treffer"></ol>
+  <p class="s-foot"><kbd>↑</kbd><kbd>↓</kbd> auswählen · <kbd>Enter</kbd> öffnen · <kbd>/</kbd> Suche von überall</p>
+</dialog>
+<dialog class="zoom" id="zoom" aria-labelledby="zoom-t">
+  <div class="z-bar">
+    <b id="zoom-t">Abbildung</b>
+    <span class="z-tools">
+      <button class="tbtn" type="button" data-z="out" aria-label="Verkleinern"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14"/></svg></button>
+      <span class="z-pct" aria-live="polite">100 %</span>
+      <button class="tbtn" type="button" data-z="in" aria-label="Vergrößern"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></button>
+      <button class="tbtn" type="button" data-z="fit"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="6" width="16" height="12" rx="1.5"/><path d="M9 12h6"/></svg><span class="lbl">Einpassen</span></button>
+      <button class="tbtn" type="button" data-z="close" aria-label="Schließen"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    </span>
+  </div>
+  <div class="z-stage"><div class="wrap z-canvas"></div></div>
+  <p class="z-cap"></p>
+</dialog>
+</body>
+</html>

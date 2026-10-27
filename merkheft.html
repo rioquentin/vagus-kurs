@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Merkheft · Vagus-Kurs</title>
+<script>try{var t=JSON.parse(localStorage.getItem('vagus-kurs:v1')||'{}').theme;if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Spectral:wght@500;600&family=Public+Sans:ital,wght@0,400;0,600;0,700;1,400&family=IBM+Plex+Sans+Condensed:wght@400;600&display=swap">
+<link rel="stylesheet" href="assets/course.css">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#1B2329">
+<link rel="icon" href="assets/icon.svg" type="image/svg+xml">
+<script src="assets/app.js" defer></script>
+<script src="assets/sync-config.js" defer></script>
+<script src="assets/sync.js" defer></script>
+<script src="assets/study.js" defer></script>
+</head>
+<body data-page="notes" class="tool">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="topbar">
+  <button class="tbtn menu-btn" type="button" data-open-nav aria-controls="sidebar" aria-expanded="false" aria-label="Inhaltsverzeichnis öffnen"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+  <a class="brand" href="index.html"><b><i class="b-long">N. vagus und Stimme</i><i class="b-short">Vagus-Kurs</i></b><span>Lernkurs</span></a>
+  <a class="tbtn prog" href="index.html#fortschritt" title="Erledigte Abschnitte"><i></i><span data-prog>0 / 9</span></a>
+  <button class="tbtn" type="button" data-open-search aria-keyshortcuts="/" aria-label="Kurs durchsuchen"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg><span class="lbl">Suchen</span></button>
+  <button class="tbtn" type="button" data-open-legend aria-label="Farb- und Formcode"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="6" height="6" rx="1"/><rect x="4" y="14" width="6" height="6" rx="3"/><path d="M14 7h6M14 17h6"/></svg><span class="lbl">Legende</span></button>
+  <button class="tbtn acc-btn" type="button" data-open-account hidden><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8.5" r="3.5"/><path d="M5 20c.8-3.6 3.6-5.5 7-5.5s6.2 1.9 7 5.5"/></svg><span class="lbl">Anmelden</span><i class="acc-dot" data-acc-dot aria-hidden="true"></i></button>
+  <button class="tbtn" type="button" data-theme-toggle aria-label="Farbschema: System"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="M12 4a8 8 0 0 0 0 16z" fill="currentColor"/></svg><span class="lbl" data-theme-label>System</span></button>
+  <span class="readbar" aria-hidden="true"></span>
+</header>
+<div class="shell">
+<nav class="sidebar" id="sidebar" aria-label="Kursinhalt">
+  <div class="side-head"><span class="eyebrow">Kernpfad · 9 Einheiten</span><button class="tbtn side-close" type="button" data-close-nav aria-label="Schließen"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+  <ol class="ctoc">
+    <li><a class="ctoc-unit" href="01-gelenke-muskeln.html" data-unit="01"><span class="ctoc-n">1</span><span class="ctoc-t">Gelenke und innere Kehlkopfmuskeln</span><span class="mark"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 6.3l2.3 2.3 4.7-5"/></svg></span></a></li>
+    <li><a class="ctoc-unit" href="02-n-laryngeus-superior.html" data-unit="02"><span class="ctoc-n">2</span><span class="ctoc-t">N. laryngeus superior</span><span class="mark"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 6.3l2.3 2.3 4.7-5"/></svg></span></a></li>
+    <li><a class="ctoc-unit" href="03-n-laryngeus-recurrens.html" data-unit="03"><span class="ctoc-n">3</span><span class="ctoc-t">N. laryngeus recurrens</span><span class="mark"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 6.3l2.3 2.3 4.7-5"/></svg></span></a></li>
+    <li><a class="ctoc-unit" href="04-gesamtkarte.html" data-unit="04"><span class="ctoc-n">4</span><span class="ctoc-t">Die Gesamtkarte</span><span class="mark"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 6.3l2.3 2.3 4.7-5"/></svg></span></a></li>
+    <li><a class="ctoc-unit" href="05-stimmentstehung.html" data-unit="05"><span class="ctoc-n">5</span><span class="ctoc-t">Stimmentstehung</span><span class="mark"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 6.3l2.3 2.3 4.7-5"/></svg></span></a></li>
+    <li><a class="ctoc-unit" href="06-schutzfunktionen.html" data-unit="06"><span class="ctoc-n">6</span><span class="ctoc-t">Schutzfunktionen</span><span class="mark"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 6.3l2.3 2.3 4.7-5"/></svg></span></a></li>
+    <li><a class="ctoc-unit" href="07-laehmungen.html" data-unit="07"><span class="ctoc-n">7</span><span class="ctoc-t">Kehlkopflähmungen im Überblick</span><span class="mark"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 6.3l2.3 2.3 4.7-5"/></svg></span></a></li>
+    <li><a class="ctoc-unit" href="08-abgrenzung.html" data-unit="08"><span class="ctoc-n">8</span><span class="ctoc-t">Abgrenzung und Warnzeichen</span><span class="mark"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 6.3l2.3 2.3 4.7-5"/></svg></span></a></li>
+    <li><a class="ctoc-unit" href="09-10-wiederholung-pruefung.html" data-unit="09"><span class="ctoc-n">9–10</span><span class="ctoc-t">Wiederholung und Probeprüfung</span><span class="mark"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 6.3l2.3 2.3 4.7-5"/></svg></span></a></li>
+  </ol>
+  <div class="side-sep eyebrow">Üben und Nachschlagen</div>
+  <a class="ctoc-ref" href="index.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 11l8-7 8 7M6 9.5V20h12V9.5"/></svg>Kursübersicht</a>
+  <a class="ctoc-ref" href="lernkarten.html"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="6" width="14" height="13" rx="2"/><path d="M7 3h12a2 2 0 0 1 2 2v11"/></svg>Lernkarten<span class="due-pill" data-due hidden></span></a>
+  <a class="ctoc-ref" href="merkheft.html" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h10a1 1 0 0 1 1 1v17l-6-4-6 4V4a1 1 0 0 1 1-1z"/></svg>Merkheft<span class="due-pill soft" data-notes-n hidden></span></a>
+  <a class="ctoc-ref" href="begriffe.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h9M4 10h16M4 15h9M4 20h16"/></svg>Fachbegriffe</a>
+  <button class="ctoc-ref" type="button" data-open-search><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg>Im Kurs suchen</button>
+  <button class="ctoc-ref" type="button" data-open-legend><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="6" height="6" rx="1"/><rect x="4" y="14" width="6" height="6" rx="3"/><path d="M14 7h6M14 17h6"/></svg>Farb- und Formcode</button>
+  <a class="ctoc-ref" href="00-styleguide.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h10a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3z"/><path d="M5 17a3 3 0 0 1 3-3h10"/></svg>Visueller Styleguide (EN)</a>
+</nav>
+<div class="scrim" data-close-nav></div>
+<main id="main" lang="de">
+<div class="wrap nb">
+  <header>
+    <span class="eyebrow">Nachschlagen · deine Notizen</span>
+    <h1>Merkheft</h1>
+    <p>Was dir wichtig ist, an einem Ort. Im Kurs eine Stelle markieren und auf <b>Merken</b> tippen; dazu kannst du eine eigene Notiz schreiben. Jeder Eintrag führt zurück an seine Stelle.</p>
+  </header>
+  <section class="nb-new" aria-label="Freie Notiz">
+    <label class="eyebrow" for="nb-free">Freie Notiz</label>
+    <textarea id="nb-free" rows="2" placeholder="z. B. Frage für die Praxisanleitung, Eselsbrücke, Prüfungstipp …"></textarea>
+    <div class="nb-row"><select data-nb-free-unit aria-label="Abschnitt"><option value="">Ohne Abschnitt</option><option value="01">1 · Gelenke und innere Kehlkopfmuskeln</option><option value="02">2 · N. laryngeus superior</option><option value="03">3 · N. laryngeus recurrens</option><option value="04">4 · Die Gesamtkarte</option><option value="05">5 · Stimmentstehung</option><option value="06">6 · Schutzfunktionen</option><option value="07">7 · Kehlkopflähmungen im Überblick</option><option value="08">8 · Abgrenzung und Warnzeichen</option><option value="09">9–10 · Wiederholung und Probeprüfung</option></select><button class="cta" type="button" data-nb-add>Notiz speichern</button></div>
+  </section>
+  <div class="nb-tools">
+    <input type="search" class="gl-q" data-nb-q placeholder="Im Merkheft suchen" aria-label="Im Merkheft suchen">
+    <label class="nb-check"><input type="checkbox" data-nb-star> nur ★ wichtig</label>
+    <span class="nb-exp"><button class="cta ghost" type="button" data-nb-export>Als Datei sichern</button><button class="cta ghost" type="button" data-nb-print>Drucken</button></span>
+  </div>
+  <div class="nb-list" data-nb-list><p class="note">Lädt …</p></div>
+</div>
+</main>
+</div>
+<dialog class="legend" id="legend" aria-labelledby="lg-t">
+  <div class="lg-head"><h2 id="lg-t">Farb- und Formcode</h2><button class="tbtn" type="button" data-close-legend aria-label="Schließen"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+  <div class="lg-body">
+    <p>In jeder Abbildung gleich. Farbe ist nie das einzige Signal: Achte auch auf Schild, Beschriftung und Muster.</p>
+    <table><tbody>
+      <tr><td><span class="sw" style="background:var(--c-nerve)"></span></td><td><b>Nerv</b> allgemein, N. vagus</td><td>Beschriftung <code>N.</code> / <code>R.</code>, Linie mit Pfeil</td></tr>
+      <tr><td><span class="sw" style="background:var(--c-sln)"></span></td><td><b>N. laryngeus superior</b></td><td>Schild <code>SLN</code></td></tr>
+      <tr><td><span class="sw" style="background:var(--c-rln)"></span></td><td><b>N. laryngeus recurrens</b></td><td>Schild <code>RLN</code></td></tr>
+      <tr><td><span class="sw" style="background:var(--c-artery)"></span></td><td><b>Arterie</b> (nur als Landmarke)</td><td>Beschriftung <code>A.</code></td></tr>
+      <tr><td><svg width="46" height="26" aria-hidden="true"><rect x=".5" y=".5" width="45" height="25" rx="3" fill="var(--c-muscle)"/><path d="M6 23 L20 3 M16 23 L30 3 M26 23 L40 3" stroke="#fff" stroke-opacity=".45"/></svg></td><td><b>Muskel</b></td><td>Beschriftung <code>M.</code>, Faserlinien</td></tr>
+      <tr><td><span class="sw" style="background:var(--c-cart);border:2px solid var(--c-cart-line)"></span></td><td><b>Knorpel</b></td><td>fester blaugrauer Rand</td></tr>
+      <tr><td><svg width="46" height="26" aria-hidden="true"><rect x=".5" y=".5" width="45" height="25" rx="3" fill="var(--c-bone)"/><g fill="#8A7650"><circle cx="9" cy="8" r="1.3"/><circle cx="22" cy="13" r="1.3"/><circle cx="35" cy="7" r="1.3"/><circle cx="14" cy="20" r="1.3"/><circle cx="31" cy="20" r="1.3"/></g></svg></td><td><b>Knochen</b> (Zungenbein, Schädelbasis)</td><td>getüpfelt</td></tr>
+      <tr><td><svg width="46" height="26" aria-hidden="true"><defs><pattern id="lg-hl" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="6" height="6" fill="var(--c-lesion)" fill-opacity=".18"/><line x1="0" y1="0" x2="0" y2="6" stroke="var(--c-lesion)" stroke-width="2"/></pattern></defs><rect x=".5" y=".5" width="45" height="25" rx="3" fill="url(#lg-hl)" stroke="var(--c-lesion)"/><path d="M17 7 L29 19 M29 7 L17 19" stroke="var(--c-lesion)" stroke-width="3"/></svg></td><td><b>Läsion</b></td><td>Schraffur, ✕ und „Läsion“</td></tr>
+      <tr><td><span class="sw" style="background:var(--muted-fill);border-color:var(--muted)"></span></td><td><b>Kontext</b>, gerade nicht Thema</td><td>grau, kein Schild</td></tr>
+    </tbody></table>
+    <table><tbody>
+      <tr><td><svg width="46" height="26" aria-hidden="true"><rect x="1" y="3" width="44" height="20" fill="var(--muted-fill)" stroke="var(--ink-2)" stroke-width="1.5"/></svg></td><td><b>Rechteck</b></td><td>Struktur: Nerv, Muskel, Knorpel</td></tr>
+      <tr><td><svg width="46" height="26" aria-hidden="true"><rect x="1" y="3" width="44" height="20" rx="10" fill="var(--action-fill)" stroke="var(--ink-2)" stroke-width="1.5"/></svg></td><td><b>Abgerundet</b></td><td>Funktion oder Wirkung</td></tr>
+      <tr><td><svg width="46" height="26" aria-hidden="true"><path d="M23 2 L44 13 L23 24 L2 13 Z" fill="var(--action-fill)" stroke="var(--ink-2)" stroke-width="1.5"/></svg></td><td><b>Raute</b></td><td>Entscheidung, diagnostische Frage</td></tr>
+      <tr><td><svg width="46" height="26" aria-hidden="true"><rect x="1" y="3" width="44" height="20" rx="3" fill="var(--flag-fill)" stroke="var(--c-artery)" stroke-width="2.5"/><text x="23" y="18" text-anchor="middle" font-weight="700" font-size="14" fill="var(--c-artery)">!</text></svg></td><td><b>Warnzeichen</b></td><td>an HNO / Phoniatrie überweisen</td></tr>
+      <tr><td><svg width="46" height="26" aria-hidden="true"><path d="M3 13 H38" stroke="var(--ink-2)" stroke-width="2"/><path d="M36 8 L44 13 L36 18 Z" fill="var(--ink-2)"/></svg></td><td><b>Pfeil</b></td><td>Nervenverlauf, direkte Ursache. Zum Muskel = motorisch, zum Nerv = sensibel</td></tr>
+      <tr><td><svg width="46" height="26" aria-hidden="true"><path d="M3 13 H38" stroke="var(--ink-2)" stroke-width="2" stroke-dasharray="5 4"/><path d="M36 8 L44 13 L36 18 Z" fill="var(--ink-2)"/></svg></td><td><b>Gestrichelt</b></td><td>indirekt, gering oder umstritten</td></tr>
+      <tr><td><svg width="46" height="26" aria-hidden="true"><rect x="2" y="3" width="42" height="20" fill="var(--plate)" stroke="var(--ink)" stroke-width="3.5"/></svg></td><td><b>Dicker Rand</b></td><td>Fokus: das, was die Abbildung lehrt</td></tr>
+    </tbody></table>
+    <p>Ansichten: anatomisch von vorn (rechts der Patientin = links im Bild) oder von oben auf die Glottis, vorne oben. Endoskopische Bilder tragen die R/L-Marken der Quelle. <a href="00-styleguide.html">Ausführlich im Styleguide</a>.</p>
+  </div>
+</dialog>
+<dialog class="account" id="account" aria-labelledby="acc-t">
+  <div class="lg-head"><h2 id="acc-t">Konto</h2><button class="tbtn" type="button" data-close-account aria-label="Schließen"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+  <div class="acc-body">
+    <p class="acc-status" data-acc-status aria-live="polite"></p>
+    <form data-acc-view="login" data-acc-form="login">
+      <p>Mit einem Konto werden Fortschritt, Lernkarten, Merkheft und Einstellungen gesichert und sind auf jedem Gerät gleich.</p>
+      <label>E-Mail<input name="email" type="email" autocomplete="username" required></label>
+      <label>Passwort<input name="password" type="password" autocomplete="current-password" required></label>
+      <p class="acc-err" role="alert"></p>
+      <button class="cta" type="submit">Anmelden</button>
+      <p class="acc-alt"><button type="button" class="linkbtn" data-acc-go="signup">Neues Konto anlegen</button> · <button type="button" class="linkbtn" data-acc-go="forgot">Passwort vergessen?</button></p>
+    </form>
+    <form data-acc-view="signup" data-acc-form="signup" hidden>
+      <p>Konto anlegen. Was du auf diesem Gerät schon gelernt hast, wird übernommen.</p>
+      <label>E-Mail<input name="email" type="email" autocomplete="username" required></label>
+      <label>Passwort <span class="note">(mindestens 8 Zeichen)</span><input name="password" type="password" autocomplete="new-password" minlength="8" required></label>
+      <label>Passwort wiederholen<input name="password2" type="password" autocomplete="new-password" minlength="8" required></label>
+      <p class="acc-err" role="alert"></p>
+      <button class="cta" type="submit">Konto anlegen</button>
+      <p class="acc-alt"><button type="button" class="linkbtn" data-acc-go="login">Ich habe schon ein Konto</button></p>
+    </form>
+    <form data-acc-view="forgot" data-acc-form="forgot" hidden>
+      <p>Du bekommst eine E-Mail mit einem Link, über den du ein neues Passwort festlegst.</p>
+      <label>E-Mail<input name="email" type="email" autocomplete="username" required></label>
+      <p class="acc-err" role="alert"></p>
+      <button class="cta" type="submit">Link senden</button>
+      <p class="acc-alt"><button type="button" class="linkbtn" data-acc-go="login">Zurück zur Anmeldung</button></p>
+    </form>
+    <form data-acc-view="newpw" data-acc-form="newpw" hidden>
+      <p>Neues Passwort festlegen.</p>
+      <label>Neues Passwort<input name="password" type="password" autocomplete="new-password" minlength="8" required></label>
+      <p class="acc-err" role="alert"></p>
+      <button class="cta" type="submit">Speichern</button>
+    </form>
+    <div data-acc-view="check" hidden>
+      <p><b>Fast geschafft.</b> Wir haben eine E-Mail an <b data-acc-sent></b> geschickt. Öffne den Link darin auf diesem oder einem anderen Gerät.</p>
+      <p class="note">Nichts angekommen? Schau im Spam-Ordner nach.</p>
+      <p class="acc-alt"><button type="button" class="linkbtn" data-acc-go="login">Zur Anmeldung</button></p>
+    </div>
+    <div data-acc-view="in" hidden>
+      <p>Angemeldet als <b data-acc-email></b></p>
+      <p class="note">Zuletzt synchronisiert: <span data-acc-last></span>. Änderungen werden automatisch gesichert, auch offline Gelerntes, sobald du wieder online bist.</p>
+      <div class="acc-row"><button class="cta" type="button" data-acc-sync>Jetzt synchronisieren</button><button class="cta ghost" type="button" data-acc-logout>Abmelden</button></div>
+      <p class="acc-alt"><button type="button" class="linkbtn" data-acc-wipe>Meine Daten auf dem Server löschen</button></p>
+    </div>
+  </div>
+</dialog>
+<dialog class="search" id="search" aria-label="Kurs durchsuchen">
+  <div class="s-head"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg><input type="search" id="search-q" placeholder="Begriff, Muskel, Symptom …" autocomplete="off" spellcheck="false" aria-controls="search-r"><button class="tbtn" type="button" data-close-search aria-label="Schließen"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+  <ol class="s-results" id="search-r" role="listbox" aria-label="Treffer"></ol>
+  <p class="s-foot"><kbd>↑</kbd><kbd>↓</kbd> auswählen · <kbd>Enter</kbd> öffnen · <kbd>/</kbd> Suche von überall</p>
+</dialog>
+<dialog class="zoom" id="zoom" aria-labelledby="zoom-t">
+  <div class="z-bar">
+    <b id="zoom-t">Abbildung</b>
+    <span class="z-tools">
+      <button class="tbtn" type="button" data-z="out" aria-label="Verkleinern"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14"/></svg></button>
+      <span class="z-pct" aria-live="polite">100 %</span>
+      <button class="tbtn" type="button" data-z="in" aria-label="Vergrößern"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></button>
+      <button class="tbtn" type="button" data-z="fit"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="6" width="16" height="12" rx="1.5"/><path d="M9 12h6"/></svg><span class="lbl">Einpassen</span></button>
+      <button class="tbtn" type="button" data-z="close" aria-label="Schließen"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    </span>
+  </div>
+  <div class="z-stage"><div class="wrap z-canvas"></div></div>
+  <p class="z-cap"></p>
+</dialog>
+</body>
+</html>

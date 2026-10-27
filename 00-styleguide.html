@@ -1,0 +1,440 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Visueller Styleguide · Vagus-Kurs</title>
+<script>try{var t=JSON.parse(localStorage.getItem('vagus-kurs:v1')||'{}').theme;if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Spectral:wght@500;600&family=Public+Sans:ital,wght@0,400;0,600;0,700;1,400&family=IBM+Plex+Sans+Condensed:wght@400;600&display=swap">
+<link rel="stylesheet" href="assets/course.css">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#1B2329">
+<link rel="icon" href="assets/icon.svg" type="image/svg+xml">
+<script src="assets/app.js" defer></script>
+<script src="assets/sync-config.js" defer></script>
+<script src="assets/sync.js" defer></script>
+<script src="assets/study.js" defer></script>
+</head>
+<body data-page="00">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="topbar">
+  <button class="tbtn menu-btn" type="button" data-open-nav aria-controls="sidebar" aria-expanded="false" aria-label="Inhaltsverzeichnis öffnen"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+  <a class="brand" href="index.html"><b><i class="b-long">N. vagus und Stimme</i><i class="b-short">Vagus-Kurs</i></b><span>Lernkurs</span></a>
+  <a class="tbtn prog" href="index.html#fortschritt" title="Erledigte Abschnitte"><i></i><span data-prog>0 / 9</span></a>
+  <button class="tbtn" type="button" data-open-search aria-keyshortcuts="/" aria-label="Kurs durchsuchen"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg><span class="lbl">Suchen</span></button>
+  <button class="tbtn" type="button" data-open-legend aria-label="Farb- und Formcode"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="6" height="6" rx="1"/><rect x="4" y="14" width="6" height="6" rx="3"/><path d="M14 7h6M14 17h6"/></svg><span class="lbl">Legende</span></button>
+  <button class="tbtn acc-btn" type="button" data-open-account hidden><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8.5" r="3.5"/><path d="M5 20c.8-3.6 3.6-5.5 7-5.5s6.2 1.9 7 5.5"/></svg><span class="lbl">Anmelden</span><i class="acc-dot" data-acc-dot aria-hidden="true"></i></button>
+  <button class="tbtn" type="button" data-theme-toggle aria-label="Farbschema: System"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="M12 4a8 8 0 0 0 0 16z" fill="currentColor"/></svg><span class="lbl" data-theme-label>System</span></button>
+  <span class="readbar" aria-hidden="true"></span>
+</header>
+<div class="shell">
+<nav class="sidebar" id="sidebar" aria-label="Kursinhalt">
+  <div class="side-head"><span class="eyebrow">Kernpfad · 9 Einheiten</span><button class="tbtn side-close" type="button" data-close-nav aria-label="Schließen"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+  <ol class="ctoc">
+    <li><a class="ctoc-unit" href="01-gelenke-muskeln.html" data-unit="01"><span class="ctoc-n">1</span><span class="ctoc-t">Gelenke und innere Kehlkopfmuskeln</span><span class="mark"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 6.3l2.3 2.3 4.7-5"/></svg></span></a></li>
+    <li><a class="ctoc-unit" href="02-n-laryngeus-superior.html" data-unit="02"><span class="ctoc-n">2</span><span class="ctoc-t">N. laryngeus superior</span><span class="mark"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 6.3l2.3 2.3 4.7-5"/></svg></span></a></li>
+    <li><a class="ctoc-unit" href="03-n-laryngeus-recurrens.html" data-unit="03"><span class="ctoc-n">3</span><span class="ctoc-t">N. laryngeus recurrens</span><span class="mark"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 6.3l2.3 2.3 4.7-5"/></svg></span></a></li>
+    <li><a class="ctoc-unit" href="04-gesamtkarte.html" data-unit="04"><span class="ctoc-n">4</span><span class="ctoc-t">Die Gesamtkarte</span><span class="mark"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 6.3l2.3 2.3 4.7-5"/></svg></span></a></li>
+    <li><a class="ctoc-unit" href="05-stimmentstehung.html" data-unit="05"><span class="ctoc-n">5</span><span class="ctoc-t">Stimmentstehung</span><span class="mark"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 6.3l2.3 2.3 4.7-5"/></svg></span></a></li>
+    <li><a class="ctoc-unit" href="06-schutzfunktionen.html" data-unit="06"><span class="ctoc-n">6</span><span class="ctoc-t">Schutzfunktionen</span><span class="mark"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 6.3l2.3 2.3 4.7-5"/></svg></span></a></li>
+    <li><a class="ctoc-unit" href="07-laehmungen.html" data-unit="07"><span class="ctoc-n">7</span><span class="ctoc-t">Kehlkopflähmungen im Überblick</span><span class="mark"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 6.3l2.3 2.3 4.7-5"/></svg></span></a></li>
+    <li><a class="ctoc-unit" href="08-abgrenzung.html" data-unit="08"><span class="ctoc-n">8</span><span class="ctoc-t">Abgrenzung und Warnzeichen</span><span class="mark"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 6.3l2.3 2.3 4.7-5"/></svg></span></a></li>
+    <li><a class="ctoc-unit" href="09-10-wiederholung-pruefung.html" data-unit="09"><span class="ctoc-n">9–10</span><span class="ctoc-t">Wiederholung und Probeprüfung</span><span class="mark"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 6.3l2.3 2.3 4.7-5"/></svg></span></a></li>
+  </ol>
+  <div class="side-sep eyebrow">Üben und Nachschlagen</div>
+  <a class="ctoc-ref" href="index.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 11l8-7 8 7M6 9.5V20h12V9.5"/></svg>Kursübersicht</a>
+  <a class="ctoc-ref" href="lernkarten.html"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="6" width="14" height="13" rx="2"/><path d="M7 3h12a2 2 0 0 1 2 2v11"/></svg>Lernkarten<span class="due-pill" data-due hidden></span></a>
+  <a class="ctoc-ref" href="merkheft.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h10a1 1 0 0 1 1 1v17l-6-4-6 4V4a1 1 0 0 1 1-1z"/></svg>Merkheft<span class="due-pill soft" data-notes-n hidden></span></a>
+  <a class="ctoc-ref" href="begriffe.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h9M4 10h16M4 15h9M4 20h16"/></svg>Fachbegriffe</a>
+  <button class="ctoc-ref" type="button" data-open-search><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg>Im Kurs suchen</button>
+  <button class="ctoc-ref" type="button" data-open-legend><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="6" height="6" rx="1"/><rect x="4" y="14" width="6" height="6" rx="3"/><path d="M14 7h6M14 17h6"/></svg>Farb- und Formcode</button>
+  <a class="ctoc-ref" href="00-styleguide.html" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h10a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3z"/><path d="M5 17a3 3 0 0 1 3-3h10"/></svg>Visueller Styleguide (EN)</a><ol class="ctoc-sub"><li><a href="#h-colour-legend">Colour legend</a></li><li><a href="#h-shape-legend">Shape legend</a></li><li><a href="#h-nine-rules">Nine rules</a></li><li><a href="#h-example-nerve-muscle-action-map">Example: nerve → muscle → action map</a></li><li><a href="#h-evidence-behind-the-rules">Evidence behind the rules</a></li></ol>
+</nav>
+<div class="scrim" data-close-nav></div>
+<main id="main" lang="en">
+<div class="wrap">
+<header>
+  <span class="eyebrow">Course on the vagus nerve and the voice · Visual rules</span>
+  <h1>Vagus Course Style Guide</h1>
+  <p>Every diagram in the course follows these rules, so she learns the visual code once and then reads each new figure without decoding it. Each rule comes with the reason it helps learning.</p>
+</header>
+
+<section>
+  <h2 id="h-colour-legend">Colour legend</h2>
+  <p class="why">One meaning per colour, everywhere. At most 5–6 colours in one diagram. Colour is never the only signal: each colour has a written label and, where useful, a pattern or line style, because about 1 in 12 men has a red-green colour-vision deficiency and arteries, muscle and lesion would otherwise blur together.</p>
+  <div class="scroll"><table>
+    <thead><tr><th>Swatch</th><th>Meaning</th><th>Backup signal (never colour alone)</th></tr></thead>
+    <tbody>
+      <tr><td><div class="sw" style="background:var(--c-nerve)"></div></td><td><strong>Nerve</strong> (general), trunk of the N. vagus</td><td>Label starts with <code>N.</code> or <code>R.</code>; drawn as a solid line with arrowheads</td></tr>
+      <tr><td><div class="sw" style="background:var(--c-sln)"></div></td><td><strong>N. laryngeus superior</strong> (SLN) and its two branches</td><td>Tag <code>SLN</code> on every structure it supplies</td></tr>
+      <tr><td><div class="sw" style="background:var(--c-rln)"></div></td><td><strong>N. laryngeus recurrens</strong> (RLN, inferior laryngeal nerve)</td><td>Tag <code>RLN</code> on every structure it supplies</td></tr>
+      <tr><td><div class="sw" style="background:var(--c-artery)"></div></td><td><strong>Artery</strong> (only as landmarks: aortic arch, subclavian, thyroid arteries)</td><td>Label starts with <code>A.</code>; solid fill</td></tr>
+      <tr><td><div class="sw" style="background:var(--c-vein)"></div></td><td><strong>Vein</strong></td><td>Label starts with <code>V.</code>; solid fill</td></tr>
+      <tr><td><svg width="46" height="28" aria-hidden="true"><rect x=".5" y=".5" width="45" height="27" rx="3" fill="var(--c-muscle)"/><path d="M6 24 L20 4 M16 24 L30 4 M26 24 L40 4" stroke="#fff" stroke-opacity=".45"/></svg></td><td><strong>Muscle</strong> (red-brown)</td><td>Label starts with <code>M.</code>; thin fibre lines in the fibre direction</td></tr>
+      <tr><td><div class="sw" style="background:var(--c-cart);border-color:var(--c-cart-line);border-width:2px"></div></td><td><strong>Cartilage</strong> (pale blue)</td><td>Firm blue-grey outline; label <code>Cartilago</code> / German name</td></tr>
+      <tr><td><svg width="46" height="28" aria-hidden="true"><rect x=".5" y=".5" width="45" height="27" rx="3" fill="var(--c-bone)"/><g fill="#8A7650"><circle cx="9" cy="8" r="1.3"/><circle cx="22" cy="14" r="1.3"/><circle cx="35" cy="7" r="1.3"/><circle cx="14" cy="21" r="1.3"/><circle cx="31" cy="21" r="1.3"/></g></svg></td><td><strong>Bone</strong> (beige): hyoid, skull base</td><td>Stippled texture; label <code>Os</code> / German name</td></tr>
+      <tr><td><svg width="46" height="28" aria-hidden="true"><defs><pattern id="hl" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="6" height="6" fill="var(--c-lesion)" fill-opacity=".18"/><line x1="0" y1="0" x2="0" y2="6" stroke="var(--c-lesion)" stroke-width="2"/></pattern></defs><rect x=".5" y=".5" width="45" height="27" rx="3" fill="url(#hl)" stroke="var(--c-lesion)"/><path d="M17 8 L29 20 M29 8 L17 20" stroke="var(--c-lesion)" stroke-width="3"/></svg></td><td><strong>Pathology / lesion site</strong> (magenta)</td><td>Diagonal hatching plus a ✕ marker and the word “Läsion”</td></tr>
+      <tr><td><div class="sw" style="background:var(--muted-fill);border-color:var(--muted)"></div></td><td><strong>Context</strong>: anything not being taught right now</td><td>Grey and lighter; no tag</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section>
+  <h2 id="h-shape-legend">Shape legend</h2>
+  <p class="why">Fixed shapes for schemas and flowcharts. The diamond-for-decision convention comes from standard flowchart notation (ISO 5807), so she may already know it.</p>
+  <div class="scroll"><table>
+    <thead><tr><th>Shape</th><th>Means</th><th>Example</th></tr></thead>
+    <tbody>
+      <tr><td><svg width="90" height="36" aria-hidden="true"><rect x="2" y="4" width="86" height="28" fill="var(--muted-fill)" stroke="var(--ink-2)" stroke-width="1.5"/></svg></td><td>Structure (nerve, muscle, cartilage)</td><td>M. cricoarytaenoideus posterior</td></tr>
+      <tr><td><svg width="90" height="36" aria-hidden="true"><rect x="2" y="4" width="86" height="28" rx="14" fill="var(--action-fill)" stroke="var(--ink-2)" stroke-width="1.5"/></svg></td><td>Function or action</td><td>Opens the glottis</td></tr>
+      <tr><td><svg width="90" height="44" aria-hidden="true"><path d="M45 3 L86 22 L45 41 L4 22 Z" fill="var(--action-fill)" stroke="var(--ink-2)" stroke-width="1.5"/></svg></td><td>Decision or diagnostic question</td><td>Fold mobile?</td></tr>
+      <tr><td><svg width="90" height="36" aria-hidden="true"><rect x="2" y="4" width="86" height="28" rx="3" fill="var(--flag-fill)" stroke="var(--c-artery)" stroke-width="3"/><text x="10" y="23" font-size="13" font-weight="700" fill="var(--c-artery)">!</text></svg></td><td>Red flag: refer to ENT/phoniatrics. Always carries a “!”</td><td>Stridor, hoarseness &gt; 3–4 weeks</td></tr>
+      <tr><td><svg width="90" height="20" aria-hidden="true"><defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="var(--ink-2)"/></marker></defs><line x1="4" y1="10" x2="84" y2="10" class="ink-line" marker-end="url(#ah)"/></svg></td><td>Nerve path or direct causation. The arrowhead shows the direction of the signal: towards a muscle = motor, towards the nerve = sensory</td><td>RLN → PCA</td></tr>
+      <tr><td><svg width="90" height="20" aria-hidden="true"><line x1="4" y1="10" x2="84" y2="10" class="ink-line" stroke-dasharray="6 5" marker-end="url(#ah)"/></svg></td><td>Indirect, minor or debated link</td><td>R. internus → interarytenoid twigs</td></tr>
+      <tr><td><svg width="90" height="36" aria-hidden="true"><rect x="4" y="5" width="82" height="26" fill="var(--muted-fill)" class="focus"/></svg></td><td>Focus: the one element this figure teaches</td><td>Bold dark outline</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section>
+  <h2 id="h-nine-rules">Nine rules</h2>
+  <ol class="rules">
+    <li><div><p><strong>Use the colour code above, identically in every figure.</strong></p><p class="why">A stable colour-to-meaning mapping lets colour act as a signal rather than something to decode, which cuts extraneous cognitive load. Following atlas convention (yellow nerves, red arteries) means Sobotta and Prometheus plates look familiar.</p></div></li>
+    <li><div><p><strong>Use the shape code above for every schema and flowchart.</strong></p><p class="why">When structure, function and decision always look different, she sees the logic of a flowchart before reading a word. Learned once, it works for the whole course.</p></div></li>
+    <li><div><p><strong>Label on the structure, keep one orientation, flow one way, leave space.</strong> Labels sit on or right next to what they name, never in a separate key. Anatomical views are always anterior (patient facing you, so the patient's right is on your left) or superior for the glottis, with anterior at the top and <code>R</code> / <code>L</code> printed in the patient's frame. Flow runs left to right or top to bottom.</p><p class="why">Spatial contiguity is one of Mayer's most robust principles: separated labels force the eyes back and forth and split attention. Endoscopic images are the exception, because their orientation differs between examination methods; they always carry R/L markers taken from the source.</p></div></li>
+    <li><div><p><strong>Signal one thing.</strong> The teaching point gets the bold outline or full saturation; everything else is muted grey.</p><p class="why">Signalling guides attention to the essential element. Several highlights in one figure cancel each other out.</p></div></li>
+    <li><div><p><strong>No decoration.</strong> No clip art, stock photos, mascots or background images. Every visual must teach something.</p><p class="why">Mayer's coherence principle and the seductive-details research (Rey 2012) show that interesting but irrelevant images reduce learning.</p></div></li>
+    <li><div><p><strong>Build complex figures in 2–4 stages</strong>, for example cartilages → muscles → nerves → lesion.</p><p class="why">Segmenting and pre-training keep the number of new elements per step within working memory, which matters in anatomy, where every element interacts with the others.</p></div></li>
+    <li><div><p><strong>Reuse the same figure for the same concept.</strong> The master map below returns in every lesion section, with only the lesion added.</p><p class="why">Seeing the same layout again strengthens one mental model and makes the figure itself a retrieval cue in the exam.</p></div></li>
+    <li><div><p><strong>Give key figures a hand-drawing prompt</strong>: a simplified version she redraws from memory, step by step.</p><p class="why">Drawing from memory combines retrieval practice with generative learning (Fiorella and Mayer 2016), which works better than rereading the finished picture.</p></div></li>
+    <li><div><p><strong>Code first, real images where realism matters.</strong> Schemas are Mermaid or SVG so they can be edited and kept consistent. Laryngoscopy, stroboscopy and 3D anatomy are not redrawn; each gets a look-up card saying exactly what to find and where.</p><p class="why">Simple schematic drawings teach structure well, but recognising a paralysed fold needs real images and video.</p></div></li>
+  </ol>
+</section>
+
+<section>
+  <h2 id="h-example-nerve-muscle-action-map">Example: nerve → muscle → action map</h2>
+  <p class="why">The core figure of the course, drawn by the rules above. Step through the build-up; stage 3 is the complete reference map.</p>
+  <div class="plate">
+    <div class="stages" role="group" aria-label="Build-up stage">
+      <button type="button" id="st1" data-s="1" aria-pressed="false">1 · Nerves</button>
+      <button type="button" id="st2" data-s="2" aria-pressed="false">2 · + Muscles</button>
+      <button type="button" id="st3" data-s="3" aria-pressed="true">3 · + Actions (full map)</button>
+      <button type="button" id="st4" data-s="4" aria-pressed="false">4 · RLN lesion</button>
+    </div>
+    <div class="scroll">
+    <svg id="map" data-stage="3" viewBox="0 0 960 600" width="960" role="img" aria-labelledby="mapT">
+      <title id="mapT">Vagus nerve branches, the laryngeal muscles they supply, and each muscle's action on the vocal folds</title>
+      <defs>
+        <marker id="aS" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="#13827E"/></marker>
+        <marker id="aR" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="#6A4C9C"/></marker>
+        <marker id="aI" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="var(--ink-2)"/></marker>
+        <pattern id="hatch" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="7" height="7" fill="#C2185B" fill-opacity=".14"/><line x1="0" y1="0" x2="0" y2="7" stroke="#C2185B" stroke-width="2"/></pattern>
+      </defs>
+
+      <text x="20" y="30" class="t-head">NERVE</text>
+      <text x="200" y="30" class="t-head">BRANCH</text>
+      <text x="430" y="30" class="t-head">MUSCLE · SENSORY FIELD</text>
+      <text x="720" y="30" class="t-head">ACTION ON THE VOCAL FOLDS</text>
+
+      <!-- stage 1: nerves -->
+      <g class="s1">
+        <rect x="20" y="250" width="150" height="62" fill="#E3B505"/>
+        <text x="32" y="276" class="t-main t-on-yellow">N. vagus</text>
+        <text x="32" y="296" class="t-sub t-on-yellow" style="fill:#3d3200">(CN X)</text>
+
+        <g class="sln-dep">
+          <path d="M170 268 H185 V86 H198" fill="none" stroke="#13827E" stroke-width="3" marker-end="url(#aS)"/>
+          <path d="M185 176 H198" fill="none" stroke="#13827E" stroke-width="3"/>
+          <rect x="200" y="60" width="180" height="52" fill="#13827E"/>
+          <text x="212" y="82" class="t-main t-on-dark">R. externus</text>
+          <text x="212" y="101" class="t-sub t-on-dark" style="fill:#d9f1ef">SLN · motor</text>
+          <rect x="200" y="150" width="180" height="52" fill="#13827E"/>
+          <text x="212" y="172" class="t-main t-on-dark">R. internus</text>
+          <text x="212" y="191" class="t-sub t-on-dark" style="fill:#d9f1ef">SLN · sensory</text>
+        </g>
+
+        <path d="M170 294 H185 V376 H198" fill="none" stroke="#6A4C9C" stroke-width="3" marker-end="url(#aR)"/>
+        <rect x="200" y="350" width="180" height="52" fill="#6A4C9C"/>
+        <text x="212" y="372" class="t-main t-on-dark">N. laryngeus recurrens</text>
+        <text x="212" y="391" class="t-sub t-on-dark" style="fill:#e8def6">RLN · motor + sensory</text>
+      </g>
+
+      <!-- stage 2: muscles and sensory fields -->
+      <g class="s2">
+        <g class="sln-dep">
+          <path d="M380 86 H428" fill="none" stroke="#13827E" stroke-width="3" marker-end="url(#aS)"/>
+          <rect x="430" y="60" width="240" height="52" class="muscle"/>
+          <rect x="436" y="66" width="36" height="16" fill="#13827E"/><text x="441" y="78" font-size="10.5" font-weight="600" class="t-on-dark">SLN</text>
+          <text x="480" y="82" class="t-main">M. cricothyroideus</text>
+          <text x="480" y="101" class="t-sub">„Antikus“</text>
+
+          <path d="M430 176 H382" fill="none" stroke="#13827E" stroke-width="3" marker-end="url(#aS)"/>
+          <rect x="430" y="150" width="240" height="52" rx="26" class="sense"/>
+          <text x="452" y="172" class="t-main">Sensation above the folds</text>
+          <text x="452" y="191" class="t-sub">supraglottis · cough/closure reflex</text>
+        </g>
+
+        <g class="rln-dep" id="rlnMus">
+          <path d="M380 376 H405 V266 H428" fill="none" stroke="#6A4C9C" stroke-width="3" marker-end="url(#aR)"/>
+          <path d="M405 336 H428" fill="none" stroke="#6A4C9C" stroke-width="3" marker-end="url(#aR)"/>
+          <path d="M405 376 V406 H428" fill="none" stroke="#6A4C9C" stroke-width="3" marker-end="url(#aR)"/>
+          <path d="M405 406 V476 H428" fill="none" stroke="#6A4C9C" stroke-width="3" marker-end="url(#aR)"/>
+          <path d="M430 546 H360 V406" fill="none" stroke="#6A4C9C" stroke-width="3" marker-end="url(#aR)"/>
+
+          <rect x="430" y="240" width="240" height="52" class="muscle focus"/>
+          <rect x="436" y="246" width="36" height="16" fill="#6A4C9C"/><text x="440" y="258" font-size="10.5" font-weight="600" class="t-on-dark">RLN</text>
+          <text x="480" y="262" class="t-main">M. cricoarytaenoideus post.</text>
+          <text x="480" y="281" class="t-sub">„Postikus“ (PCA)</text>
+
+          <rect x="430" y="310" width="240" height="52" class="muscle"/>
+          <rect x="436" y="316" width="36" height="16" fill="#6A4C9C"/><text x="440" y="328" font-size="10.5" font-weight="600" class="t-on-dark">RLN</text>
+          <text x="480" y="332" class="t-main">M. cricoarytaenoideus lat.</text>
+          <text x="480" y="351" class="t-sub">„Lateralis“ (LCA)</text>
+
+          <rect x="430" y="380" width="240" height="52" class="muscle"/>
+          <rect x="436" y="386" width="36" height="16" fill="#6A4C9C"/><text x="440" y="398" font-size="10.5" font-weight="600" class="t-on-dark">RLN</text>
+          <text x="480" y="402" class="t-main">M. arytaenoideus transv./obl.*</text>
+          <text x="480" y="421" class="t-sub">„Transversus“ (IA)</text>
+
+          <rect x="430" y="450" width="240" height="52" class="muscle"/>
+          <rect x="436" y="456" width="36" height="16" fill="#6A4C9C"/><text x="440" y="468" font-size="10.5" font-weight="600" class="t-on-dark">RLN</text>
+          <text x="480" y="472" class="t-main">M. thyroarytaenoideus</text>
+          <text x="480" y="491" class="t-sub">„Vokalis/Internus“ (TA)</text>
+
+          <rect x="430" y="520" width="240" height="52" rx="26" class="sense r"/>
+          <text x="452" y="542" class="t-main">Sensation below the folds</text>
+          <text x="452" y="561" class="t-sub">subglottis, trachea</text>
+
+          <g class="lost">
+            <rect x="430" y="240" width="240" height="262" fill="url(#hatch)"/>
+            <rect x="430" y="520" width="240" height="52" rx="26" fill="url(#hatch)"/>
+          </g>
+        </g>
+      </g>
+
+      <!-- stage 3: actions -->
+      <g class="s3">
+        <g class="sln-dep">
+          <path d="M670 86 H718" class="ink-line" marker-end="url(#aI)"/>
+          <rect x="720" y="60" width="220" height="52" rx="26" class="action"/>
+          <text x="740" y="82" class="t-main">Tenses + lengthens fold</text>
+          <text x="740" y="101" class="t-sub">pitch ↑ · Spannung</text>
+        </g>
+        <g class="rln-dep">
+          <path d="M670 266 H718" class="ink-line" marker-end="url(#aI)"/>
+          <rect x="720" y="240" width="220" height="52" rx="26" class="action focus"/>
+          <text x="740" y="262" class="t-main">Opens the glottis</text>
+          <text x="740" y="281" class="t-sub">the only opener · Abduktion</text>
+
+          <path d="M670 336 H718" class="ink-line" marker-end="url(#aI)"/>
+          <rect x="720" y="310" width="220" height="52" rx="26" class="action"/>
+          <text x="740" y="332" class="t-main">Closes the front glottis</text>
+          <text x="740" y="351" class="t-sub">Adduktion</text>
+
+          <path d="M670 406 H718" class="ink-line" marker-end="url(#aI)"/>
+          <rect x="720" y="380" width="220" height="52" rx="26" class="action"/>
+          <text x="740" y="402" class="t-main">Closes the back glottis</text>
+          <text x="740" y="421" class="t-sub">brings arytenoids together</text>
+
+          <path d="M670 476 H718" class="ink-line" marker-end="url(#aI)"/>
+          <rect x="720" y="450" width="220" height="52" rx="26" class="action"/>
+          <text x="740" y="472" class="t-main">Shortens + thickens fold</text>
+          <text x="740" y="491" class="t-sub">loudness, chest register</text>
+
+          <g class="lost">
+            <rect x="720" y="240" width="220" height="52" rx="26" fill="url(#hatch)"/>
+            <rect x="720" y="310" width="220" height="52" rx="26" fill="url(#hatch)"/>
+            <rect x="720" y="380" width="220" height="52" rx="26" fill="url(#hatch)"/>
+            <rect x="720" y="450" width="220" height="52" rx="26" fill="url(#hatch)"/>
+          </g>
+        </g>
+        <text x="720" y="545" class="t-sub">* plus possible twigs from R. internus</text>
+        <text x="720" y="562" class="t-sub">(debated; shown dashed in later figures)</text>
+      </g>
+
+      <!-- stage 4: lesion -->
+      <g class="s4">
+        <circle cx="185" cy="335" r="15" fill="url(#hatch)" stroke="#C2185B" stroke-width="2.5"/>
+        <path d="M177 327 L193 343 M193 327 L177 343" stroke="#C2185B" stroke-width="3.5"/>
+        <text x="40" y="350" font-size="13" font-weight="700" style="fill:#C2185B">Läsion ✕</text>
+        <text x="40" y="367" class="t-sub">e.g. thyroid surgery</text>
+      </g>
+    </svg>
+    </div>
+    <p class="caption" id="cap" aria-live="polite"></p>
+  </div>
+
+  <div class="grid2">
+    <div class="card">
+      <span class="eyebrow">Hand-drawing prompt · redraw from memory</span>
+      <ol class="draw">
+        <li>Draw a yellow box “N. vagus” on the left.</li>
+        <li>Split it: two teal boxes on top (R. externus, R. internus = SLN), one violet box below (RLN).</li>
+        <li>From R. externus, one arrow to “CT”. From R. internus, an arrow pointing <em>back</em> from “sensation above”.</li>
+        <li>From RLN, four arrows: PCA, LCA, IA, TA. Add “sensation below” pointing back.</li>
+        <li>Write one action per muscle. Box the PCA and write “only opener”.</li>
+        <li>Check against the map. Anything missing becomes a flashcard.</li>
+      </ol>
+    </div>
+    <div class="card">
+      <span class="eyebrow">Look-up card · when a real image is needed</span>
+      <dl>
+        <dt>Find</dt><dd>Laryngoscopy video of a left recurrent nerve palsy (Rekurrensparese links), during breathing and phonation</dd>
+        <dt>Where</dt><dd>Laryngopedia, entry on vocal fold paralysis (free); Wendler/Seidner/Eysholdt textbook DVD (library)</dd>
+        <dt>Look for</dt><dd>Left fold does not move out on breathing in; gap on phonation; left vocal process may sit lower</dd>
+        <dt>Orientation</dt><dd>Use the R/L marks in the source; endoscopic views are not always shown the same way</dd>
+        <dt>Links to</dt><dd>Stage 4 of the map above</dd>
+      </dl>
+    </div>
+  </div>
+
+  <div class="card">
+    <span class="eyebrow">Mermaid template for flowcharts</span>
+    <pre>flowchart LR
+  classDef nerve fill:#E3B505,stroke:#1B2329,color:#1B2329
+  classDef sln fill:#13827E,stroke:#13827E,color:#fff
+  classDef rln fill:#6A4C9C,stroke:#6A4C9C,color:#fff
+  classDef muscle fill:#F3E3DA,stroke:#9C4A2F,color:#1B2329
+  classDef action fill:#fff,stroke:#4A5862,color:#1B2329
+  classDef flag fill:#FDECEC,stroke:#C62828,stroke-width:3px,color:#1B2329
+  classDef lesion fill:#F8D8E5,stroke:#C2185B,stroke-width:3px,color:#1B2329
+  X["N. vagus (CN X)"]:::nerve --> R["RLN"]:::rln
+  R --> P["M. cricoarytaenoideus post. (PCA)"]:::muscle
+  P --> A("Opens the glottis"):::action
+  Q{"Fold mobile?"} -.-> F["! Stridor: refer to ENT"]:::flag</pre>
+  </div>
+</section>
+
+<section>
+  <h2 id="h-evidence-behind-the-rules">Evidence behind the rules</h2>
+  <div class="refs">
+    <p>Mayer RE (ed.). <em>The Cambridge Handbook of Multimedia Learning</em>, 3rd ed. Cambridge University Press, 2022 (coherence, signalling, spatial contiguity, segmenting, pre-training).</p>
+    <p>Schroeder NL, Cenkci AT. Spatial contiguity and spatial split-attention effects in multimedia learning environments: a meta-analysis. <em>Educ Psychol Rev</em> 2018;30:679–701.</p>
+    <p>Paivio A. <em>Mental Representations: A Dual Coding Approach</em>. Oxford University Press, 1986.</p>
+    <p>Sweller J, van Merriënboer JJG, Paas F. Cognitive architecture and instructional design: 20 years later. <em>Educ Psychol Rev</em> 2019;31:261–292.</p>
+    <p>Rey GD. A review of research and a meta-analysis of the seductive detail effect. <em>Educ Res Rev</em> 2012;7:216–237.</p>
+    <p>Fiorella L, Mayer RE. Eight ways to promote generative learning. <em>Educ Psychol Rev</em> 2016;28:717–741.</p>
+    <p>W3C. WCAG 2.2, Success Criterion 1.4.1 “Use of Color”. Okabe M, Ito K. Color Universal Design (CUD), 2008.</p>
+    <p>ISO 5807:1985. Documentation symbols and conventions for flowcharts.</p>
+  </div>
+</section>
+</div>
+
+<script>
+(function(){
+  var map=document.getElementById('map'), cap=document.getElementById('cap');
+  var text={
+    '1':'Stage 1. The vagus gives two nerves to the larynx: the superior laryngeal nerve (teal, two branches) and the recurrent laryngeal nerve (violet).',
+    '2':'Stage 2. The SLN external branch supplies only the cricothyroid. The RLN supplies every other muscle inside the larynx. Arrows pointing back to a nerve mean sensation travelling to the brain.',
+    '3':'Stage 3, full map. The bold outline marks the teaching point: the posterior cricoarytenoid is the only muscle that opens the glottis.',
+    '4':'Stage 4. A lesion of the recurrent nerve (magenta ✕) knocks out everything hatched: opening, closing and sensation below the folds. The cricothyroid still works, so pitch control is partly kept.'
+  };
+  function set(s){
+    map.setAttribute('data-stage',s);
+    document.querySelectorAll('.stages button').forEach(function(b){b.setAttribute('aria-pressed',b.dataset.s===s?'true':'false');});
+    cap.textContent=text[s];
+  }
+  document.querySelectorAll('.stages button').forEach(function(b){b.addEventListener('click',function(){set(b.dataset.s);});});
+  set('3');
+})();
+</script>
+<nav class="pager" aria-label="Abschnitte" lang="de" style="max-width:980px"><div class="nav2"><a class="prev" href="index.html"><span class="eyebrow">← Kursübersicht</span><b>Alle Abschnitte</b></a></div></nav>
+</main>
+</div>
+<dialog class="legend" id="legend" aria-labelledby="lg-t">
+  <div class="lg-head"><h2 id="lg-t">Farb- und Formcode</h2><button class="tbtn" type="button" data-close-legend aria-label="Schließen"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+  <div class="lg-body">
+    <p>In jeder Abbildung gleich. Farbe ist nie das einzige Signal: Achte auch auf Schild, Beschriftung und Muster.</p>
+    <table><tbody>
+      <tr><td><span class="sw" style="background:var(--c-nerve)"></span></td><td><b>Nerv</b> allgemein, N. vagus</td><td>Beschriftung <code>N.</code> / <code>R.</code>, Linie mit Pfeil</td></tr>
+      <tr><td><span class="sw" style="background:var(--c-sln)"></span></td><td><b>N. laryngeus superior</b></td><td>Schild <code>SLN</code></td></tr>
+      <tr><td><span class="sw" style="background:var(--c-rln)"></span></td><td><b>N. laryngeus recurrens</b></td><td>Schild <code>RLN</code></td></tr>
+      <tr><td><span class="sw" style="background:var(--c-artery)"></span></td><td><b>Arterie</b> (nur als Landmarke)</td><td>Beschriftung <code>A.</code></td></tr>
+      <tr><td><svg width="46" height="26" aria-hidden="true"><rect x=".5" y=".5" width="45" height="25" rx="3" fill="var(--c-muscle)"/><path d="M6 23 L20 3 M16 23 L30 3 M26 23 L40 3" stroke="#fff" stroke-opacity=".45"/></svg></td><td><b>Muskel</b></td><td>Beschriftung <code>M.</code>, Faserlinien</td></tr>
+      <tr><td><span class="sw" style="background:var(--c-cart);border:2px solid var(--c-cart-line)"></span></td><td><b>Knorpel</b></td><td>fester blaugrauer Rand</td></tr>
+      <tr><td><svg width="46" height="26" aria-hidden="true"><rect x=".5" y=".5" width="45" height="25" rx="3" fill="var(--c-bone)"/><g fill="#8A7650"><circle cx="9" cy="8" r="1.3"/><circle cx="22" cy="13" r="1.3"/><circle cx="35" cy="7" r="1.3"/><circle cx="14" cy="20" r="1.3"/><circle cx="31" cy="20" r="1.3"/></g></svg></td><td><b>Knochen</b> (Zungenbein, Schädelbasis)</td><td>getüpfelt</td></tr>
+      <tr><td><svg width="46" height="26" aria-hidden="true"><defs><pattern id="lg-hl" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="6" height="6" fill="var(--c-lesion)" fill-opacity=".18"/><line x1="0" y1="0" x2="0" y2="6" stroke="var(--c-lesion)" stroke-width="2"/></pattern></defs><rect x=".5" y=".5" width="45" height="25" rx="3" fill="url(#lg-hl)" stroke="var(--c-lesion)"/><path d="M17 7 L29 19 M29 7 L17 19" stroke="var(--c-lesion)" stroke-width="3"/></svg></td><td><b>Läsion</b></td><td>Schraffur, ✕ und „Läsion“</td></tr>
+      <tr><td><span class="sw" style="background:var(--muted-fill);border-color:var(--muted)"></span></td><td><b>Kontext</b>, gerade nicht Thema</td><td>grau, kein Schild</td></tr>
+    </tbody></table>
+    <table><tbody>
+      <tr><td><svg width="46" height="26" aria-hidden="true"><rect x="1" y="3" width="44" height="20" fill="var(--muted-fill)" stroke="var(--ink-2)" stroke-width="1.5"/></svg></td><td><b>Rechteck</b></td><td>Struktur: Nerv, Muskel, Knorpel</td></tr>
+      <tr><td><svg width="46" height="26" aria-hidden="true"><rect x="1" y="3" width="44" height="20" rx="10" fill="var(--action-fill)" stroke="var(--ink-2)" stroke-width="1.5"/></svg></td><td><b>Abgerundet</b></td><td>Funktion oder Wirkung</td></tr>
+      <tr><td><svg width="46" height="26" aria-hidden="true"><path d="M23 2 L44 13 L23 24 L2 13 Z" fill="var(--action-fill)" stroke="var(--ink-2)" stroke-width="1.5"/></svg></td><td><b>Raute</b></td><td>Entscheidung, diagnostische Frage</td></tr>
+      <tr><td><svg width="46" height="26" aria-hidden="true"><rect x="1" y="3" width="44" height="20" rx="3" fill="var(--flag-fill)" stroke="var(--c-artery)" stroke-width="2.5"/><text x="23" y="18" text-anchor="middle" font-weight="700" font-size="14" fill="var(--c-artery)">!</text></svg></td><td><b>Warnzeichen</b></td><td>an HNO / Phoniatrie überweisen</td></tr>
+      <tr><td><svg width="46" height="26" aria-hidden="true"><path d="M3 13 H38" stroke="var(--ink-2)" stroke-width="2"/><path d="M36 8 L44 13 L36 18 Z" fill="var(--ink-2)"/></svg></td><td><b>Pfeil</b></td><td>Nervenverlauf, direkte Ursache. Zum Muskel = motorisch, zum Nerv = sensibel</td></tr>
+      <tr><td><svg width="46" height="26" aria-hidden="true"><path d="M3 13 H38" stroke="var(--ink-2)" stroke-width="2" stroke-dasharray="5 4"/><path d="M36 8 L44 13 L36 18 Z" fill="var(--ink-2)"/></svg></td><td><b>Gestrichelt</b></td><td>indirekt, gering oder umstritten</td></tr>
+      <tr><td><svg width="46" height="26" aria-hidden="true"><rect x="2" y="3" width="42" height="20" fill="var(--plate)" stroke="var(--ink)" stroke-width="3.5"/></svg></td><td><b>Dicker Rand</b></td><td>Fokus: das, was die Abbildung lehrt</td></tr>
+    </tbody></table>
+    <p>Ansichten: anatomisch von vorn (rechts der Patientin = links im Bild) oder von oben auf die Glottis, vorne oben. Endoskopische Bilder tragen die R/L-Marken der Quelle. <a href="00-styleguide.html">Ausführlich im Styleguide</a>.</p>
+  </div>
+</dialog>
+<dialog class="account" id="account" aria-labelledby="acc-t">
+  <div class="lg-head"><h2 id="acc-t">Konto</h2><button class="tbtn" type="button" data-close-account aria-label="Schließen"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+  <div class="acc-body">
+    <p class="acc-status" data-acc-status aria-live="polite"></p>
+    <form data-acc-view="login" data-acc-form="login">
+      <p>Mit einem Konto werden Fortschritt, Lernkarten, Merkheft und Einstellungen gesichert und sind auf jedem Gerät gleich.</p>
+      <label>E-Mail<input name="email" type="email" autocomplete="username" required></label>
+      <label>Passwort<input name="password" type="password" autocomplete="current-password" required></label>
+      <p class="acc-err" role="alert"></p>
+      <button class="cta" type="submit">Anmelden</button>
+      <p class="acc-alt"><button type="button" class="linkbtn" data-acc-go="signup">Neues Konto anlegen</button> · <button type="button" class="linkbtn" data-acc-go="forgot">Passwort vergessen?</button></p>
+    </form>
+    <form data-acc-view="signup" data-acc-form="signup" hidden>
+      <p>Konto anlegen. Was du auf diesem Gerät schon gelernt hast, wird übernommen.</p>
+      <label>E-Mail<input name="email" type="email" autocomplete="username" required></label>
+      <label>Passwort <span class="note">(mindestens 8 Zeichen)</span><input name="password" type="password" autocomplete="new-password" minlength="8" required></label>
+      <label>Passwort wiederholen<input name="password2" type="password" autocomplete="new-password" minlength="8" required></label>
+      <p class="acc-err" role="alert"></p>
+      <button class="cta" type="submit">Konto anlegen</button>
+      <p class="acc-alt"><button type="button" class="linkbtn" data-acc-go="login">Ich habe schon ein Konto</button></p>
+    </form>
+    <form data-acc-view="forgot" data-acc-form="forgot" hidden>
+      <p>Du bekommst eine E-Mail mit einem Link, über den du ein neues Passwort festlegst.</p>
+      <label>E-Mail<input name="email" type="email" autocomplete="username" required></label>
+      <p class="acc-err" role="alert"></p>
+      <button class="cta" type="submit">Link senden</button>
+      <p class="acc-alt"><button type="button" class="linkbtn" data-acc-go="login">Zurück zur Anmeldung</button></p>
+    </form>
+    <form data-acc-view="newpw" data-acc-form="newpw" hidden>
+      <p>Neues Passwort festlegen.</p>
+      <label>Neues Passwort<input name="password" type="password" autocomplete="new-password" minlength="8" required></label>
+      <p class="acc-err" role="alert"></p>
+      <button class="cta" type="submit">Speichern</button>
+    </form>
+    <div data-acc-view="check" hidden>
+      <p><b>Fast geschafft.</b> Wir haben eine E-Mail an <b data-acc-sent></b> geschickt. Öffne den Link darin auf diesem oder einem anderen Gerät.</p>
+      <p class="note">Nichts angekommen? Schau im Spam-Ordner nach.</p>
+      <p class="acc-alt"><button type="button" class="linkbtn" data-acc-go="login">Zur Anmeldung</button></p>
+    </div>
+    <div data-acc-view="in" hidden>
+      <p>Angemeldet als <b data-acc-email></b></p>
+      <p class="note">Zuletzt synchronisiert: <span data-acc-last></span>. Änderungen werden automatisch gesichert, auch offline Gelerntes, sobald du wieder online bist.</p>
+      <div class="acc-row"><button class="cta" type="button" data-acc-sync>Jetzt synchronisieren</button><button class="cta ghost" type="button" data-acc-logout>Abmelden</button></div>
+      <p class="acc-alt"><button type="button" class="linkbtn" data-acc-wipe>Meine Daten auf dem Server löschen</button></p>
+    </div>
+  </div>
+</dialog>
+<dialog class="search" id="search" aria-label="Kurs durchsuchen">
+  <div class="s-head"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg><input type="search" id="search-q" placeholder="Begriff, Muskel, Symptom …" autocomplete="off" spellcheck="false" aria-controls="search-r"><button class="tbtn" type="button" data-close-search aria-label="Schließen"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+  <ol class="s-results" id="search-r" role="listbox" aria-label="Treffer"></ol>
+  <p class="s-foot"><kbd>↑</kbd><kbd>↓</kbd> auswählen · <kbd>Enter</kbd> öffnen · <kbd>/</kbd> Suche von überall</p>
+</dialog>
+<dialog class="zoom" id="zoom" aria-labelledby="zoom-t">
+  <div class="z-bar">
+    <b id="zoom-t">Abbildung</b>
+    <span class="z-tools">
+      <button class="tbtn" type="button" data-z="out" aria-label="Verkleinern"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14"/></svg></button>
+      <span class="z-pct" aria-live="polite">100 %</span>
+      <button class="tbtn" type="button" data-z="in" aria-label="Vergrößern"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></button>
+      <button class="tbtn" type="button" data-z="fit"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="6" width="16" height="12" rx="1.5"/><path d="M9 12h6"/></svg><span class="lbl">Einpassen</span></button>
+      <button class="tbtn" type="button" data-z="close" aria-label="Schließen"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    </span>
+  </div>
+  <div class="z-stage"><div class="wrap z-canvas"></div></div>
+  <p class="z-cap"></p>
+</dialog>
+</body>
+</html>

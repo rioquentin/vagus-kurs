@@ -1,0 +1,486 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>4 · Die Gesamtkarte · Vagus-Kurs</title>
+<script>try{var t=JSON.parse(localStorage.getItem('vagus-kurs:v1')||'{}').theme;if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Spectral:wght@500;600&family=Public+Sans:ital,wght@0,400;0,600;0,700;1,400&family=IBM+Plex+Sans+Condensed:wght@400;600&display=swap">
+<link rel="stylesheet" href="assets/course.css">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#1B2329">
+<link rel="icon" href="assets/icon.svg" type="image/svg+xml">
+<script src="assets/app.js" defer></script>
+<script src="assets/sync-config.js" defer></script>
+<script src="assets/sync.js" defer></script>
+<script src="assets/study.js" defer></script>
+</head>
+<body data-page="04">
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="topbar">
+  <button class="tbtn menu-btn" type="button" data-open-nav aria-controls="sidebar" aria-expanded="false" aria-label="Inhaltsverzeichnis öffnen"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+  <a class="brand" href="index.html"><b><i class="b-long">N. vagus und Stimme</i><i class="b-short">Vagus-Kurs</i></b><span>Lernkurs</span></a>
+  <a class="tbtn prog" href="index.html#fortschritt" title="Erledigte Abschnitte"><i></i><span data-prog>0 / 9</span></a>
+  <button class="tbtn" type="button" data-open-search aria-keyshortcuts="/" aria-label="Kurs durchsuchen"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg><span class="lbl">Suchen</span></button>
+  <button class="tbtn" type="button" data-open-legend aria-label="Farb- und Formcode"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="6" height="6" rx="1"/><rect x="4" y="14" width="6" height="6" rx="3"/><path d="M14 7h6M14 17h6"/></svg><span class="lbl">Legende</span></button>
+  <button class="tbtn acc-btn" type="button" data-open-account hidden><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8.5" r="3.5"/><path d="M5 20c.8-3.6 3.6-5.5 7-5.5s6.2 1.9 7 5.5"/></svg><span class="lbl">Anmelden</span><i class="acc-dot" data-acc-dot aria-hidden="true"></i></button>
+  <button class="tbtn" type="button" data-theme-toggle aria-label="Farbschema: System"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="M12 4a8 8 0 0 0 0 16z" fill="currentColor"/></svg><span class="lbl" data-theme-label>System</span></button>
+  <span class="readbar" aria-hidden="true"></span>
+</header>
+<div class="shell">
+<nav class="sidebar" id="sidebar" aria-label="Kursinhalt">
+  <div class="side-head"><span class="eyebrow">Kernpfad · 9 Einheiten</span><button class="tbtn side-close" type="button" data-close-nav aria-label="Schließen"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+  <ol class="ctoc">
+    <li><a class="ctoc-unit" href="01-gelenke-muskeln.html" data-unit="01"><span class="ctoc-n">1</span><span class="ctoc-t">Gelenke und innere Kehlkopfmuskeln</span><span class="mark"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 6.3l2.3 2.3 4.7-5"/></svg></span></a></li>
+    <li><a class="ctoc-unit" href="02-n-laryngeus-superior.html" data-unit="02"><span class="ctoc-n">2</span><span class="ctoc-t">N. laryngeus superior</span><span class="mark"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 6.3l2.3 2.3 4.7-5"/></svg></span></a></li>
+    <li><a class="ctoc-unit" href="03-n-laryngeus-recurrens.html" data-unit="03"><span class="ctoc-n">3</span><span class="ctoc-t">N. laryngeus recurrens</span><span class="mark"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 6.3l2.3 2.3 4.7-5"/></svg></span></a></li>
+    <li><a class="ctoc-unit" href="04-gesamtkarte.html" data-unit="04" aria-current="page"><span class="ctoc-n">4</span><span class="ctoc-t">Die Gesamtkarte</span><span class="mark"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 6.3l2.3 2.3 4.7-5"/></svg></span></a>
+      <ol class="ctoc-sub"><li><a href="#h-4-1-die-karte-und-was-bei-ausfall-verloren-geht">4.1 · Die Karte, und was bei Ausfall verloren geht</a></li><li><a href="#h-4-2-die-empfindungskarte-oben-mitte-unten">4.2 · Die Empfindungskarte: oben, Mitte, unten</a></li><li><a href="#h-4-3-vom-muskel-zum-befund-was-du-siehst-und-hoerst">4.3 · Vom Muskel zum Befund: was du siehst und hörst</a></li><li><a href="#h-4-4-gemischte-uebung-der-laesionsdetektiv">4.4 · Gemischte Übung: der Läsionsdetektiv</a></li><li><a href="#h-4-5-zwei-mini-faelle">4.5 · Zwei Mini-Fälle</a></li><li><a href="#h-zusammenfassung-in-fuenf-zeilen">Zusammenfassung in fünf Zeilen</a></li><li><a href="#h-quellen">Quellen</a></li></ol></li>
+    <li><a class="ctoc-unit" href="05-stimmentstehung.html" data-unit="05"><span class="ctoc-n">5</span><span class="ctoc-t">Stimmentstehung</span><span class="mark"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 6.3l2.3 2.3 4.7-5"/></svg></span></a></li>
+    <li><a class="ctoc-unit" href="06-schutzfunktionen.html" data-unit="06"><span class="ctoc-n">6</span><span class="ctoc-t">Schutzfunktionen</span><span class="mark"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 6.3l2.3 2.3 4.7-5"/></svg></span></a></li>
+    <li><a class="ctoc-unit" href="07-laehmungen.html" data-unit="07"><span class="ctoc-n">7</span><span class="ctoc-t">Kehlkopflähmungen im Überblick</span><span class="mark"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 6.3l2.3 2.3 4.7-5"/></svg></span></a></li>
+    <li><a class="ctoc-unit" href="08-abgrenzung.html" data-unit="08"><span class="ctoc-n">8</span><span class="ctoc-t">Abgrenzung und Warnzeichen</span><span class="mark"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 6.3l2.3 2.3 4.7-5"/></svg></span></a></li>
+    <li><a class="ctoc-unit" href="09-10-wiederholung-pruefung.html" data-unit="09"><span class="ctoc-n">9–10</span><span class="ctoc-t">Wiederholung und Probeprüfung</span><span class="mark"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 6.3l2.3 2.3 4.7-5"/></svg></span></a></li>
+  </ol>
+  <div class="side-sep eyebrow">Üben und Nachschlagen</div>
+  <a class="ctoc-ref" href="index.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 11l8-7 8 7M6 9.5V20h12V9.5"/></svg>Kursübersicht</a>
+  <a class="ctoc-ref" href="lernkarten.html"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="6" width="14" height="13" rx="2"/><path d="M7 3h12a2 2 0 0 1 2 2v11"/></svg>Lernkarten<span class="due-pill" data-due hidden></span></a>
+  <a class="ctoc-ref" href="merkheft.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h10a1 1 0 0 1 1 1v17l-6-4-6 4V4a1 1 0 0 1 1-1z"/></svg>Merkheft<span class="due-pill soft" data-notes-n hidden></span></a>
+  <a class="ctoc-ref" href="begriffe.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h9M4 10h16M4 15h9M4 20h16"/></svg>Fachbegriffe</a>
+  <button class="ctoc-ref" type="button" data-open-search><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg>Im Kurs suchen</button>
+  <button class="ctoc-ref" type="button" data-open-legend><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="6" height="6" rx="1"/><rect x="4" y="14" width="6" height="6" rx="3"/><path d="M14 7h6M14 17h6"/></svg>Farb- und Formcode</button>
+  <a class="ctoc-ref" href="00-styleguide.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h10a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3z"/><path d="M5 17a3 3 0 0 1 3-3h10"/></svg>Visueller Styleguide (EN)</a>
+</nav>
+<div class="scrim" data-close-nav></div>
+<main id="main" lang="de">
+<div class="wrap">
+<header>
+  <span class="eyebrow">Kernpfad · Abschnitt 4 von 10</span>
+  <h1>Die Gesamtkarte: Nerv → Muskel → Wirkung</h1>
+  <div class="meta"><span>≈ 20 Minuten</span><span>Baut auf: Abschnitte 1–3</span><span>Weiter: Stimmentstehung</span></div>
+  <div class="box">
+    <span class="eyebrow">Nach diesem Abschnitt kannst du</span>
+    <ol>
+      <li>Die vollständige Karte aus dem Gedächtnis zeichnen: zwei Nerven, fünf Muskelgruppen, zwei Empfindungsgebiete, ihre Wirkungen.</li>
+      <li>Für den Ausfall jedes Astes vorhersagen, welche Funktionen verloren gehen und welche bleiben.</li>
+      <li>Aus einem Symptom auf den beteiligten Nerv und Muskel schließen.</li>
+    </ol>
+  </div>
+  <div class="box hook">
+    <span class="eyebrow">Warum das für dich als Logopädin wichtig ist</span>
+    <p>„Welcher Nerv versorgt welchen Kehlkopfmuskel, und was passiert bei Ausfall?“ ist die klassische Prüfungsfrage, mündlich wie schriftlich. In der Praxis ist es die Übersetzungshilfe zwischen dem HNO-Befund und dem, was du hörst: Diese eine Karte verbindet Anatomie, Laryngoskopie und Stimmklang. Dieser Abschnitt bringt nichts Neues; er fügt die Abschnitte 1–3 zusammen und lässt dich damit arbeiten.</p>
+  </div>
+</header>
+
+<section>
+  <h2 id="h-4-1-die-karte-und-was-bei-ausfall-verloren-geht">4.1 · Die Karte, und was bei Ausfall verloren geht</h2>
+  <p>Die Karte liest du von links nach rechts: <b>Nerv → Ast → Muskel oder Empfindungsgebiet → Wirkung</b>. Pfeile zum Muskel bedeuten Bewegungsbefehl, Pfeile zurück zum Nerv bedeuten eine Meldung an das Gehirn. Gelb ist der N. vagus, türkis der N. laryngeus superior, violett der N. laryngeus recurrens; jeder Muskel trägt außerdem ein Schild <span class="tag sln">SLN</span> oder <span class="tag rln">RLN</span>.</p>
+  <p class="predict"><b>So übst du damit:</b> Bevor du einen Ausfall anklickst, sag laut, was verloren geht und was bleibt. Dann klicken und vergleichen. Das Vorhersagen ist die eigentliche Übung.</p>
+  <div class="figure">
+    <div class="ctrl" role="group" aria-label="Läsion wählen">
+      <button type="button" data-l="none" aria-pressed="true">Vollständige Karte</button>
+      <button type="button" data-l="ext" aria-pressed="false">Ausfall R. externus</button>
+      <button type="button" data-l="int" aria-pressed="false">Ausfall R. internus</button>
+      <button type="button" data-l="rln" aria-pressed="false">Ausfall N. recurrens (eine Seite)</button>
+    </div>
+    <div class="scroll">
+    <svg id="map" data-l="none" viewBox="0 0 960 610" width="960" role="img" aria-labelledby="mapT">
+      <title id="mapT">Gesamtkarte: N. vagus, seine Kehlkopfäste, die versorgten Muskeln und Empfindungsgebiete und deren Wirkung</title>
+      <defs>
+        <marker id="aS" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="#13827E"/></marker>
+        <marker id="aR" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="#6A4C9C"/></marker>
+        <marker id="aI" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="var(--ink-2)"/></marker>
+        <pattern id="hatch" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="7" height="7" fill="#C2185B" fill-opacity=".14"/><line x1="0" y1="0" x2="0" y2="7" stroke="#C2185B" stroke-width="2"/></pattern>
+        <g id="lesmark"><circle r="14" fill="url(#hatch)" stroke="#C2185B" stroke-width="2.5"/><path d="M-8 -8 L8 8 M8 -8 L-8 8" stroke="#C2185B" stroke-width="3.5"/></g>
+      </defs>
+
+      <text x="20" y="30" class="t-head">NERV</text>
+      <text x="200" y="30" class="t-head">AST</text>
+      <text x="430" y="30" class="t-head">MUSKEL · EMPFINDUNG</text>
+      <text x="720" y="30" class="t-head">WIRKUNG</text>
+
+      <rect x="20" y="250" width="150" height="62" fill="#E3B505"/>
+      <text x="32" y="276" class="t-main" style="fill:#1B2329">N. vagus</text>
+      <text x="32" y="296" class="t-sub" style="fill:#3d3200">(N. X)</text>
+
+      <!-- R. externus -->
+      <g class="grp ext">
+        <path d="M170 262 H185 V86 H198" fill="none" stroke="#13827E" stroke-width="3" marker-end="url(#aS)"/>
+        <rect x="200" y="60" width="180" height="52" fill="#13827E"/>
+        <text x="212" y="82" class="t-main t-w">R. externus</text><text x="212" y="101" class="t-sub t-w">SLN · motorisch</text>
+        <path d="M380 86 H428" fill="none" stroke="#13827E" stroke-width="3" marker-end="url(#aS)"/>
+        <rect x="430" y="60" width="240" height="52" class="muscle"/>
+        <rect x="436" y="66" width="36" height="16" fill="#13827E"/><text x="441" y="78" font-size="10.5" font-weight="600" class="t-w">SLN</text>
+        <text x="480" y="82" class="t-main">M. cricothyroideus</text><text x="480" y="101" class="t-sub">„Antikus“ (CT)</text>
+        <path d="M670 86 H718" class="ink-line" marker-end="url(#aI)"/>
+        <rect x="720" y="60" width="220" height="52" rx="26" class="action"/>
+        <text x="740" y="82" class="t-main">Spannt, verlängert</text><text x="740" y="101" class="t-sub">Tonhöhe ↑ · Tragfähigkeit</text>
+        <g class="lost"><rect x="430" y="60" width="240" height="52" fill="url(#hatch)"/><rect x="720" y="60" width="220" height="52" rx="26" fill="url(#hatch)"/></g>
+      </g>
+
+      <!-- R. internus -->
+      <g class="grp int">
+        <path d="M185 176 H198" fill="none" stroke="#13827E" stroke-width="3"/>
+        <rect x="200" y="150" width="180" height="52" fill="#13827E"/>
+        <text x="212" y="172" class="t-main t-w">R. internus</text><text x="212" y="191" class="t-sub t-w">SLN · sensibel</text>
+        <path d="M430 176 H382" fill="none" stroke="#13827E" stroke-width="3" marker-end="url(#aS)"/>
+        <rect x="430" y="150" width="240" height="52" rx="26" class="sense"/>
+        <text x="452" y="172" class="t-main">Empfindung oberhalb</text><text x="452" y="191" class="t-sub">der Stimmlippen</text>
+        <path d="M670 176 H718" class="ink-line" marker-end="url(#aI)"/>
+        <rect x="720" y="150" width="220" height="52" rx="26" class="action"/>
+        <text x="740" y="172" class="t-main">Startet Schutzreflex</text><text x="740" y="191" class="t-sub">Verschluss, Husten</text>
+        <g class="lost"><rect x="430" y="150" width="240" height="52" rx="26" fill="url(#hatch)"/><rect x="720" y="150" width="220" height="52" rx="26" fill="url(#hatch)"/></g>
+      </g>
+
+      <!-- N. recurrens -->
+      <g class="grp rln">
+        <path d="M170 294 H185 V376 H198" fill="none" stroke="#6A4C9C" stroke-width="3" marker-end="url(#aR)"/>
+        <rect x="200" y="350" width="180" height="52" fill="#6A4C9C"/>
+        <text x="212" y="372" class="t-main t-w">N. lar. recurrens</text><text x="212" y="391" class="t-sub t-w">RLN · motorisch + sensibel</text>
+        <path d="M380 376 H405 V266 H428" fill="none" stroke="#6A4C9C" stroke-width="3" marker-end="url(#aR)"/>
+        <path d="M405 336 H428" fill="none" stroke="#6A4C9C" stroke-width="3" marker-end="url(#aR)"/>
+        <path d="M405 376 V406 H428" fill="none" stroke="#6A4C9C" stroke-width="3" marker-end="url(#aR)"/>
+        <path d="M405 406 V476 H428" fill="none" stroke="#6A4C9C" stroke-width="3" marker-end="url(#aR)"/>
+        <path d="M430 546 H360 V404" fill="none" stroke="#6A4C9C" stroke-width="3" marker-end="url(#aR)"/>
+
+        <rect x="430" y="240" width="240" height="52" class="muscle focus"/>
+        <rect x="436" y="246" width="36" height="16" fill="#6A4C9C"/><text x="440" y="258" font-size="10.5" font-weight="600" class="t-w">RLN</text>
+        <text x="480" y="262" class="t-main">M. cricoaryt. posterior</text><text x="480" y="281" class="t-sub">„Postikus“ (PCA)</text>
+        <rect x="430" y="310" width="240" height="52" class="muscle"/>
+        <rect x="436" y="316" width="36" height="16" fill="#6A4C9C"/><text x="440" y="328" font-size="10.5" font-weight="600" class="t-w">RLN</text>
+        <text x="480" y="332" class="t-main">M. cricoaryt. lateralis</text><text x="480" y="351" class="t-sub">„Lateralis“ (LCA)</text>
+        <rect x="430" y="380" width="240" height="52" class="muscle"/>
+        <rect x="436" y="386" width="36" height="16" fill="#6A4C9C"/><text x="440" y="398" font-size="10.5" font-weight="600" class="t-w">RLN</text>
+        <text x="480" y="402" class="t-main">M. arytaenoideus*</text><text x="480" y="421" class="t-sub">„Transversus“ (IA)</text>
+        <rect x="430" y="450" width="240" height="52" class="muscle"/>
+        <rect x="436" y="456" width="36" height="16" fill="#6A4C9C"/><text x="440" y="468" font-size="10.5" font-weight="600" class="t-w">RLN</text>
+        <text x="480" y="472" class="t-main">M. thyroarytaenoideus</text><text x="480" y="491" class="t-sub">„Vokalis/Externus“ (TA)</text>
+        <rect x="430" y="520" width="240" height="52" rx="26" class="sense r"/>
+        <text x="452" y="542" class="t-main">Empfindung unterhalb</text><text x="452" y="561" class="t-sub">der Stimmlippen</text>
+
+        <path d="M670 266 H718" class="ink-line" marker-end="url(#aI)"/>
+        <rect x="720" y="240" width="220" height="52" rx="26" class="action focus"/>
+        <text x="740" y="262" class="t-main">Öffnet die Glottis</text><text x="740" y="281" class="t-sub">der einzige Öffner</text>
+        <path d="M670 336 H718" class="ink-line" marker-end="url(#aI)"/>
+        <rect x="720" y="310" width="220" height="52" rx="26" class="action"/>
+        <text x="740" y="332" class="t-main">Schließt vorne</text><text x="740" y="351" class="t-sub">Adduktion</text>
+        <path d="M670 406 H718" class="ink-line" marker-end="url(#aI)"/>
+        <rect x="720" y="380" width="220" height="52" rx="26" class="action"/>
+        <text x="740" y="402" class="t-main">Schließt hinten</text><text x="740" y="421" class="t-sub">Stellknorpel zusammen</text>
+        <path d="M670 476 H718" class="ink-line" marker-end="url(#aI)"/>
+        <rect x="720" y="450" width="220" height="52" rx="26" class="action"/>
+        <text x="740" y="472" class="t-main">Verkürzt, verdickt</text><text x="740" y="491" class="t-sub">Spannung, Lautstärke</text>
+        <path d="M670 546 H718" class="ink-line" marker-end="url(#aI)"/>
+        <rect x="720" y="520" width="220" height="52" rx="26" class="action"/>
+        <text x="740" y="542" class="t-main">Meldet Reiz unterhalb</text><text x="740" y="561" class="t-sub">Husten</text>
+        <g class="lost">
+          <rect x="430" y="240" width="240" height="262" fill="url(#hatch)"/>
+          <rect x="430" y="520" width="240" height="52" rx="26" fill="url(#hatch)"/>
+          <rect x="720" y="240" width="220" height="52" rx="26" fill="url(#hatch)"/>
+          <rect x="720" y="310" width="220" height="52" rx="26" fill="url(#hatch)"/>
+          <rect x="720" y="380" width="220" height="52" rx="26" fill="url(#hatch)"/>
+          <rect x="720" y="450" width="220" height="52" rx="26" fill="url(#hatch)"/>
+          <rect x="720" y="520" width="220" height="52" rx="26" fill="url(#hatch)"/>
+        </g>
+      </g>
+
+      <use href="#lesmark" x="185" y="130" class="les les-ext"/>
+      <use href="#lesmark" x="191" y="176" class="les les-int"/>
+      <use href="#lesmark" x="185" y="335" class="les les-rln"/>
+      <text x="20" y="600" class="t-sub">* plus mögliche Ästchen vom R. internus (umstritten). Fett umrandet: der Postikus, einziger Öffner. Schraffiert mit ✕: Läsion und verlorene Funktionen.</text>
+    </svg>
+    </div>
+    <p class="caption" id="cap" aria-live="polite"></p>
+  </div>
+  <div class="box">
+    <span class="eyebrow">Merkhilfe: die drei „Einzigen“</span>
+    <ul>
+      <li>Der <b>Antikus</b> ist der einzige Muskel des N. laryngeus superior und der einzige außen am Kehlkopf.</li>
+      <li>Der <b>Postikus</b> ist der einzige Öffner.</li>
+      <li>Der <b>Transversus</b> ist der einzige unpaare Muskel und vielleicht der einzige mit doppelter Versorgung.</li>
+    </ul>
+    <p>Alles andere schließt und wird vom N. laryngeus recurrens versorgt.</p>
+  </div>
+  <div class="box recall">
+    <span class="eyebrow">Abruf · ohne nachzusehen</span>
+    <ol>
+      <li><b>F1.</b> Welche Funktionen bleiben erhalten, wenn auf einer Seite nur der N. laryngeus recurrens ausfällt?</li>
+      <li><b>F2.</b> Bei welchem Ausfall bleibt die Stimme normal, und warum ist er trotzdem gefährlich?</li>
+      <li><b>F3.</b> Welche Wirkung in der Karte gibt es nur einmal, und welcher Muskel erzeugt sie?</li>
+    </ol>
+  </div>
+</section>
+
+<section>
+  <h2 id="h-4-2-die-empfindungskarte-oben-mitte-unten">4.2 · Die Empfindungskarte: oben, Mitte, unten</h2>
+  <p>Für Schutz und Schlucken zählt, wer welche Schleimhaut „spürt“. Die Grenze ist die Stimmlippe:</p>
+  <ul>
+    <li><b>Oberhalb</b> (Kehldeckel, aryepiglottische Falten, Vorhof, Taschenfalten, Recessus piriformis): R. internus des N. laryngeus superior.</li>
+    <li><b>Stimmlippenebene</b>: beide Nerven überlappen sich.</li>
+    <li><b>Unterhalb</b> (subglottischer Raum, obere Luftröhre): N. laryngeus recurrens.</li>
+  </ul>
+  <p>Die meisten Bissen und Tropfen, die „falsch“ laufen, treffen zuerst die Schleimhaut <b>oberhalb</b>. Deshalb ist der R. internus der wichtigste Wächter, und sein Ausfall ist das typische Bild der stillen Aspiration.</p>
+  <div class="figure">
+    <div class="scroll">
+    <svg viewBox="0 0 560 380" width="560" role="img" aria-labelledby="f42t">
+      <title id="f42t">Frontalschnitt: Empfindungsgebiete oberhalb, auf Höhe und unterhalb der Stimmlippen</title>
+      <text x="12" y="200" class="t-or">R</text><text x="420" y="200" class="t-or">L</text>
+      <polygon points="150,20 140,90 185,140 160,168 196,188 224,188 260,168 235,140 280,90 270,20" fill="#13827E" fill-opacity=".22"/>
+      <polygon points="196,212 150,232 155,340 265,340 270,232 224,212" fill="#6A4C9C" fill-opacity=".22"/>
+      <rect x="150" y="188" width="120" height="24" fill="var(--muted-fill)"/>
+      <polyline class="wall" points="150,20 140,90 185,140 160,168 200,200 150,232 155,340"/>
+      <polyline class="wall" points="270,20 280,90 235,140 260,168 220,200 270,232 265,340"/>
+      <polygon class="musc" points="150,186 200,200 150,216"/>
+      <polygon class="musc" points="270,186 220,200 270,216"/>
+      <text x="210" y="80" text-anchor="middle" class="t-l" style="fill:#13827E">SLN</text>
+      <text x="210" y="96" text-anchor="middle" class="t-s">R. internus</text>
+      <text x="210" y="285" text-anchor="middle" class="t-l" style="fill:#6A4C9C">RLN</text>
+      <text x="210" y="301" text-anchor="middle" class="t-s">N. lar. recurrens</text>
+      <path class="lead" d="M280 70 L330 70"/><text x="334" y="66" class="t-l">oben</text><text x="334" y="81" class="t-s">Epiglottis, Vorhof, Taschenfalten,</text><text x="334" y="95" class="t-s">Recessus piriformis</text>
+      <path class="lead" d="M272 200 L330 200"/><text x="334" y="196" class="t-l">Stimmlippenebene</text><text x="334" y="211" class="t-s">Überlappung beider Nerven</text>
+      <path class="lead" d="M268 300 L330 300"/><text x="334" y="296" class="t-l">unten</text><text x="334" y="311" class="t-s">subglottischer Raum, Trachea</text>
+    </svg>
+    </div>
+    <p class="figcap"><b>Abb. 4.2</b> Dieselbe Darstellung wie Abb. 2.2, Frontalschnitt von vorn (R und L der Patientin). Grau: Überlappungszone auf Stimmlippenhöhe.</p>
+  </div>
+  <div class="atlas" data-atlas hidden><p class="atlas-note"><b>Anatomische Ansicht.</b> Diese Zeichnungen folgen nicht dem Farbcode des Kurses. Erst das Schema verstehen, dann hier wiederfinden.</p><div class="atlas-grid"><figure class="atlas-card"><button class="atlas-img" type="button" data-zoom-img aria-label="Frontalschnitt durch den Kehlkopf, vergrößern"><img src="assets/atlas/servier-kehlkopf-frontalschnitt.png" width="338" height="720" alt="Frontalschnitt durch den Kehlkopf" loading="lazy" decoding="async"></button>
+      <figcaption><p><b>Worauf achten:</b> Derselbe Frontalschnitt wie in Abschnitt 2: Die Stimmlippe trennt das Gebiet des R. internus (oben) vom Gebiet des N. recurrens (unten).</p><p class="atlas-or">Frontalschnitt von vorn.</p><p class="atlas-cr">Servier Medical Art, <a href="https://smart.servier.com/smart_image/larynx-front-cut/">smart.servier.com</a>, <a href="https://creativecommons.org/licenses/by/4.0/deed.de">CC BY 4.0</a></p></figcaption></figure></div></div>
+  <div class="box recall">
+    <span class="eyebrow">Abruf</span>
+    <ol>
+      <li><b>F4.</b> Welcher Nerv versorgt den Recessus piriformis sensibel?</li>
+      <li><b>F5.</b> Warum ist der Ausfall der Empfindung <i>oberhalb</i> der Stimmlippen für das Schlucken wichtiger als der unterhalb?</li>
+    </ol>
+  </div>
+</section>
+
+<section>
+  <h2 id="h-4-3-vom-muskel-zum-befund-was-du-siehst-und-hoerst">4.3 · Vom Muskel zum Befund: was du siehst und hörst</h2>
+  <p>Fällt ein Muskel <b>auf einer Seite</b> aus, kannst du seine Funktion in einen Befund übersetzen. Diese Tabelle ist die Brücke zu den Lähmungsabschnitten:</p>
+  <div class="scroll"><table>
+    <thead><tr><th>Muskel fällt aus</th><th>Nerv</th><th>Was man sieht</th><th>Was man hört oder merkt</th></tr></thead>
+    <tbody>
+      <tr><td><b>Antikus</b></td><td><span class="tag sln">SLN</span></td><td>Bewegung normal; bei Phonation evtl. kürzere, durchgebogene Stimmlippe, oft kaum sichtbar</td><td>Hohe Töne und Umfang fehlen, Stimme ermüdet, trägt schlecht</td></tr>
+      <tr><td><b>Postikus</b></td><td><span class="tag rln">RLN</span></td><td>Stimmlippe geht beim Einatmen nicht nach außen</td><td>Einseitig meist kein Atemproblem; beidseitig Stridor</td></tr>
+      <tr><td><b>Lateralis, Transversus</b></td><td><span class="tag rln">RLN</span></td><td>Stimmlippe kommt bei Phonation nicht zur Mitte: Spalt (Glottisschlussinsuffizienz)</td><td>Behauchte, leise Stimme, kurze Tonhaltedauer, schwacher Husten, Verschlucken bei Flüssigkeit</td></tr>
+      <tr><td><b>Vokalis/Externus</b></td><td><span class="tag rln">RLN</span></td><td>Stimmlippe schlaff, kürzer, später dünner (Atrophie)</td><td>Wenig Spannung und Kraft; Stimme kann zittern oder doppeltönig sein</td></tr>
+    </tbody>
+  </table></div>
+  <p>Weil der N. laryngeus recurrens alle Muskeln der Tabelle außer dem Antikus versorgt, fallen bei einer Rekurrensparese die drei unteren Zeilen <b>zusammen</b> aus. Wo die gelähmte Stimmlippe dann stehen bleibt, hängt unter anderem davon ab, ob der Antikus noch zieht; das ist ein Thema der Lähmungsabschnitte.</p>
+</section>
+
+<section>
+  <h2 id="h-4-4-gemischte-uebung-der-laesionsdetektiv">4.4 · Gemischte Übung: der Läsionsdetektiv</h2>
+  <p>Die Aufgaben sind absichtlich gemischt, damit du jedes Mal neu entscheiden musst, welcher Nerv gemeint ist. Schreib zu jeder Aufgabe Nerv, Ast und Seite auf, bevor du weiterliest.</p>
+  <div class="box recall">
+    <span class="eyebrow">Abruf · Symptom → Nerv</span>
+    <ol>
+      <li><b>F6.</b> Eine Lehrerin kann nach einer Schilddrüsenoperation nicht mehr laut über die Klasse rufen, ihre Sprechstimme klingt normal, in der Laryngoskopie bewegen sich beide Stimmlippen.</li>
+      <li><b>F7.</b> Ein Patient verschluckt sich nicht hörbar, aber in der Schluckendoskopie liegt Joghurt im Kehlkopfvorhof, ohne dass er reagiert. Die Stimme ist normal.</li>
+      <li><b>F8.</b> Eine Frau hat seit einer Herzoperation eine behauchte, leise Stimme; die linke Stimmlippe steht still.</li>
+      <li><b>F9.</b> Beide Stimmlippen stehen nahe der Mitte, beim Einatmen pfeift es, die Stimme ist fast normal.</li>
+      <li><b>F10.</b> Die rechte Stimmlippe steht still, <i>und</i> das Gaumensegel hebt sich rechts schlechter, <i>und</i> der Patient spürt Getränke rechts im Hals nicht. Wo liegt die Läsion eher: am N. laryngeus recurrens oder höher am N. vagus?</li>
+    </ol>
+  </div>
+</section>
+
+<section>
+  <h2 id="h-4-5-zwei-mini-faelle">4.5 · Zwei Mini-Fälle</h2>
+  <div class="box">
+    <span class="eyebrow">Erwachsene · Herr B., 55, nach Operation an der Halswirbelsäule von vorn</span>
+    <p>Seit der Operation ist Herr B. heiser und behaucht, er hält ein „a“ nur 5 Sekunden lang und verschluckt sich bei Wasser. Hohe Töne kann er noch ansteuern, aber ohne Kraft. Die rechte Stimmlippe bewegt sich nicht.</p>
+    <p><b>F11.</b> Welcher Nerv ist betroffen? Welche Zeilen der Tabelle in 4.3 erklären seine Symptome, und warum ist die Tonhöhe nicht ganz verloren?</p>
+  </div>
+  <div class="box kind">
+    <span class="eyebrow">Kind · Paul, 5 Monate</span>
+    <p>Paul hat eine Fehlbildung am Übergang vom Gehirn zum Rückenmark (Chiari-Malformation) mit erhöhtem Hirndruck. Er atmet laut beim Einatmen, besonders im Schlaf, schreit aber kräftig. Die Endoskopie zeigt beide Stimmlippen nahe der Mitte.</p>
+    <p><b>F12.</b> Welche Muskeln arbeiten bei Paul nicht, und warum passt ein kräftiges Schreien dazu? Warum kann die Ursache im Gehirn liegen, obwohl die Muskeln im Kehlkopf sitzen?</p>
+  </div>
+</section>
+
+<section>
+  <div class="box mis">
+    <span class="eyebrow">Häufige Fehlvorstellungen</span>
+    <ul>
+      <li><b>„Rekurrensparese = Stimmlippe steht ganz außen.“</b> Meist steht sie nahe der Mitte oder in Zwischenstellung, nicht ganz außen. Die genaue Stellung ist variabel und kein sicherer Hinweis auf den Läsionsort.</li>
+      <li><b>„Wer gut spricht, hat keine Nervenlähmung.“</b> Ein Ausfall des R. externus oder des R. internus kann die Sprechstimme fast normal lassen, und bei beidseitiger Rekurrensparese ist die Stimme oft gut, während die Atmung gefährdet ist.</li>
+      <li><b>„Die Empfindung ist für die Logopädie egal.“</b> Sie ist der Ausgangspunkt jedes Schutzreflexes und damit zentral für Schluckdiagnostik und -therapie.</li>
+      <li><b>„Ein kleiner Spalt hinten bei normaler Beweglichkeit zeigt eine Nervenlähmung.“</b> Ein hinterer Spalt bei normaler Beweglichkeit ist oft ein funktionelles Schlussmuster (Transversusschwäche), keine Nervenläsion.</li>
+    </ul>
+  </div>
+</section>
+
+<section>
+  <h2 id="h-zusammenfassung-in-fuenf-zeilen">Zusammenfassung in fünf Zeilen</h2>
+  <ol>
+    <li>N. vagus → N. laryngeus superior (R. externus motorisch, R. internus sensibel) und N. laryngeus recurrens (motorisch und sensibel).</li>
+    <li>R. externus → Antikus → Spannung und Tonhöhe. Alle anderen inneren Muskeln → N. laryngeus recurrens.</li>
+    <li>Öffnen kann nur der Postikus; schließen können Lateralis, Transversus und Thyroarytänoid.</li>
+    <li>Empfindung oberhalb der Stimmlippen: R. internus; unterhalb: N. laryngeus recurrens; dazwischen Überlappung.</li>
+    <li>Ausfall außen = Höhe fehlt; Ausfall innen = stille Aspiration; Rekurrens einseitig = Spalt und Behauchtheit; Rekurrens beidseitig = Atemnot.</li>
+  </ol>
+  <div class="box">
+    <span class="eyebrow">Aus dem Gedächtnis zeichnen · 7 Minuten, leeres Blatt</span>
+    <ol>
+      <li>Schreib vier Spaltenüberschriften: Nerv · Ast · Muskel/Empfindung · Wirkung.</li>
+      <li>Links ein gelbes Kästchen „N. vagus“. Drei Äste: R. externus und R. internus (türkis), N. laryngeus recurrens (violett).</li>
+      <li>Ordne zu: R. externus → Antikus; R. internus ← Empfindung oben; Rekurrens → Postikus, Lateralis, Transversus, Vokalis; Rekurrens ← Empfindung unten.</li>
+      <li>Schreib zu jedem Muskel seine Wirkung. Umrande den Postikus fett.</li>
+      <li>Setz mit einem anderen Stift ein ✕ auf einen Ast deiner Wahl und schraffiere, was ausfällt.</li>
+      <li>Vergleiche mit der Karte in 4.1. Jede Lücke wird eine Lernkarte.</li>
+    </ol>
+  </div>
+</section>
+
+<section>
+  <details>
+    <summary>Lösungen zu F1–F12 (erst nach eigenem Versuch öffnen)</summary>
+    <div>
+      <p><b>F1.</b> Die Funktionen des N. laryngeus superior: Spannung und Tonhöhe über den Antikus sowie die Empfindung oberhalb der Stimmlippen mit dem Schutzreflex. Außerdem arbeitet die andere Seite normal.</p>
+      <p><b>F2.</b> Beim Ausfall des R. internus. Ohne Empfindung oberhalb der Stimmlippen startet der Schutzreflex nicht, und es kommt zu stiller Aspiration.</p>
+      <p><b>F3.</b> „Öffnet die Glottis“, erzeugt allein vom Postikus (M. cricoarytaenoideus posterior).</p>
+      <p><b>F4.</b> Der R. internus des N. laryngeus superior.</p>
+      <p><b>F5.</b> Material, das falsch läuft, trifft zuerst die Schleimhaut oberhalb der Stimmlippen. Fehlt dort die Empfindung, wird der Schutzreflex nicht ausgelöst, bevor das Material die Stimmlippen erreicht.</p>
+      <p><b>F6.</b> R. externus des N. laryngeus superior (Antikus): Spannung und Tragfähigkeit fehlen, Beweglichkeit normal. Seite: die verletzte; nach Schilddrüsenoperation kann auch beidseits betroffen sein.</p>
+      <p><b>F7.</b> R. internus des N. laryngeus superior: fehlende Empfindung oberhalb der Stimmlippen, stille Aspiration bzw. Penetration.</p>
+      <p><b>F8.</b> Linker N. laryngeus recurrens; er schlingt sich um den Aortenbogen und ist bei Herzoperationen gefährdet.</p>
+      <p><b>F9.</b> N. laryngeus recurrens beidseits: Beide Postikusmuskeln fehlen, die Stimmlippen stehen nahe der Mitte, deshalb Stridor bei guter Stimme.</p>
+      <p><b>F10.</b> Höher am N. vagus, oberhalb des Abgangs des N. laryngeus superior: Gaumensegel (Rachenäste), Empfindung oben (R. internus) und Stimmlippe (N. laryngeus recurrens) sind zusammen betroffen. Eine reine Rekurrensparese würde Gaumen und Empfindung oben verschonen.</p>
+      <p><b>F11.</b> Rechter N. laryngeus recurrens: Er läuft im Operationsgebiet an der Luftröhre vorbei, und die rechte Stimmlippe steht still. Es passen die Zeilen Lateralis/Transversus (Spalt, Behauchtheit, kurze Tonhaltedauer, Verschlucken bei Wasser) und Vokalis (wenig Kraft). Der Antikus (N. laryngeus superior) arbeitet noch, deshalb ist Tonhöhe teilweise steuerbar.</p>
+      <p><b>F12.</b> Beide Postikusmuskeln, also die Öffner beider Seiten. Die Stimmlippen stehen nahe der Mitte und können gut schwingen, deshalb ist das Schreien kräftig. Die Nervenzellen für die Kehlkopfmuskeln liegen im Hirnstamm (Nucleus ambiguus), und die Nervenwurzeln des N. vagus verlassen den Hirnstamm genau im Bereich, auf den eine Chiari-Malformation mit erhöhtem Hirndruck drücken oder an dem sie ziehen kann.</p>
+    </div>
+  </details>
+</section>
+
+<section>
+  <h2 id="h-quellen">Quellen</h2>
+  <div class="refs">
+    <p>Schünke M, Schulte E, Schumacher U. <em>PROMETHEUS LernAtlas: Kopf, Hals und Neuroanatomie</em>. 6. Aufl. Thieme; 2022.</p>
+    <p>Standring S (Hrsg.). <em>Gray's Anatomy</em>. 42nd ed. Elsevier; 2020.</p>
+    <p>Wendler J, Seidner W, Eysholdt U. <em>Lehrbuch der Phoniatrie und Pädaudiologie</em>. 5. Aufl. Thieme; 2015 (Lähmungsbilder, Transversusschwäche).</p>
+    <p>Orestes MI, Chhetri DK. Superior laryngeal nerve injury. <em>Curr Opin Otolaryngol Head Neck Surg</em> 2014. doi:10.1097/MOO.0000000000000097.</p>
+    <p>Lechien JR. Management of pediatric bilateral vocal fold paralysis. <em>Children</em> 2024;11(4):398. doi:10.3390/children11040398 (Ursachen bei Kindern, u. a. Chiari-Malformation).</p>
+    <p>DGPP. S2k-Leitlinie Diagnostik und Therapie von Störungen der Stimmfunktion (Dysphonien), AWMF 049-008, 2023.</p>
+    <p>Abschnitte 1–3 dieses Kurses mit ihren Einzelquellen.</p>
+  </div>
+</section>
+</div>
+
+<script>
+(function(){
+  var map=document.getElementById('map'), cap=document.getElementById('cap');
+  var txt={
+    none:'Vollständige Karte. Sag vor dem nächsten Klick laut, was bei dem gewählten Ausfall verloren geht und was bleibt.',
+    ext:'Ausfall R. externus: Nur der Antikus fällt aus. Spannung, Tonhöhe nach oben und Tragfähigkeit fehlen. Öffnen, Schließen und alle Empfindungen bleiben, deshalb sieht die Laryngoskopie fast normal aus.',
+    int:'Ausfall R. internus: Kein Muskel fällt aus, die Stimme bleibt normal. Es fehlt die Empfindung oberhalb der Stimmlippen, also startet der Schutzreflex nicht: stille Aspiration.',
+    rln:'Ausfall N. laryngeus recurrens (eine Seite): Öffnen, Schließen, innere Spannung und die Empfindung unterhalb fallen auf dieser Seite aus. Es bleiben der Antikus und die Empfindung oberhalb, also Tonhöhenspannung und der wichtigste Schutzreflex.'
+  };
+  function set(l){
+    map.setAttribute('data-l',l);
+    document.querySelectorAll('.ctrl button').forEach(function(b){b.setAttribute('aria-pressed',b.dataset.l===l?'true':'false');});
+    cap.textContent=txt[l];
+  }
+  document.querySelectorAll('.ctrl button').forEach(function(b){b.addEventListener('click',function(){set(b.dataset.l);});});
+  set('none');
+})();
+</script>
+<nav class="pager" aria-label="Abschnitte" lang="de" style="max-width:980px"><div class="done-row" lang="de"><p>Fertig mit diesem Abschnitt? Markiere ihn, dann siehst du auf der Startseite, wo du stehst.</p><button class="done-btn" type="button" data-done="04" aria-pressed="false"><span class="mark"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 6.3l2.3 2.3 4.7-5"/></svg></span><span>Als erledigt markieren</span></button></div><a class="practice" href="lernkarten.html?unit=04"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="6" width="14" height="13" rx="2"/><path d="M7 3h12a2 2 0 0 1 2 2v11"/></svg><span><b>Die 12 Fragen dieses Abschnitts als Lernkarten</b><span class="note">verteilt wiederholen, damit es bis zur Prüfung sitzt</span></span></a><div class="nav2"><a class="prev" href="03-n-laryngeus-recurrens.html" rel="prev"><span class="eyebrow">← Zurück · 3</span><b>N. laryngeus recurrens</b></a><a class="next" href="05-stimmentstehung.html" rel="next"><span class="eyebrow">Weiter · 5 →</span><b>Stimmentstehung</b></a></div></nav>
+</main>
+</div>
+<dialog class="legend" id="legend" aria-labelledby="lg-t">
+  <div class="lg-head"><h2 id="lg-t">Farb- und Formcode</h2><button class="tbtn" type="button" data-close-legend aria-label="Schließen"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+  <div class="lg-body">
+    <p>In jeder Abbildung gleich. Farbe ist nie das einzige Signal: Achte auch auf Schild, Beschriftung und Muster.</p>
+    <table><tbody>
+      <tr><td><span class="sw" style="background:var(--c-nerve)"></span></td><td><b>Nerv</b> allgemein, N. vagus</td><td>Beschriftung <code>N.</code> / <code>R.</code>, Linie mit Pfeil</td></tr>
+      <tr><td><span class="sw" style="background:var(--c-sln)"></span></td><td><b>N. laryngeus superior</b></td><td>Schild <code>SLN</code></td></tr>
+      <tr><td><span class="sw" style="background:var(--c-rln)"></span></td><td><b>N. laryngeus recurrens</b></td><td>Schild <code>RLN</code></td></tr>
+      <tr><td><span class="sw" style="background:var(--c-artery)"></span></td><td><b>Arterie</b> (nur als Landmarke)</td><td>Beschriftung <code>A.</code></td></tr>
+      <tr><td><svg width="46" height="26" aria-hidden="true"><rect x=".5" y=".5" width="45" height="25" rx="3" fill="var(--c-muscle)"/><path d="M6 23 L20 3 M16 23 L30 3 M26 23 L40 3" stroke="#fff" stroke-opacity=".45"/></svg></td><td><b>Muskel</b></td><td>Beschriftung <code>M.</code>, Faserlinien</td></tr>
+      <tr><td><span class="sw" style="background:var(--c-cart);border:2px solid var(--c-cart-line)"></span></td><td><b>Knorpel</b></td><td>fester blaugrauer Rand</td></tr>
+      <tr><td><svg width="46" height="26" aria-hidden="true"><rect x=".5" y=".5" width="45" height="25" rx="3" fill="var(--c-bone)"/><g fill="#8A7650"><circle cx="9" cy="8" r="1.3"/><circle cx="22" cy="13" r="1.3"/><circle cx="35" cy="7" r="1.3"/><circle cx="14" cy="20" r="1.3"/><circle cx="31" cy="20" r="1.3"/></g></svg></td><td><b>Knochen</b> (Zungenbein, Schädelbasis)</td><td>getüpfelt</td></tr>
+      <tr><td><svg width="46" height="26" aria-hidden="true"><defs><pattern id="lg-hl" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="6" height="6" fill="var(--c-lesion)" fill-opacity=".18"/><line x1="0" y1="0" x2="0" y2="6" stroke="var(--c-lesion)" stroke-width="2"/></pattern></defs><rect x=".5" y=".5" width="45" height="25" rx="3" fill="url(#lg-hl)" stroke="var(--c-lesion)"/><path d="M17 7 L29 19 M29 7 L17 19" stroke="var(--c-lesion)" stroke-width="3"/></svg></td><td><b>Läsion</b></td><td>Schraffur, ✕ und „Läsion“</td></tr>
+      <tr><td><span class="sw" style="background:var(--muted-fill);border-color:var(--muted)"></span></td><td><b>Kontext</b>, gerade nicht Thema</td><td>grau, kein Schild</td></tr>
+    </tbody></table>
+    <table><tbody>
+      <tr><td><svg width="46" height="26" aria-hidden="true"><rect x="1" y="3" width="44" height="20" fill="var(--muted-fill)" stroke="var(--ink-2)" stroke-width="1.5"/></svg></td><td><b>Rechteck</b></td><td>Struktur: Nerv, Muskel, Knorpel</td></tr>
+      <tr><td><svg width="46" height="26" aria-hidden="true"><rect x="1" y="3" width="44" height="20" rx="10" fill="var(--action-fill)" stroke="var(--ink-2)" stroke-width="1.5"/></svg></td><td><b>Abgerundet</b></td><td>Funktion oder Wirkung</td></tr>
+      <tr><td><svg width="46" height="26" aria-hidden="true"><path d="M23 2 L44 13 L23 24 L2 13 Z" fill="var(--action-fill)" stroke="var(--ink-2)" stroke-width="1.5"/></svg></td><td><b>Raute</b></td><td>Entscheidung, diagnostische Frage</td></tr>
+      <tr><td><svg width="46" height="26" aria-hidden="true"><rect x="1" y="3" width="44" height="20" rx="3" fill="var(--flag-fill)" stroke="var(--c-artery)" stroke-width="2.5"/><text x="23" y="18" text-anchor="middle" font-weight="700" font-size="14" fill="var(--c-artery)">!</text></svg></td><td><b>Warnzeichen</b></td><td>an HNO / Phoniatrie überweisen</td></tr>
+      <tr><td><svg width="46" height="26" aria-hidden="true"><path d="M3 13 H38" stroke="var(--ink-2)" stroke-width="2"/><path d="M36 8 L44 13 L36 18 Z" fill="var(--ink-2)"/></svg></td><td><b>Pfeil</b></td><td>Nervenverlauf, direkte Ursache. Zum Muskel = motorisch, zum Nerv = sensibel</td></tr>
+      <tr><td><svg width="46" height="26" aria-hidden="true"><path d="M3 13 H38" stroke="var(--ink-2)" stroke-width="2" stroke-dasharray="5 4"/><path d="M36 8 L44 13 L36 18 Z" fill="var(--ink-2)"/></svg></td><td><b>Gestrichelt</b></td><td>indirekt, gering oder umstritten</td></tr>
+      <tr><td><svg width="46" height="26" aria-hidden="true"><rect x="2" y="3" width="42" height="20" fill="var(--plate)" stroke="var(--ink)" stroke-width="3.5"/></svg></td><td><b>Dicker Rand</b></td><td>Fokus: das, was die Abbildung lehrt</td></tr>
+    </tbody></table>
+    <p>Ansichten: anatomisch von vorn (rechts der Patientin = links im Bild) oder von oben auf die Glottis, vorne oben. Endoskopische Bilder tragen die R/L-Marken der Quelle. <a href="00-styleguide.html">Ausführlich im Styleguide</a>.</p>
+  </div>
+</dialog>
+<dialog class="account" id="account" aria-labelledby="acc-t">
+  <div class="lg-head"><h2 id="acc-t">Konto</h2><button class="tbtn" type="button" data-close-account aria-label="Schließen"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+  <div class="acc-body">
+    <p class="acc-status" data-acc-status aria-live="polite"></p>
+    <form data-acc-view="login" data-acc-form="login">
+      <p>Mit einem Konto werden Fortschritt, Lernkarten, Merkheft und Einstellungen gesichert und sind auf jedem Gerät gleich.</p>
+      <label>E-Mail<input name="email" type="email" autocomplete="username" required></label>
+      <label>Passwort<input name="password" type="password" autocomplete="current-password" required></label>
+      <p class="acc-err" role="alert"></p>
+      <button class="cta" type="submit">Anmelden</button>
+      <p class="acc-alt"><button type="button" class="linkbtn" data-acc-go="signup">Neues Konto anlegen</button> · <button type="button" class="linkbtn" data-acc-go="forgot">Passwort vergessen?</button></p>
+    </form>
+    <form data-acc-view="signup" data-acc-form="signup" hidden>
+      <p>Konto anlegen. Was du auf diesem Gerät schon gelernt hast, wird übernommen.</p>
+      <label>E-Mail<input name="email" type="email" autocomplete="username" required></label>
+      <label>Passwort <span class="note">(mindestens 8 Zeichen)</span><input name="password" type="password" autocomplete="new-password" minlength="8" required></label>
+      <label>Passwort wiederholen<input name="password2" type="password" autocomplete="new-password" minlength="8" required></label>
+      <p class="acc-err" role="alert"></p>
+      <button class="cta" type="submit">Konto anlegen</button>
+      <p class="acc-alt"><button type="button" class="linkbtn" data-acc-go="login">Ich habe schon ein Konto</button></p>
+    </form>
+    <form data-acc-view="forgot" data-acc-form="forgot" hidden>
+      <p>Du bekommst eine E-Mail mit einem Link, über den du ein neues Passwort festlegst.</p>
+      <label>E-Mail<input name="email" type="email" autocomplete="username" required></label>
+      <p class="acc-err" role="alert"></p>
+      <button class="cta" type="submit">Link senden</button>
+      <p class="acc-alt"><button type="button" class="linkbtn" data-acc-go="login">Zurück zur Anmeldung</button></p>
+    </form>
+    <form data-acc-view="newpw" data-acc-form="newpw" hidden>
+      <p>Neues Passwort festlegen.</p>
+      <label>Neues Passwort<input name="password" type="password" autocomplete="new-password" minlength="8" required></label>
+      <p class="acc-err" role="alert"></p>
+      <button class="cta" type="submit">Speichern</button>
+    </form>
+    <div data-acc-view="check" hidden>
+      <p><b>Fast geschafft.</b> Wir haben eine E-Mail an <b data-acc-sent></b> geschickt. Öffne den Link darin auf diesem oder einem anderen Gerät.</p>
+      <p class="note">Nichts angekommen? Schau im Spam-Ordner nach.</p>
+      <p class="acc-alt"><button type="button" class="linkbtn" data-acc-go="login">Zur Anmeldung</button></p>
+    </div>
+    <div data-acc-view="in" hidden>
+      <p>Angemeldet als <b data-acc-email></b></p>
+      <p class="note">Zuletzt synchronisiert: <span data-acc-last></span>. Änderungen werden automatisch gesichert, auch offline Gelerntes, sobald du wieder online bist.</p>
+      <div class="acc-row"><button class="cta" type="button" data-acc-sync>Jetzt synchronisieren</button><button class="cta ghost" type="button" data-acc-logout>Abmelden</button></div>
+      <p class="acc-alt"><button type="button" class="linkbtn" data-acc-wipe>Meine Daten auf dem Server löschen</button></p>
+    </div>
+  </div>
+</dialog>
+<dialog class="search" id="search" aria-label="Kurs durchsuchen">
+  <div class="s-head"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg><input type="search" id="search-q" placeholder="Begriff, Muskel, Symptom …" autocomplete="off" spellcheck="false" aria-controls="search-r"><button class="tbtn" type="button" data-close-search aria-label="Schließen"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+  <ol class="s-results" id="search-r" role="listbox" aria-label="Treffer"></ol>
+  <p class="s-foot"><kbd>↑</kbd><kbd>↓</kbd> auswählen · <kbd>Enter</kbd> öffnen · <kbd>/</kbd> Suche von überall</p>
+</dialog>
+<dialog class="zoom" id="zoom" aria-labelledby="zoom-t">
+  <div class="z-bar">
+    <b id="zoom-t">Abbildung</b>
+    <span class="z-tools">
+      <button class="tbtn" type="button" data-z="out" aria-label="Verkleinern"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14"/></svg></button>
+      <span class="z-pct" aria-live="polite">100 %</span>
+      <button class="tbtn" type="button" data-z="in" aria-label="Vergrößern"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></button>
+      <button class="tbtn" type="button" data-z="fit"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="6" width="16" height="12" rx="1.5"/><path d="M9 12h6"/></svg><span class="lbl">Einpassen</span></button>
+      <button class="tbtn" type="button" data-z="close" aria-label="Schließen"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    </span>
+  </div>
+  <div class="z-stage"><div class="wrap z-canvas"></div></div>
+  <p class="z-cap"></p>
+</dialog>
+</body>
+</html>
