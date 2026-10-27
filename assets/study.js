@@ -857,6 +857,78 @@
     });
   }
 
+  // ---------- Tagesrunde „Heute“ ----------
+  // Gemischt: zuerst Schwachstellen, dann fällige Karten, dann ein paar neue aus gelernten Abschnitten.
+  // Zum Schluss eine Abbildung mit verdeckter Beschriftung. Abschnitte wechseln sich ab (Interleaving).
+  function dayKey() { var d = new Date(Date.now() - 4 * 3600e3); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); }
+  function interleave(list) {
+    var a = list.slice().sort(function () { return Math.random() - .5; }), out = [];
+    while (a.length) {
+      var prev = out.length ? out[out.length - 1].unit : null, k = a.findIndex(function (x) { return x.unit !== prev; });
+      out.push(a.splice(k < 0 ? 0 : k, 1)[0]);
+    }
+    return out;
+  }
+  function todayPlan(d) {
+    var learned = UNIT_PAGES.filter(function (u) { return state.done && state.done[u]; });
+    if (state.last && UNIT_PAGES.indexOf(state.last) >= 0 && learned.indexOf(state.last) < 0) learned.push(state.last);
+    Object.keys(state.cards).forEach(function (k) { var u = k.slice(0, 2); if (/^\d\d-F/.test(k) && learned.indexOf(u) < 0) learned.push(u); });
+    var taken = {}, items = [];
+    function take(list, max) { list.slice(0, max).forEach(function (x) { if (!taken[x.id] && items.length < 14) { taken[x.id] = 1; items.push(x); } }); }
+    var miss = allMissItems(d).sort(function (a, b) { return (state.miss[b.id].n || 0) - (state.miss[a.id].n || 0); });
+    take(miss, 6);
+    var open = function (c) { return { kind: 'open', id: c.id, unit: c.unit, n: c.n, q: c.q, ctx: c.ctx, a: c.a, sec: c.sec, secT: c.secT }; };
+    take(d.cards.filter(function (c) { return isDue(c.id); }).sort(function (a, b) { return info(a.id).d - info(b.id).d; }).map(open), 8);
+    // Neue Karten reihum aus allen gelernten Abschnitten, sonst käme alles aus dem ersten
+    var fresh = learned.map(function (u) { return d.cards.filter(function (c) { return c.unit === u && !info(c.id); }); }), rr = [];
+    for (var k = 0; rr.length < 40 && fresh.some(function (l) { return l.length > k; }); k++) fresh.forEach(function (l) { if (l[k]) rr.push(l[k]); });
+    take(rr.map(open), Math.max(3, 12 - items.length));
+    var figs = d.figs.filter(function (f) { return learned.indexOf(f.unit) >= 0; });
+    var day = Math.floor(Date.now() / 864e5), fig = figs.length ? figs[day % figs.length] : null;
+    return { items: interleave(items), fig: fig, learned: learned };
+  }
+  function todayCard() {
+    var host = $('[data-today]'); if (!host) return;
+    state.days = state.days || {};
+    data().then(function (d) {
+      function figLink(fig) {
+        var u = unitInfo(fig.unit);
+        return '<a class="today-fig" href="' + u.file + '?fig=' + encodeURIComponent(fig.abb) + '"><span class="eyebrow">Zum Abschluss · Abbildung</span><b>' + esc(fig.abb) + ' beschriften</b><span class="note">Beschriftung ist verdeckt. Erst laut benennen, dann antippen. Abschnitt ' + esc(u.n) + ' · ' + esc(u.t) + '</span></a>';
+      }
+      function intro() {
+        var p = todayPlan(d), done = state.days[dayKey()];
+        var head = '<span class="eyebrow">Heute · etwa 15 Minuten</span><h2 id="today-t">' + (done ? 'Heute geschafft' : 'Deine Runde') + '</h2>';
+        if (!p.learned.length) {
+          host.innerHTML = head + '<p>Hier wartet jeden Tag eine kurze, gemischte Runde aus allem, was du schon gelernt hast. Lies zuerst <a href="01-gelenke-muskeln.html">Abschnitt 1</a>, dann geht es los.</p>';
+          return;
+        }
+        var nMiss = p.items.filter(function (x) { return state.miss[x.id]; }).length, nDue = p.items.filter(function (x) { return !state.miss[x.id] && info(x.id); }).length, nNew = p.items.length - nMiss - nDue;
+        host.innerHTML = head +
+          (done ? '<p>' + done.n + ' Fragen beantwortet, davon ' + done.ok + ' gewusst. Morgen wartet eine neue Mischung. Wenn du magst, gibt es hier noch eine Extrarunde.</p>' :
+            '<p>' + p.items.length + ' Fragen gemischt aus ' + p.learned.length + (p.learned.length === 1 ? ' Abschnitt' : ' Abschnitten') + ' und eine Abbildung. Du musst nichts auswählen.</p>') +
+          '<ul class="today-mix">' + (nMiss ? '<li><b>' + nMiss + '</b> ' + (nMiss === 1 ? 'Schwachstelle' : 'Schwachstellen') + '</li>' : '') + (nDue ? '<li><b>' + nDue + '</b> fällig</li>' : '') + (nNew ? '<li><b>' + nNew + '</b> neu</li>' : '') + (p.fig ? '<li><b>1</b> Abbildung</li>' : '') + '</ul>' +
+          (p.items.length ? '<div class="qz-act"><button class="cta" type="button" data-today-go>' + (done ? 'Extrarunde' : 'Runde starten') + '</button></div>' : (p.fig ? figLink(p.fig) : ''));
+        var go = $('[data-today-go]', host); if (go) go.onclick = function () { run(p); };
+      }
+      function run(p) {
+        host.classList.add('quiz');
+        runQuiz(host, p.items, function (res, stopped) {
+          var n = res.mcN + res.open, ok = res.mc + res.known, k = dayKey();
+          if (n) { var prev = state.days[k] || { n: 0, ok: 0 }; state.days[k] = { n: prev.n + n, ok: prev.ok + ok, t: Date.now() }; K.save(); }
+          host.classList.remove('quiz');
+          host.innerHTML = '<span class="eyebrow">Heute</span><h2 id="today-t">' + (stopped ? 'Pause' : 'Fast fertig') + '</h2>' +
+            '<ul class="tally"><li><b>' + ok + '/' + n + '</b> gewusst oder richtig</li></ul>' +
+            (res.missed.length ? '<p>' + res.missed.length + ' davon sind unter <a href="merkheft.html#schwachstellen">Schwachstellen</a> gespeichert.</p>' : '') +
+            (p.fig ? figLink(p.fig) : '') + '<div class="qz-act"><button class="cta ghost" type="button" data-today-back>Fertig</button></div>';
+          $('[data-today-back]', host).onclick = intro;
+          host.scrollIntoView({ block: 'start' });
+        }, { showUnit: true, label: 'Heute' });
+      }
+      intro();
+      if (location.hash === '#heute') setTimeout(function () { host.scrollIntoView({ block: 'start' }); }, 50);
+    });
+  }
+
   inlineChecks(); highlight(); viewSwitch(); notebookInPage(); notebookPage(); noteCount(); zoomSetup(); searchSetup(); flashcards(); glossary(); badges();
-  unitQuiz(); weakPage(); missBadges();
+  unitQuiz(); weakPage(); missBadges(); todayCard();
 })();

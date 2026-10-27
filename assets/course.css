@@ -1063,3 +1063,79 @@ body,:where(.wrap) *{font-feature-settings:"lnum" 1}
 .nb-undo button{color:var(--btn-fg)}
 .cta.ghost,.done-btn[aria-pressed="true"]{background:transparent;color:var(--ink);border-color:var(--ink)}
 .done-btn .mark{border-color:currentColor}
+
+/* ---------- 7 · Lesemodus: Größe und Schrift ---------- */
+:root{--fsa:.47}
+:root[data-size="s"]{--fsa:.43}:root[data-size="l"]{--fsa:.52}:root[data-size="xl"]{--fsa:.58}
+body{font-size-adjust:var(--fsa)}
+:root[data-font="sans"]{--f-body:"Atkinson Hyperlegible",system-ui,"Segoe UI",sans-serif;--f-display:"Atkinson Hyperlegible",system-ui,"Segoe UI",sans-serif}
+:root[data-font="sans"] body{font-weight:400}
+:root[data-font="sans"] :where(.wrap) :is(h1,h2,h3){font-weight:700;letter-spacing:0}
+:root[data-font="sans"] .eyebrow,:root[data-font="sans"] :where(.wrap) .eyebrow{font-variant:normal;text-transform:uppercase;font-size:12.5px;letter-spacing:.08em}
+.aa{font:600 17px/1 var(--f-display);letter-spacing:-.02em}
+.rd-sans{font-family:"Atkinson Hyperlegible",system-ui,sans-serif;font-style:normal}
+.lg-body .rd-row{display:grid;gap:8px}
+.rd-opts{display:flex;flex-wrap:wrap;gap:8px}
+
+/* ---------- 8 · Beschriftung verdecken ---------- */
+.lbl-bar{display:flex;flex-wrap:wrap;align-items:center;gap:6px 14px}
+.lbl-btn{padding:6px 12px;border:1.5px solid var(--rose-deep);border-radius:999px;background:transparent;color:var(--ink);font:italic 500 15px/1.2 var(--f-body);cursor:pointer}
+.lbl-btn[aria-pressed="true"]{background:var(--rose-deep);color:var(--paper)}
+.lbl-n{font-style:italic}
+/* Abdeckung: neutrale Fläche, gestrichelter Rand. Kein Rosé in der Abbildung (Läsion ist Magenta). */
+svg .lbl-cover{fill:var(--paper-2);stroke:var(--ink-2);stroke-width:1;stroke-dasharray:3 2;cursor:pointer}
+svg .lbl-cover:hover{fill:var(--muted-fill)}
+svg .lbl-cover.open{fill:transparent;stroke:var(--ok);stroke-dasharray:none;stroke-width:1.2}
+svg .lbl-cover:focus-visible{outline:none;stroke:var(--ink);stroke-width:2}
+.lbl-on svg{cursor:default}
+.fig-flash{animation:figflash 2.4s ease-out 1}
+@keyframes figflash{0%,40%{box-shadow:0 0 0 3px var(--rose-deep)}100%{box-shadow:0 0 0 0 transparent}}
+
+/* ---------- 9 · Zeichnen ---------- */
+.dr-launch{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+dialog.draw{width:100vw;height:100dvh;max-width:none;max-height:none;margin:0;padding:0;border:0;background:var(--paper);color:var(--ink);display:none;grid-template-rows:auto auto minmax(0,1fr)}
+dialog.draw[open]{display:grid}
+dialog.draw::backdrop{background:var(--paper)}
+.dr-tools{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;padding:8px 16px;background:var(--plate);border-bottom:1px solid var(--rule)}
+.dr-pens{display:flex;gap:6px}
+.dr-pen{width:30px;height:30px;border-radius:50%;border:2px solid var(--rule);background:var(--pc);cursor:pointer}
+.dr-pen[aria-pressed="true"]{outline:2px solid var(--ink);outline-offset:2px}
+.dr-size{display:flex;gap:8px;align-items:center;font:italic 500 15px/1 var(--f-body)}
+.dr-size input{width:110px;accent-color:var(--rose-deep)}
+.dr-main{display:grid;grid-template-columns:minmax(0,1fr) 300px;min-height:0}
+.dr-stage{position:relative;overflow:hidden;background:var(--plate);touch-action:none}
+.dr-stage canvas{position:absolute;inset:0;cursor:crosshair}
+.dr-over.wrap{position:absolute;inset:16px;max-width:none;margin:0;display:flex;align-items:center;justify-content:center;pointer-events:none;opacity:0}
+.dr-over svg{max-width:100%!important;max-height:100%;width:100%;height:100%}
+.dr-side{overflow:auto;padding:14px 16px;border-left:1px solid var(--rule);display:grid;gap:14px;align-content:start;background:var(--paper)}
+.dr-side summary{font:600 17px/1.2 var(--f-display);cursor:pointer}
+.dr-steps ol{margin:8px 0 0;padding-left:20px;display:grid;gap:6px;font-size:15.5px}
+.dr-cmp{display:grid;gap:10px}
+.dr-refs{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+@media (max-width:760px){.dr-main{grid-template-columns:1fr;grid-template-rows:minmax(0,1fr) auto}.dr-side{border-left:0;border-top:1px solid var(--rule);max-height:34vh}}
+
+/* ---------- 10 · Vorlesen ---------- */
+.tts-btn{justify-self:start;display:inline-flex;gap:6px;align-items:center;margin-top:-6px;padding:4px 11px;border:1.5px solid var(--rule);border-radius:999px;background:transparent;color:var(--ink-2);font:italic 500 14.5px/1.2 var(--f-body);cursor:pointer}
+.tts-btn svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linejoin:round;stroke-linecap:round}
+.tts-btn:hover,.tts-btn[aria-pressed="true"]{border-color:var(--rose-deep);color:var(--ink)}
+.tts-now{background:var(--paper-2);box-shadow:-8px 0 0 var(--paper-2),8px 0 0 var(--paper-2);border-radius:4px}
+.tts-bar{position:fixed;left:50%;bottom:calc(16px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:60;display:flex;flex-wrap:wrap;justify-content:center;gap:6px;align-items:center;max-width:calc(100vw - 20px);padding:8px 10px;border-radius:999px;background:var(--btn-bg);color:var(--btn-fg)}
+.tts-bar[hidden]{display:none}
+.tts-bar button{padding:6px 11px;border:1px solid currentColor;border-radius:999px;background:transparent;color:inherit;font:600 14px/1 var(--f-body);cursor:pointer}
+.tts-t{font:italic 500 15px/1 var(--f-body);padding:0 6px}
+@media print{.tts-btn,.tts-bar,.lbl-bar,.dr-launch{display:none!important}}
+
+/* ---------- 11 · Heute ---------- */
+.today{display:grid;gap:12px;padding:22px;border:1.5px solid var(--rule);border-radius:18px;background:var(--plate);scroll-margin-top:calc(var(--bar-h) + 12px)}
+.today.quiz{border:2px solid var(--rose-deep);border-radius:6px}
+.today>h2{font:400 34px/1.1 var(--f-black);margin:0;padding:0;border:0;font-size-adjust:none}
+:root[data-font="sans"] .today>h2,:root[data-font="sans"] .quiz h2,:root[data-font="sans"] .weak>h2{font-family:var(--f-black)}
+.today-mix{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:8px}
+.today-mix li{padding:5px 12px;border:1.5px solid var(--rose-deep);border-radius:999px;font:italic 500 16px/1.2 var(--f-body)}
+.today-mix b{font-style:normal}
+.today-fig{display:grid;gap:3px;padding:14px 16px;border:1.5px dashed var(--rose-deep);border-radius:14px;text-decoration:none}
+.today-fig b{font-size:19px}
+svg .lbl-cover{fill:color-mix(in srgb,var(--ink-2) 32%,var(--plate))}
+svg .lbl-cover:hover{fill:color-mix(in srgb,var(--ink-2) 45%,var(--plate))}
+svg .lbl-cover.open{fill:transparent;stroke:var(--ink-2);stroke-dasharray:none}
+@media (max-width:640px){.b-long{display:none}.b-short{display:inline}}
