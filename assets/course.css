@@ -1014,3 +1014,52 @@ dialog.legend::backdrop,dialog.account::backdrop,dialog.search::backdrop{backgro
 ::marker{font-variant-numeric:lining-nums;font-feature-settings:"lnum" 1}
 body,:where(.wrap) *{font-feature-settings:"lnum" 1}
 .home-hero p,.tool .wrap>header p{font-feature-settings:"onum" 1}
+
+/* Abschnittsquiz, Erinnerung, Schwachstellen */
+.quiz{display:grid;gap:14px;padding:22px 22px 24px;border:2px solid var(--rose-deep);outline:1px solid var(--rose-deep);outline-offset:-9px;border-radius:6px;background:var(--plate);scroll-margin-top:calc(var(--bar-h) + 12px)}
+.quiz h2{font:400 32px/1.1 var(--f-black);margin:0;padding:0;border:0;font-size-adjust:none}
+.quiz>p{max-width:62ch}
+.qz-act{display:flex;flex-wrap:wrap;gap:8px}
+.qz-top{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+.qz-card{display:grid;gap:14px}
+.qz-where{margin:0}
+.qz-opts{display:grid;gap:8px}
+.qz-opt{display:flex;gap:12px;align-items:baseline;width:100%;padding:12px 14px;text-align:left;border:1.5px solid var(--rule);border-radius:14px;background:var(--paper);color:var(--ink);font:500 18px/1.35 var(--f-body);cursor:pointer}
+.qz-opt:hover:not(:disabled){border-color:var(--rose-deep)}
+.qz-opt:disabled{cursor:default}
+.qz-k{flex:none;font:600 14px/1 var(--f-label);color:var(--ink-2)}
+/* Richtig/Falsch nie nur über Farbe: Zeichen ✓/✕ und Text */
+.qz-opt.ok{border-color:var(--ok);background:var(--ok-fill)}
+.qz-opt.ok .qz-k::before{content:"✓ "}
+.qz-opt.bad{border-color:var(--bad);background:var(--bad-fill)}
+.qz-opt.bad .qz-k::before{content:"✕ "}
+.qz-fb{display:grid;gap:10px}
+.qz-fb:empty{display:none}
+.qz-verdict{font-weight:700}
+.qz-verdict.ok{color:var(--ok)}.qz-verdict.bad{color:var(--bad)}
+.qz-fb .cta{justify-self:start}
+.qz-missed{margin:0;padding-left:20px;display:grid;gap:10px}
+.qz-missed p{margin:0}
+.miss-banner{display:block;padding:10px 16px;border-left:3px solid var(--rose-deep);border-radius:0 14px 14px 0;background:var(--q-fill);text-decoration:none;font-size:17px}
+.miss-banner span{color:var(--rose-deep);font-style:italic;white-space:nowrap}
+.miss-line a{color:var(--rose-deep)}
+.weak{display:grid;gap:12px;scroll-margin-top:calc(var(--bar-h) + 12px)}
+.weak>h2{font:400 34px/1.1 var(--f-black);margin:0;font-size-adjust:none;color:var(--ink)}
+.weak-g{display:grid;gap:8px}
+.weak-g h3{font:600 20px/1.25 var(--f-display);margin:8px 0 0}
+.weak-g h3 a{font:italic 500 15px/1 var(--f-body);margin-left:8px}
+.weak-e{border:1.5px solid var(--rule);border-left:4px solid var(--rose-deep);border-radius:0 14px 14px 0;background:var(--plate)}
+.weak-e summary{display:flex;gap:12px;justify-content:space-between;align-items:baseline;padding:12px 16px;cursor:pointer;list-style:none;font-size:17px}
+.weak-e summary::-webkit-details-marker{display:none}
+.weak-n{flex:none;font:italic 500 14px/1 var(--f-body);color:var(--rose-deep)}
+.weak-e>div{padding:0 16px 14px;display:grid;gap:6px;font-size:16.5px}
+.weak-run{margin-top:4px}
+
+/* Hauptknöpfe: hell = Tinte mit Rosa, dunkel = Rosa mit Tinte (sonst Rosa auf Hellrosa) */
+:root{--btn-bg:#3a2226;--btn-fg:#f4b9c8}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--btn-bg:#f4b9c8;--btn-fg:#3a2226}}
+:root[data-theme="dark"]{--btn-bg:#f4b9c8;--btn-fg:#3a2226}
+.cta,.done-btn,.sel-pop button:first-child,.qa-rate button[aria-pressed="true"],.due-pill,.nb-undo{background:var(--btn-bg);color:var(--btn-fg);border-color:var(--btn-bg)}
+.nb-undo button{color:var(--btn-fg)}
+.cta.ghost,.done-btn[aria-pressed="true"]{background:transparent;color:var(--ink);border-color:var(--ink)}
+.done-btn .mark{border-color:currentColor}

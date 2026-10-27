@@ -4,7 +4,7 @@
   var K = window.Kurs;
   if (!K) return;
   var state = K.state;
-  state.cards = state.cards || {};
+  state.cards = state.cards || {}; state.miss = state.miss || {}; state.quiz = state.quiz || {};
   var page = K.page;
   var UNIT_PAGES = ['01', '02', '03', '04', '05', '06', '07', '08'];
 
@@ -62,7 +62,13 @@
     var days = r === 2 ? INTERVAL[b] : r === 1 ? 1 : 0;
     return { b: b, d: today() + days, n: (c.n || 0) + 1, r: r };
   }
-  function rate(id, r) { state.cards[id] = next(id, r); K.save(); badges(); return state.cards[id]; }
+  function rate(id, r) {
+    state.cards[id] = next(id, r);
+    // Kursfragen (nicht Latein-Karten) zählen auch für die Schwachstellen; record() speichert
+    if (/^\d\d-F\d+$/.test(id)) record({ id: id, unit: id.slice(0, 2) }, r === 2 ? true : r === 1 ? 'soft' : false);
+    else K.save();
+    badges(); return state.cards[id];
+  }
   function whenText(days) { return days <= 0 ? 'heute nochmal' : days === 1 ? 'morgen' : 'in ' + days + ' Tagen'; }
   function hint(id, r) { return whenText(next(id, r).d - today()); }
   var LEVEL = function (c) { return !c ? 'neu' : c.b >= 3 ? 'sitzt' : c.b >= 1 ? 'im Aufbau' : 'wiederholen'; };
@@ -680,5 +686,177 @@
     render();
   }
 
+  // ---------- Abschnittsquiz und Schwachstellen ----------
+  // Fragen: Auswahlfragen aus Teil 1 der Wiederholung (mit Erklärung) + die offenen Abruffragen des Abschnitts.
+  // state.miss[id] = { unit, n: wie oft verpasst, ok: richtig in Folge seither, t }; nach 2× richtig in Folge erledigt.
+  // state.quiz[unit] = { mc, mcN, known, open, t } letztes Ergebnis.
+  state.miss = state.miss || {}; state.quiz = state.quiz || {};
+  function missCount(unit) { return Object.keys(state.miss).filter(function (k) { return !unit || state.miss[k].unit === unit; }).length; }
+  function missBadges() {
+    var n = missCount();
+    $$('[data-miss-n]').forEach(function (b) { b.hidden = !n; b.textContent = n; });
+    var line = $('[data-miss-line]');
+    if (line) { line.hidden = !n; line.innerHTML = n ? '<a href="merkheft.html#schwachstellen">' + n + (n === 1 ? ' verpasste Frage' : ' verpasste Fragen') + '</a> warten auf eine Wiederholung.' : ''; }
+  }
+  function record(item, good) {
+    state.miss = state.miss || {};
+    var m = state.miss[item.id];
+    if (good === true) { if (m) { m.ok = (m.ok || 0) + 1; m.t = Date.now(); if (m.ok >= 2) delete state.miss[item.id]; } }
+    else state.miss[item.id] = { unit: item.unit, n: (m ? m.n : 0) + 1, ok: 0, t: Date.now(), soft: good === 'soft' };
+    K.save(); missBadges();
+  }
+  function quizItems(d, unit, onlyMiss) {
+    var mc = d.mc.filter(function (x) { return x.units.indexOf(unit) >= 0; }).map(function (x) { return { kind: 'mc', id: x.id, unit: unit, q: x.q, o: x.o, a: x.a, e: x.e }; });
+    var open = d.cards.filter(function (c) { return c.unit === unit; }).map(function (c) { return { kind: 'open', id: c.id, unit: unit, n: c.n, q: c.q, ctx: c.ctx, a: c.a, sec: c.sec, secT: c.secT }; });
+    var all = mc.concat(open);
+    return onlyMiss ? all.filter(function (x) { return state.miss[x.id]; }) : all;
+  }
+  function allMissItems(d) {
+    var out = [];
+    COURSE.forEach(function (u) { if (u !== '00') out = out.concat(quizItems(d, u, true)); });
+    // Eine Auswahlfrage für zwei Abschnitte nur einmal
+    var seen = {}; return out.filter(function (x) { if (seen[x.id]) return false; seen[x.id] = 1; return true; });
+  }
+
+  // Spielt eine Fragenliste in einem Container ab; ruft onDone(ergebnis) auf.
+  function runQuiz(host, items, onDone, opts) {
+    opts = opts || {};
+    var i = 0, res = { mc: 0, mcN: 0, known: 0, open: 0, missed: [] };
+    function head() {
+      return '<div class="qz-top"><span class="eyebrow">' + (opts.label || 'Frage') + ' ' + (i + 1) + ' von ' + items.length + '</span>' +
+        '<button type="button" class="linkbtn" data-qz-stop>Beenden</button></div><div class="fc-bar" aria-hidden="true"><i style="width:' + (i / items.length * 100) + '%"></i></div>';
+    }
+    function where(it) { var u = unitInfo(it.unit); return opts.showUnit && u ? '<p class="qz-where note">Abschnitt ' + esc(u.n) + ' · ' + esc(u.t) + '</p>' : ''; }
+    function show() {
+      var it = items[i];
+      if (it.kind === 'mc') {
+        host.innerHTML = head() + '<div class="qz-card">' + where(it) + '<p class="cq-q">' + esc(it.q) + '</p><div class="qz-opts" role="group" aria-label="Antworten">' +
+          it.o.map(function (o, k) { return '<button type="button" class="qz-opt" data-k="' + k + '"><span class="qz-k">' + 'ABCD'.charAt(k) + '</span>' + esc(o) + '</button>'; }).join('') +
+          '</div><div class="qz-fb" aria-live="polite"></div></div>';
+        $$('.qz-opt', host).forEach(function (b) {
+          b.addEventListener('click', function () {
+            var k = +b.getAttribute('data-k'), ok = k === it.a;
+            $$('.qz-opt', host).forEach(function (x) { x.disabled = true; var kk = +x.getAttribute('data-k'); if (kk === it.a) x.classList.add('ok'); else if (kk === k) x.classList.add('bad'); });
+            res.mcN++; if (ok) res.mc++; else res.missed.push(it);
+            record(it, ok);
+            $('.qz-fb', host).innerHTML = '<p class="qz-verdict ' + (ok ? 'ok' : 'bad') + '">' + (ok ? '✓ Richtig.' : '✕ Nicht ganz. Richtig ist <b>' + 'ABCD'.charAt(it.a) + '</b>.') + '</p>' +
+              (it.e ? '<p>' + esc(it.e) + '</p>' : '') + (!ok ? '<p class="note">Gespeichert unter Schwachstellen.</p>' : '') +
+              '<button class="cta" type="button" data-qz-next>' + (i + 1 < items.length ? 'Weiter' : 'Auswertung') + '</button>';
+            $('[data-qz-next]', host).focus({ preventScroll: true });
+          });
+        });
+      } else {
+        host.innerHTML = head() + '<div class="qz-card">' + where(it) +
+          (it.ctx ? '<div class="cq-ctx">' + (it.ctx.head ? '<span class="eyebrow">' + esc(it.ctx.head) + '</span>' : '') + '<p>' + it.ctx.html + '</p></div>' : '') +
+          '<p class="cq-q"><b>' + it.n + '.</b> ' + it.q + '</p>' +
+          '<label class="fc-try"><span class="eyebrow">Deine Antwort (optional)</span><textarea rows="3"></textarea></label>' +
+          '<div class="qz-fb"><button class="cta" type="button" data-qz-show>Antwort zeigen</button></div></div>';
+        $('[data-qz-show]', host).addEventListener('click', function () {
+          $('.qz-fb', host).innerHTML = '<div class="fc-answer"><span class="eyebrow">Lösung aus dem Kurs</span><p>' + it.a + '</p></div>' +
+            '<span class="eyebrow">Wie gut wusstest du es?</span><div class="rate-row">' +
+            '<button type="button" class="rate-b r0" data-r="0">Nochmal</button><button type="button" class="rate-b r1" data-r="1">Unsicher</button><button type="button" class="rate-b r2" data-r="2">Gewusst</button></div>';
+          $$('[data-r]', host).forEach(function (b) {
+            b.addEventListener('click', function () {
+              var r = +b.getAttribute('data-r');
+              rate(it.id, r); // fließt in Lernkarten und Schwachstellen
+              res.open++; if (r === 2) res.known++; else res.missed.push(it);
+              next();
+            });
+          });
+        });
+      }
+      var top = host.getBoundingClientRect().top;
+      if (top < 0 || top > innerHeight * .6) host.scrollIntoView({ block: 'start' });
+    }
+    function next() { i++; if (i < items.length) show(); else onDone(res); }
+    host.onclick = function (e) {
+      if (e.target.closest('[data-qz-next]')) next();
+      else if (e.target.closest('[data-qz-stop]')) onDone(res, true);
+    };
+    show();
+  }
+  function missedList(list) {
+    return '<ul class="qz-missed">' + list.map(function (it) {
+      return '<li><p><b>' + (it.kind === 'mc' ? esc(it.q) : it.n + '. ' + it.q) + '</b></p><p class="note">' +
+        (it.kind === 'mc' ? 'Richtig: ' + esc(it.o[it.a]) + (it.e ? '. ' + esc(it.e) : '') : it.a) + '</p></li>';
+    }).join('') + '</ul>';
+  }
+
+  function unitQuiz() {
+    var host = $('[data-quiz]'); if (!host) return;
+    var unit = host.getAttribute('data-quiz');
+    // Erinnerung oben im Abschnitt, wenn hier noch Fragen offen sind
+    var n0 = missCount(unit), hdr = $('.wrap > header');
+    if (n0 && hdr) {
+      var b = el('a', 'miss-banner', '<b>' + n0 + (n0 === 1 ? ' Frage' : ' Fragen') + '</b> aus diesem Abschnitt hast du zuletzt verpasst. <span>Zum Quiz ↓</span>');
+      b.href = '#quiz'; hdr.appendChild(b);
+    }
+    data().then(function (d) {
+      function intro() {
+        var all = quizItems(d, unit), miss = quizItems(d, unit, true), last = state.quiz[unit];
+        var mcN = all.filter(function (x) { return x.kind === 'mc'; }).length, openN = all.length - mcN;
+        host.innerHTML = '<span class="eyebrow">Abschnittsquiz</span><h2 id="quiz-t">Teste dich</h2>' +
+          '<p>' + (mcN ? mcN + ' Auswahlfrage' + (mcN > 1 ? 'n' : '') + ' aus der Wiederholung und ' : '') + openN + ' offene Fragen aus diesem Abschnitt, eine nach der anderen. Was du verpasst, landet unter <a href="merkheft.html#schwachstellen">Schwachstellen</a>.</p>' +
+          (last ? '<p class="note">Letztes Mal' + (last.mcN ? ': ' + last.mc + ' von ' + last.mcN + ' Auswahlfragen richtig' : '') + (last.open ? (last.mcN ? ', ' : ': ') + last.known + ' von ' + last.open + ' offenen gewusst' : '') + ' (' + new Date(last.t).toLocaleDateString('de-DE') + ').</p>' : '') +
+          '<div class="qz-act"><button class="cta" type="button" data-qz-all>Quiz starten</button>' +
+          (miss.length ? '<button class="cta ghost" type="button" data-qz-miss>Nur Verpasstes (' + miss.length + ')</button>' : '') + '</div>';
+        $('[data-qz-all]', host).onclick = function () { start(all); };
+        if (miss.length) $('[data-qz-miss]', host).onclick = function () { start(miss); };
+      }
+      function start(items) {
+        runQuiz(host, items, function (res, stopped) {
+          if (!stopped || res.mcN + res.open) { state.quiz[unit] = { mc: res.mc, mcN: res.mcN, known: res.known, open: res.open, t: Date.now() }; K.save(); }
+          var left = missCount(unit);
+          host.innerHTML = '<span class="eyebrow">Auswertung</span><h2 id="quiz-t">' + (res.missed.length ? 'Gut gemacht, ' + res.missed.length + ' zum Wiederholen' : 'Alles gewusst') + '</h2>' +
+            '<ul class="tally">' + (res.mcN ? '<li><b>' + res.mc + '/' + res.mcN + '</b> Auswahl richtig</li>' : '') + (res.open ? '<li><b>' + res.known + '/' + res.open + '</b> offene gewusst</li>' : '') + '</ul>' +
+            (res.missed.length ? '<p>Diese Fragen sind unter <a href="merkheft.html#schwachstellen">Schwachstellen</a> gespeichert. Sie verschwinden, wenn du sie zweimal hintereinander richtig hast.</p>' + missedList(res.missed) : '<p>Morgen oder übermorgen kurz nochmal: Abrufen nach einer Pause verankert es am besten.</p>') +
+            '<div class="qz-act">' + (left ? '<button class="cta" type="button" data-qz-again>Verpasstes nochmal (' + left + ')</button>' : '') + '<button class="cta ghost" type="button" data-qz-back>Zurück zum Start</button></div>';
+          var a = $('[data-qz-again]', host); if (a) a.onclick = function () { start(quizItems(d, unit, true)); };
+          $('[data-qz-back]', host).onclick = intro;
+          host.scrollIntoView({ block: 'start' });
+        });
+      }
+      intro();
+      if (new URLSearchParams(location.search).get('quiz') === 'miss' && quizItems(d, unit, true).length) {
+        history.replaceState(null, '', location.pathname + location.hash);
+        setTimeout(function () { start(quizItems(d, unit, true)); }, 50);
+      }
+    });
+  }
+
+  function weakPage() {
+    var host = $('[data-weak]'); if (!host) return;
+    data().then(function (d) {
+      function render() {
+        var items = allMissItems(d);
+        if (!items.length) {
+          host.innerHTML = '<h2 id="weak-t">Schwachstellen</h2><div class="nb-empty"><p><b>Gerade nichts offen.</b> Fragen, die du im Abschnittsquiz verpasst oder als „Nochmal“ oder „Unsicher“ bewertest, sammeln sich hier, bis du sie zweimal hintereinander richtig hast.</p></div>';
+          return;
+        }
+        var by = {};
+        items.forEach(function (it) { (by[it.unit] = by[it.unit] || []).push(it); });
+        host.innerHTML = '<h2 id="weak-t">Schwachstellen</h2><p class="note">' + items.length + (items.length === 1 ? ' Frage' : ' Fragen') + ' zum Wiederholen. Sie verschwinden, wenn du sie zweimal hintereinander richtig hast.</p>' +
+          '<div class="qz-act"><button class="cta" type="button" data-weak-run>Alle üben (' + items.length + ')</button></div>' +
+          COURSE.filter(function (u) { return by[u]; }).map(function (u) {
+            var info = unitInfo(u);
+            return '<div class="weak-g"><h3><span class="nb-n">' + esc(info.n) + '</span> ' + esc(info.t) + ' <a class="note" href="' + info.file + '?quiz=miss#quiz">im Abschnitt üben →</a></h3>' +
+              by[u].map(function (it) {
+                var m = state.miss[it.id];
+                return '<details class="weak-e"><summary><span>' + (it.kind === 'mc' ? esc(it.q) : '<b>' + it.n + '.</b> ' + it.q) + '</span><span class="weak-n">' + (m.n > 1 ? m.n + '× verpasst' : m.soft ? 'unsicher' : 'verpasst') + '</span></summary>' +
+                  '<div><p>' + (it.kind === 'mc' ? '<b>Richtig:</b> ' + esc(it.o[it.a]) + (it.e ? '<br>' + esc(it.e) : '') : it.a) + '</p>' +
+                  (it.sec ? '<p><a href="' + info.file + '#' + it.sec + '">Im Kurs nachlesen: ' + esc(it.secT) + ' →</a></p>' : '') + '</div></details>';
+              }).join('') + '</div>';
+          }).join('');
+        $('[data-weak-run]', host).onclick = function () {
+          var box = el('div', 'quiz weak-run'); host.innerHTML = ''; host.appendChild(box);
+          runQuiz(box, items, function () { render(); host.scrollIntoView({ block: 'start' }); }, { showUnit: true, label: 'Schwachstelle' });
+        };
+      }
+      render();
+      if (location.hash === '#schwachstellen') setTimeout(function () { host.scrollIntoView({ block: 'start' }); }, 50);
+    });
+  }
+
   inlineChecks(); highlight(); viewSwitch(); notebookInPage(); notebookPage(); noteCount(); zoomSetup(); searchSetup(); flashcards(); glossary(); badges();
+  unitQuiz(); weakPage(); missBadges();
 })();
