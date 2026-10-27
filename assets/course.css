@@ -1174,6 +1174,24 @@ details[open]>:not(summary){animation:fade-in .3s ease both}
   html{scroll-behavior:auto}
 }
 
+/* Werkzeugzeile unter jeder Abbildung: nichts liegt über der Zeichnung */
+.fig-tools{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px 14px}
+.fig-tools .lbl-bar{flex:1 1 auto}
+.fig-tools .z-open{position:static;opacity:1;margin-left:auto}
+.fig-tools .z-open span{display:inline}
+@media print{.fig-tools{display:none!important}}
+
+/* Kopfzeile: Platz für den Titel. Beschriftungen der Knöpfe erst ab 1000 px, Legende auf kleinen Handys nur im Menü. */
+.topbar .tbtn .lbl{display:none}
+@media (min-width:1000px){.topbar .tbtn .lbl{display:inline}}
+@media (max-width:420px){.topbar [data-open-legend]{display:none}}
+@media (max-width:560px){.m-list .m-t{white-space:normal;overflow:visible}}
+@media (max-width:360px){.topbar{gap:2px;padding-inline:8px}.topbar .tbtn{padding:0 7px}.brand b{font-size:19px}}
+.m-list .m-t{hyphens:auto;overflow-wrap:anywhere}
+dialog.draw,dialog.zoom{width:100%;max-width:100%;inset:0}
+dialog.draw{grid-template-columns:minmax(0,1fr)}
+dialog.draw .z-bar b{min-width:0}
+
 /* ---------- 13 · Willkommens-Anleitung ---------- */
 dialog.tour{width:min(700px,calc(100vw - 20px));max-height:calc(100dvh - 24px);padding:0;border:2px solid var(--rose-deep);outline:1px solid var(--rose-deep);outline-offset:-10px;border-radius:6px;background:var(--plate);color:var(--ink);overflow:auto}
 dialog.tour::backdrop{background:rgb(58 34 38 / .72)}

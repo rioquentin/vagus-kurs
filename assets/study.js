@@ -144,12 +144,15 @@
       var vb = svg.viewBox && svg.viewBox.baseVal;
       if (!vb || !vb.width || vb.width < 280) return;
       var host = svg.closest('.figure, .plate') || svg.parentElement;
-      if (host.querySelector(':scope > .z-open')) return;
+      if (host.querySelector('.z-open')) return;
       host.classList.add('has-zoom');
       var b = el('button', 'z-open', '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h6v6M10 20H4v-6M20 4l-7 7M4 20l7-7"/></svg><span>Vergrößern</span>');
       b.type = 'button';
       b.addEventListener('click', function () { openZoom(svg, host); });
-      host.appendChild(b);
+      // In einer Werkzeugzeile unter der Abbildung, nie über der Zeichnung (sonst verdeckt er Beschriftungen)
+      var row = host.querySelector(':scope > .fig-tools');
+      if (!row) { row = el('div', 'fig-tools'); host.insertBefore(row, host.querySelector(':scope > .figcap, :scope > .caption')); }
+      row.appendChild(b);
       // Klick auf die Abbildung selbst öffnet ebenfalls die Lupe (nicht bei Abbildungen mit eigenen Bedienelementen)
       if (!svg.querySelector('a, button, [tabindex]')) svg.addEventListener('click', function () { openZoom(svg, host); });
     });

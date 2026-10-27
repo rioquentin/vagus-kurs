@@ -52,8 +52,10 @@
       var svg = $('svg[viewBox]', host);
       if (!svg || labelTexts(svg).length < 3) return;
       var bar = el('div', 'lbl-bar', '<button type="button" class="lbl-btn" data-lbl aria-pressed="false">Beschriftung verdecken</button><span class="lbl-n note" aria-live="polite"></span><button type="button" class="linkbtn" data-lbl-all hidden>alle aufdecken</button>');
-      var cap = $('.figcap', host);
-      host.insertBefore(bar, cap || null);
+      // Gleiche Werkzeugzeile wie „Vergrößern“ (study.js), unter der Abbildung
+      var row = host.querySelector(':scope > .fig-tools');
+      if (!row) { row = el('div', 'fig-tools'); host.insertBefore(row, $('.figcap', host)); }
+      row.insertBefore(bar, row.firstChild);
       bar.querySelector('[data-lbl]').addEventListener('click', function () {
         var on = !host.classList.contains('lbl-on');
         host.classList.toggle('lbl-on', on);
