@@ -155,7 +155,7 @@
       var cap = $$('.figcap b').filter(function (b) { return b.textContent.trim() === abb; })[0];
       var svg = cap && $('svg[viewBox]', cap.closest('.figure'));
       if (!svg) return;
-      var c = svg.cloneNode(true); c.removeAttribute('width'); c.removeAttribute('height'); $$('.lbl-cover', c).forEach(function (r) { r.remove(); });
+      var c = svg.cloneNode(true); c.removeAttribute('width'); c.removeAttribute('height'); c.style.minWidth = ''; $$('.lbl-cover', c).forEach(function (r) { r.remove(); });
       over.appendChild(c); opacity.disabled = false; if (+opacity.value === 0) opacity.value = 45; over.style.opacity = opacity.value / 100;
     }
     refs.addEventListener('click', function (e) { var b = e.target.closest('[data-ref]'); if (b) showRef(b.getAttribute('aria-pressed') === 'true' ? null : b.getAttribute('data-ref')); });

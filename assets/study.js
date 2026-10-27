@@ -186,7 +186,7 @@
     function openZoom(svg, host) {
       canvas.innerHTML = '';
       var c = svg.cloneNode(true);
-      c.removeAttribute('width'); c.removeAttribute('height');
+      c.removeAttribute('width'); c.removeAttribute('height'); c.style.minWidth = ''; // Handy-Mindestbreite gilt nur in der Lesespalte
       c.setAttribute('aria-hidden', 'false');
       canvas.appendChild(c);
       // SVG-Schema oder Atlas-Bild (img mit width/height)

@@ -9,6 +9,8 @@
   function load() { try { return JSON.parse(localStorage.getItem(KEY) || '{}') || {}; } catch (e) { return {}; } }
   var state = load();
   state.done = state.done || {};
+  // Früher landeten Klicks auf beantwortete Prüfungsfragen (eigenes data-done der Seite) hier: aufräumen
+  Object.keys(state.done).forEach(function (k) { if (!/^\d\d$/.test(k)) delete state.done[k]; });
   state.scroll = state.scroll || {};
   var prev = JSON.parse(JSON.stringify(state));
 
@@ -53,14 +55,14 @@
         el.setAttribute('aria-description', state.done[id] ? 'erledigt' : '');
       }
     });
-    $$('[data-done]').forEach(function (b) {
+    $$('.done-btn[data-done]').forEach(function (b) {
       var on = !!state.done[b.getAttribute('data-done')];
       b.setAttribute('aria-pressed', on);
       b.querySelector('span:last-child').textContent = on ? 'Erledigt · zurücknehmen' : 'Als erledigt markieren';
     });
   }
   document.addEventListener('click', function (e) {
-    var b = e.target.closest('[data-done]');
+    var b = e.target.closest('.done-btn[data-done]');
     if (b) { var id = b.getAttribute('data-done'); state.done[id] = !state.done[id]; if (!state.done[id]) delete state.done[id]; save(); render(); }
     if (e.target.closest('[data-reset]') && confirm('Alle Markierungen und den Lesestand löschen?')) {
       state.done = {}; state.scroll = {}; delete state.last; save(); render(); resume();
