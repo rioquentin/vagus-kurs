@@ -1284,3 +1284,93 @@ dialog.tour[open]{display:grid;grid-template-rows:auto auto auto}
   .tv-draw path{stroke-dashoffset:0!important}
 }
 @media print{dialog.tour{display:none!important}}
+
+/* ---------- 14 · Ruhe und Luft (Lesbarkeit vor Dekor) ----------
+   Gemessen vorher: Zeilenabstand effektiv ≈ 1,4 (Cormorant wird auf ≈ 19 px vergrößert, der Abstand
+   aber von 16 px berechnet), ≈ 74 Zeichen pro Zeile, 14 px zwischen Absätzen, 16 umrandete Knöpfe
+   auf Seite 1, Rosa-Text 3,25 : 1. Ziel: Zeilenabstand ≈ 1,6 bezogen auf die sichtbare Größe,
+   ≈ 60 Zeichen, deutlich mehr Abstand, weniger Rahmen, alle Texte ≥ 4,5 : 1. */
+
+/* Ruhigere Palette: fast weißes Papier, zarteres Rosa für Flächen, dunkleres Rosa für Text */
+:root{
+  --paper:#f8f0f0; --plate:#fffbfb; --paper-2:#f1e2e4; --q-fill:#f6eaeb; --muted-fill:#f1e2e4; --flag-fill:#fbecee;
+  --ink-2:#6e5155; --rule:#e8d5d8; --rose-text:#a3435c;
+  --lhk:1.9; --gap-s:22px; --gap-l:64px;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --paper:#2e2321; --plate:#3a2c29; --paper-2:#46352f; --q-fill:#433330; --muted-fill:#4a3833;
+  --ink:#f6e6e9; --ink-2:#d2b7bc; --rule:#5c4642; --rose-text:#eaa0b2}}
+:root[data-theme="dark"]{
+  --paper:#2e2321; --plate:#3a2c29; --paper-2:#46352f; --q-fill:#433330; --muted-fill:#4a3833;
+  --ink:#f6e6e9; --ink-2:#d2b7bc; --rule:#5c4642; --rose-text:#eaa0b2}
+:root[data-font="sans"]{--lhk:1.65}
+
+/* Zeilenabstand passend zur sichtbaren Schriftgröße (wächst mit der gewählten Textgröße mit) */
+:where(.wrap) :is(p,li,dd,dt,blockquote,summary,.figcap,.note,td){line-height:calc(var(--lhk) * var(--fsa) / .47)}
+:where(.wrap) :is(h2){line-height:1.25}
+:where(.wrap) td{line-height:calc((var(--lhk) - .15) * var(--fsa) / .47)}
+.cq-q,.tour-body,.qa-a,.fc-answer p,.weak-e>div,.gl-e dd,.nb-e textarea{line-height:calc(var(--lhk) * var(--fsa) / .47)}
+
+/* Zeilenlänge: etwa 60 Zeichen */
+:where(.wrap) :is(p,li){max-width:62ch}
+.wrap :is(.box,.recall,.hook,.mis) :is(p,li){max-width:60ch}
+
+/* Abstände: Abschnitte atmen, Absätze trennen sich, Listen nicht gedrängt */
+main>.wrap{gap:var(--gap-l)}
+:where(.wrap) :is(section,header){gap:var(--gap-s)}
+:where(.wrap) h2{padding-top:40px;margin-top:4px;border-top-color:var(--rule)}
+:where(.wrap) h2+*{margin-top:-4px}
+:where(.wrap) :is(ul,ol){gap:12px}
+:where(.wrap) li>ul,:where(.wrap) li>ol{margin-top:10px}
+:where(.wrap) .box,:where(.wrap) .figure,:where(.wrap) details>div{gap:14px}
+:where(.wrap) .box{padding:24px 28px}
+:where(.wrap) .figure{padding:20px}
+:where(.wrap) details>div{padding:4px 26px 22px}
+:where(.wrap) summary{padding:18px 26px}
+:where(.wrap) th,:where(.wrap) td{padding:12px 12px}
+.pager{margin-top:88px;gap:20px}
+.quiz,.today{padding:28px}
+@media (max-width:560px){
+  :root{--gap-s:18px;--gap-l:48px}
+  :where(.wrap) .box{padding:20px}
+  :where(.wrap) .figure{padding:14px}
+  :where(.wrap) h2{padding-top:32px}
+}
+
+/* Weniger Rahmen, weniger Knöpfe im Blick */
+body::after{opacity:.09}
+.qa-btn{border-color:transparent;background:transparent;color:var(--rose-text);padding:2px 4px;text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:3px}
+.qa-btn:hover{border-color:transparent;color:var(--ink)}
+.qa-btn[aria-expanded="true"]{background:transparent;color:var(--ink);border-color:transparent}
+.qa{border-left-width:2px;padding:14px 18px}
+/* Vorlesen: nur noch ein kleines Symbol unter der Überschrift */
+.tts-btn{border-color:transparent;padding:2px 2px;color:var(--ink-2);margin-top:-12px}
+.tts-btn span{font-size:13.5px}
+.tts-btn:hover,.tts-btn[aria-pressed="true"]{border-color:transparent;color:var(--rose-text)}
+.lbl-btn{border-color:var(--rule)}
+.lbl-btn[aria-pressed="true"]{border-color:var(--rose-deep)}
+.z-open{border-color:var(--rule);background:transparent}
+:where(.wrap) .box,.unit,.stat,.review,.done-row,.nav2 a,.gl-e,.nb-e,.weak-e,.today,.fc-mastery,.card-q,.atlas{border-color:var(--rule)}
+.recall{border-color:transparent!important}
+
+/* Rosa als Textfarbe nur in der lesbaren, dunkleren Fassung */
+.miss-banner span,.miss-line a,.weak-n,.weak-g h3 a,.unit .n,.gl-g h2,.fleuron,.tv-cap,.lbl-n{color:var(--rose-text)}
+
+/* Abbildungen in beiden Modi auf hellem Papier: der Farbcode (Gelb, Türkis, Violett, Rot, Magenta)
+   ist für hellen Grund gemacht und versinkt sonst im Sepia (Violett nur 2 : 1). */
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) :is(.wrap .figure,.wrap .plate,.z-stage){
+  --paper:#f4ebea; --plate:#f7efee; --paper-2:#eadcdc; --ink:#3a2226; --ink-2:#6e5155; --rule:#dcc7ca; --muted:#a89194; --muted-fill:#eadcdc;
+  --muscle-tint:#f3e3da; --action-fill:#fbf5f4; --flag-fill:#fbecee; --q-fill:#f1e6e6; --rose-text:#a3435c; --cover:#fbf6f1;
+  color-scheme:light; background:var(--plate); color:var(--ink)}}
+:root[data-theme="dark"] :is(.wrap .figure,.wrap .plate,.z-stage){
+  --paper:#f4ebea; --plate:#f7efee; --paper-2:#eadcdc; --ink:#3a2226; --ink-2:#6e5155; --rule:#dcc7ca; --muted:#a89194; --muted-fill:#eadcdc;
+  --muscle-tint:#f3e3da; --action-fill:#fbf5f4; --flag-fill:#fbecee; --q-fill:#f1e6e6; --rose-text:#a3435c; --cover:#fbf6f1;
+  color-scheme:light; background:var(--plate); color:var(--ink)}
+
+/* Lange deutsche Wörter dürfen die Spalte nie sprengen: Raster schrumpft mit, Wörter werden getrennt */
+main>.wrap,:where(.wrap) :is(section,header){grid-template-columns:minmax(0,1fr)}
+:where(.wrap) :is(h1,h2,h3,p,li,dd,dt,summary,.eyebrow,.figcap,blockquote,td){overflow-wrap:break-word;hyphens:auto}
+.tool .wrap>header h1,.home-hero h1{hyphens:manual}
+:where(.wrap) :is(div,section,header,figure,details,li,p,ol,ul,dl,dd,dt,blockquote,article,aside,nav,form,label){min-width:0}
+:where(.wrap) .grid2{grid-template-columns:repeat(auto-fit,minmax(min(280px,100%),1fr))}
+:where(.wrap) .q .qhead{flex-wrap:wrap;row-gap:4px}
