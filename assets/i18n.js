@@ -14,7 +14,7 @@
   // Werkzeuge, die in der Lesespalte liegen und übersetzt werden dürfen
   var TOOL = '.qa-btn, .qa > .eyebrow, .qa-rate, .fig-tools, .view-sw, .atlas-note > b, .atlas-card figcaption > p > b, .tts-btn, .dr-launch, .miss-banner, .lbl-bar, .quiz, .today, .weak, .z-open';
   // Kursinhalt innerhalb dieser Werkzeuge (Fragen, Lösungen, Erklärungen) bleibt Deutsch
-  var KEEP = '.qa-a, .cq-q, .cq-ctx, .fc-answer > p, .qz-opt, .qz-fb > p:not(.qz-verdict):not(.note), .qz-missed, .weak-e > div, .weak-e summary > span:first-child, .cq-term, .tv-q, .tv-line, .tv-opts, .atlas-card figcaption p:not(.atlas-cr), .dr-steps, .z-cap, #zoom-t, .s-snip, .s-results b, .gl-e dd > p:first-child, .gl-e dt, .nb-e blockquote, .nb-e textarea, .ctoc-t, .ctoc-sub, .unit .t, .unit .s, .chip > b + *, [data-fc-card], [data-fc-answer]';
+  var KEEP = '.skip-list li > span, .qa-a, .cq-q, .cq-ctx, .fc-answer > p, .qz-opt, .qz-fb > p:not(.qz-verdict):not(.note), .qz-missed, .weak-e > div, .weak-e summary > span:first-child, .cq-term, .tv-q, .tv-line, .tv-opts, .atlas-card figcaption p:not(.atlas-cr), .dr-steps, .z-cap, #zoom-t, .s-snip, .s-results b, .gl-e dd > p:first-child, .gl-e dt, .nb-e blockquote, .nb-e textarea, .ctoc-t, .ctoc-sub, .unit .t, .unit .s, .chip > b + *, [data-fc-card], [data-fc-answer]';
   var COURSE_PAGE = /^\d\d$/.test(document.body.dataset.page);
   function inScope(el) {
     if (!el || el.closest('script, style, svg text, code, pre, [data-no-i18n]')) return false;

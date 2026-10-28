@@ -64,7 +64,7 @@
       .sort(function (x, y) { return (x.ts || 0) - (y.ts || 0); });
     out.gone = gone;
     // Erledigt und Ansicht je Abbildung: pro Schlüssel die zuletzt geänderte Seite
-    [['done', 'doneT'], ['views', 'viewsT'], ['miss', 'missT'], ['quiz', 'quizT'], ['days', 'daysT']].forEach(function (p) {
+    [['done', 'doneT'], ['views', 'viewsT'], ['miss', 'missT'], ['quiz', 'quizT'], ['days', 'daysT'], ['skip', 'skipT']].forEach(function (p) {
       var va = a[p[0]] || {}, vb = b[p[0]] || {}, ta = a[p[1]] || {}, tb = b[p[1]] || {};
       out[p[0]] = {}; out[p[1]] = {};
       Object.keys(va).concat(Object.keys(vb), Object.keys(ta), Object.keys(tb)).forEach(function (k) {

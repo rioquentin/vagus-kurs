@@ -24,7 +24,7 @@
     var seen = {};
     (state.notes || []).forEach(function (n) { seen[n.id] = 1; if (!same(pn[n.id], n)) n.mod = now; });
     Object.keys(pn).forEach(function (id) { if (!seen[id]) { state.gone = state.gone || {}; state.gone[id] = now; } });
-    [['done', 'doneT'], ['views', 'viewsT'], ['miss', 'missT'], ['quiz', 'quizT'], ['days', 'daysT']].forEach(function (p) {
+    [['done', 'doneT'], ['views', 'viewsT'], ['miss', 'missT'], ['quiz', 'quizT'], ['days', 'daysT'], ['skip', 'skipT']].forEach(function (p) {
       var a = prev[p[0]] || {}, b = state[p[0]] || {}, t = state[p[1]] = state[p[1]] || {};
       Object.keys(a).concat(Object.keys(b)).forEach(function (k) { if (!same(a[k], b[k])) t[k] = now; });
     });

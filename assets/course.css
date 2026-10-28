@@ -1423,3 +1423,18 @@ html[data-ui="en"].ui-ready body{animation:fade-in .2s ease both}
 @media print{.swipe-hint{display:none}}
 /* Kopfzeile auf dem Handy: Sprache und Farbschema wandern in „Aa“ (dort beide wählbar), damit der Titel Platz hat */
 @media (max-width:520px){.topbar [data-ui-toggle],.topbar [data-theme-toggle]{display:none}}
+
+/* „Nicht prüfungsrelevant“: bewusst leiser als die drei Bewertungen, damit man ihn nicht aus Versehen trifft */
+.skip-b{display:flex;justify-content:center;align-items:center;gap:8px;width:100%;margin-top:10px;padding:10px 12px;border:1.5px dashed var(--rule);border-radius:14px;background:transparent;color:var(--ink-2);font:500 15px/1.25 var(--f-body);cursor:pointer;text-align:center}
+.skip-b:hover{border-color:var(--ink-2);color:var(--ink)}
+.qa-rate .qa-skip{border-style:dashed;border-color:var(--rule);color:var(--ink-2);font-weight:500}
+.qa-rate .qa-skip[aria-pressed="true"]{background:transparent;color:var(--ink);border-color:var(--ink-2);border-style:solid}
+.qz-next-row{display:flex;flex-wrap:wrap;align-items:center;gap:8px 18px}
+.qz-next-row .linkbtn{color:var(--ink-2);font-size:15px}
+.skip-list{margin-top:18px;border-top:1px solid var(--rule);padding-top:12px}
+.skip-list summary{cursor:pointer;font-weight:600;color:var(--ink-2)}
+.skip-list ul{list-style:none;margin:10px 0 0;padding:0;display:grid;gap:8px}
+.skip-list li{display:flex;justify-content:space-between;align-items:baseline;gap:12px;font-size:15px;max-width:none}
+.skip-list li>span{min-width:0}
+.skip-list .linkbtn{flex:none;color:var(--ink-2)}
+@media (max-width:480px){.skip-b kbd{display:none}}

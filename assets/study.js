@@ -53,7 +53,14 @@
   var INTERVAL = [0, 1, 3, 7, 14, 30, 60];
   function today() { return Math.floor((Date.now() - 4 * 3600e3 - new Date().getTimezoneOffset() * 60e3) / 864e5); } // Tageswechsel um 4 Uhr
   function info(id) { return state.cards[id] || null; }
-  function isDue(id) { var c = info(id); return !!c && c.d <= today(); }
+  // „Nicht prüfungsrelevant“: state.skip[id] = 1. Die Frage bleibt im Kurs, wird aber nirgends mehr abgefragt.
+  state.skip = state.skip || {};
+  function skipped(id) { return !!state.skip[id]; }
+  function setSkip(id, on) {
+    if (on) { state.skip[id] = 1; delete state.miss[id]; } else delete state.skip[id];
+    K.save(); badges(); missBadges();
+  }
+  function isDue(id) { var c = info(id); return !!c && c.d <= today() && !skipped(id); }
   function next(id, r) {
     var fresh = !info(id);
     var c = info(id) || { b: 0, d: today(), n: 0 };
@@ -63,6 +70,8 @@
     return { b: b, d: today() + days, n: (c.n || 0) + 1, r: r };
   }
   function rate(id, r) {
+    if (r === 3) { setSkip(id, true); return info(id); }
+    if (skipped(id)) delete state.skip[id]; // neu bewertet: wieder dabei
     state.cards[id] = next(id, r);
     // Kursfragen (nicht Latein-Karten) zählen auch für die Schwachstellen; record() speichert
     if (/^\d\d-F\d+$/.test(id)) record({ id: id, unit: id.slice(0, 2) }, r === 2 ? true : r === 1 ? 'soft' : false);
@@ -73,7 +82,7 @@
   function hint(id, r) { return whenText(next(id, r).d - today()); }
   var LEVEL = function (c) { return !c ? 'neu' : c.b >= 3 ? 'sitzt' : c.b >= 1 ? 'im Aufbau' : 'wiederholen'; };
 
-  function dueTotal() { var t = today(); return Object.keys(state.cards).filter(function (k) { return state.cards[k].d <= t; }).length; }
+  function dueTotal() { var t = today(); return Object.keys(state.cards).filter(function (k) { return state.cards[k].d <= t && !skipped(k); }).length; }
   function badges() {
     var n = dueTotal();
     $$('[data-due]').forEach(function (b) { b.hidden = !n; b.textContent = n; b.title = n + ' Karten fällig'; });
@@ -106,8 +115,9 @@
       var panel = null;
       function label() {
         var c = info(id);
-        btn.dataset.level = c ? LEVEL(c) : '';
-        btn.innerHTML = (btn.getAttribute('aria-expanded') === 'true' ? 'Antwort ausblenden' : 'Antwort prüfen') + (c ? ' <span class="qa-lv">· ' + LEVEL(c) + '</span>' : '');
+        var lv = skipped(id) ? 'nicht prüfungsrelevant' : c ? LEVEL(c) : '';
+        btn.dataset.level = lv;
+        btn.innerHTML = (btn.getAttribute('aria-expanded') === 'true' ? 'Antwort ausblenden' : 'Antwort prüfen') + (lv ? ' <span class="qa-lv">· ' + lv + '</span>' : '');
       }
       btn.addEventListener('click', function () {
         var open = btn.getAttribute('aria-expanded') === 'true';
@@ -118,17 +128,21 @@
           panel.innerHTML = '<span class="eyebrow">Lösung aus dem Kurs</span><p class="qa-a">' + a.innerHTML.trim() + '</p>' +
             '<div class="qa-rate"><span class="note">Selbst bewertet:</span>' +
             '<button type="button" data-r="0">Nochmal</button><button type="button" data-r="1">Unsicher</button><button type="button" data-r="2">Gewusst</button>' +
+            '<button type="button" class="qa-skip" data-r="3">Nicht prüfungsrelevant</button>' +
             '<span class="note qa-out" aria-live="polite"></span></div>';
           if (host.tagName === 'LI') host.appendChild(panel); else host.parentNode.insertBefore(panel, host.nextSibling);
           $$('[data-r]', panel).forEach(function (rb) {
             rb.addEventListener('click', function () {
-              var c = rate(id, +rb.getAttribute('data-r'));
+              var r = +rb.getAttribute('data-r');
+              if (r === 3 && skipped(id)) { setSkip(id, false); rb.setAttribute('aria-pressed', 'false'); $('.qa-out', panel).textContent = 'Wieder dabei.'; label(); return; }
+              var c = rate(id, r);
               $$('[data-r]', panel).forEach(function (x) { x.setAttribute('aria-pressed', x === rb); });
-              $('.qa-out', panel).textContent = 'Kommt ' + whenText(c.d - today()) + ' wieder in den Lernkarten.';
+              $('.qa-out', panel).textContent = r === 3 ? 'Wird nicht mehr abgefragt: nicht in Lernkarten, Heute und Quiz. Nochmal tippen holt sie zurück.' : 'Kommt ' + whenText(c.d - today()) + ' wieder in den Lernkarten.';
               label();
             });
           });
         }
+        $('.qa-skip', panel).setAttribute('aria-pressed', skipped(id));
         panel.hidden = false; btn.setAttribute('aria-expanded', 'true'); label();
       });
       label();
@@ -312,7 +326,7 @@
     var deck = params.get('deck') === 't' ? 't' : 'q';
     var chosen = {}; (params.get('unit') || '').split(',').filter(Boolean).forEach(function (u) { chosen[u] = true; });
     var NEW_LIMIT = 12;
-    var d, queue = [], i = 0, tally = { 0: 0, 1: 0, 2: 0 }, repeats = {};
+    var d, queue = [], i = 0, tally = { 0: 0, 1: 0, 2: 0, 3: 0 }, repeats = {};
 
     function units() {
       var picked = Object.keys(chosen).filter(function (k) { return chosen[k]; });
@@ -323,8 +337,9 @@
     function pool() {
       var us = units();
       if (deck === 't') return d.terms.filter(function (t) { return t.lat && us.indexOf(t.unit) >= 0; })
-        .map(function (t) { return { id: 'T:' + t.term.toLowerCase(), unit: t.unit, sec: t.sec, secT: t.secT, term: t }; });
-      return d.cards.filter(function (c) { return us.indexOf(c.unit) >= 0; });
+        .map(function (t) { return { id: 'T:' + t.term.toLowerCase(), unit: t.unit, sec: t.sec, secT: t.secT, term: t }; })
+        .filter(function (c) { return !skipped(c.id); });
+      return d.cards.filter(function (c) { return us.indexOf(c.unit) >= 0 && !skipped(c.id); });
     }
     function plan() {
       var p = pool(), due = p.filter(function (c) { return isDue(c.id); }), fresh = p.filter(function (c) { return !info(c.id); });
@@ -342,15 +357,27 @@
         var u = unitOf(d, uid);
         var ids = deck === 't' ? d.terms.filter(function (t) { return t.lat && t.unit === uid; }).map(function (t) { return 'T:' + t.term.toLowerCase(); })
           : d.cards.filter(function (c) { return c.unit === uid; }).map(function (c) { return c.id; });
+        ids = ids.filter(function (id) { return !skipped(id); });
         if (!ids.length) return '';
         var sit = 0, bau = 0;
         ids.forEach(function (id) { var c = info(id); if (c && c.b >= 3) sit++; else if (c) bau++; });
         var n = ids.length;
         return '<li><span class="m-n">' + u.n + '</span><span class="m-t">' + esc(u.t) + '</span><span class="m-bar" role="img" aria-label="' + sit + ' sitzen, ' + bau + ' im Aufbau, ' + (n - sit - bau) + ' neu"><i class="m-sit" style="width:' + (sit / n * 100) + '%"></i><i class="m-bau" style="width:' + (bau / n * 100) + '%"></i></span><span class="m-c">' + sit + ' / ' + n + '</span></li>';
       }).join('');
-      $('[data-fc-mastery]').innerHTML = '<span class="eyebrow">Wissensstand</span><ul class="m-list">' + rows + '</ul><p class="note"><span class="m-key m-sit"></span> sitzt (mehrfach gewusst) <span class="m-key m-bau"></span> im Aufbau <span class="m-key"></span> noch nicht geübt</p>';
+      $('[data-fc-mastery]').innerHTML = '<span class="eyebrow">Wissensstand</span><ul class="m-list">' + rows + '</ul><p class="note"><span class="m-key m-sit"></span> sitzt (mehrfach gewusst) <span class="m-key m-bau"></span> im Aufbau <span class="m-key"></span> noch nicht geübt</p>' + skipList();
       var all = Object.keys(state.cards).length;
       $('[data-fc-stats]').innerHTML = '<div><b>' + dueTotal() + '</b><span>heute fällig</span></div><div><b>' + Object.keys(state.cards).filter(function (k) { return state.cards[k].b >= 3; }).length + '</b><span>sitzen</span></div><div><b>' + all + '</b><span>schon geübt</span></div><div><b>' + (d.cards.length + d.terms.filter(function (t) { return t.lat; }).length) + '</b><span>Karten insgesamt</span></div>';
+    }
+    // Ausgeblendete Fragen: aufklappbare Liste mit „Zurückholen“
+    function skipList() {
+      var ids = Object.keys(state.skip), txt = {};
+      d.cards.forEach(function (c) { txt[c.id] = { unit: c.unit, t: '<b>' + c.n + '.</b> ' + c.q }; });
+      d.mc.forEach(function (m) { txt[m.id] = { unit: m.units[0], t: esc(m.q) }; });
+      d.terms.forEach(function (t) { txt['T:' + t.term.toLowerCase()] = { unit: t.unit, t: esc(t.term) + (t.lat ? ' · ' + esc(t.lat) : '') }; });
+      ids = ids.filter(function (id) { return txt[id]; }).sort(function (a, b) { return txt[a].unit < txt[b].unit ? -1 : txt[a].unit > txt[b].unit ? 1 : 0; });
+      if (!ids.length) return '';
+      return '<details class="skip-list"><summary>Nicht prüfungsrelevant (' + ids.length + ')</summary><p class="note">Diese Fragen werden nirgends mehr abgefragt. Im Kurs stehen sie weiter.</p><ul>' +
+        ids.map(function (id) { var u = unitOf(d, txt[id].unit); return '<li><span><span class="nb-n">' + (u ? esc(u.n) : '') + '</span> ' + txt[id].t + '</span><button type="button" class="linkbtn" data-unskip="' + esc(id) + '">Zurückholen</button></li>'; }).join('') + '</ul></details>';
     }
     function cardHtml(c) {
       if (c.term) return '<p class="cq-kind eyebrow">Fachbegriff</p><p class="cq-term">' + esc(c.term.term) + '</p><p class="cq-q">Wie lautet der andere Name?</p>';
@@ -382,6 +409,7 @@
     }
     function answer(r) {
       var c = queue[i]; rate(c.id, r); tally[r]++;
+      if (r === 3) { i++; if (i < queue.length) show(); else finish(); return; }
       if (r === 0 && (repeats[c.id] = (repeats[c.id] || 0) + 1) <= 3) queue.push(c); // gleich noch einmal, höchstens dreimal
       i++;
       if (i < queue.length) show(); else finish();
@@ -391,8 +419,8 @@
       var t = today(), tomorrow = Object.keys(state.cards).filter(function (k) { return state.cards[k].d === t + 1; }).length;
       var box = $('[data-fc-done]');
       box.hidden = false;
-      box.innerHTML = '<span class="eyebrow">Runde beendet</span><h2>' + (tally[2] + tally[1] + tally[0]) + ' Antworten</h2>' +
-        '<ul class="tally"><li><b>' + tally[2] + '</b> gewusst</li><li><b>' + tally[1] + '</b> unsicher</li><li><b>' + tally[0] + '</b> nochmal</li></ul>' +
+      box.innerHTML = '<span class="eyebrow">Runde beendet</span><h2>' + (tally[2] + tally[1] + tally[0] + tally[3]) + ' Antworten</h2>' +
+        '<ul class="tally"><li><b>' + tally[2] + '</b> gewusst</li><li><b>' + tally[1] + '</b> unsicher</li><li><b>' + tally[0] + '</b> nochmal</li>' + (tally[3] ? '<li><b>' + tally[3] + '</b> ausgeblendet</li>' : '') + '</ul>' +
         '<p>Morgen fällig: ' + tomorrow + ' Karten. Kurze tägliche Runden halten länger als eine lange vor der Prüfung.</p>' +
         '<div class="fc-actions"><button class="cta" type="button" data-fc-again>Weitere Karten</button><a class="cta ghost" href="index.html">Zur Kursübersicht</a></div>';
       $('[data-fc-again]').addEventListener('click', function () { box.hidden = true; $('[data-fc-setup]').hidden = false; setup(); });
@@ -401,7 +429,7 @@
       var pl = plan();
       queue = pl.due.sort(function (a, b) { return info(a.id).d - info(b.id).d; }).concat(pl.fresh);
       if (!queue.length) return;
-      i = 0; tally = { 0: 0, 1: 0, 2: 0 }; repeats = {};
+      i = 0; tally = { 0: 0, 1: 0, 2: 0, 3: 0 }; repeats = {};
       $('[data-fc-setup]').hidden = true; $('[data-fc-done]').hidden = true; $('[data-fc-run]').hidden = false;
       show();
     }
@@ -413,11 +441,16 @@
       $('[data-fc-show]').addEventListener('click', reveal);
       $('[data-fc-stop]').addEventListener('click', finish);
       $$('[data-rate]').forEach(function (b) { b.addEventListener('click', function () { answer(+b.getAttribute('data-rate')); }); });
+      $('[data-fc-mastery]').addEventListener('click', function (e) {
+        var b = e.target.closest('[data-unskip]'); if (!b) return;
+        setSkip(b.getAttribute('data-unskip'), false); setup();
+        var l = $('.skip-list'); if (l) l.open = true;
+      });
       document.addEventListener('keydown', function (e) {
         if ($('[data-fc-run]').hidden || document.querySelector('dialog[open]')) return;
         var inText = e.target.tagName === 'TEXTAREA';
         if ((e.key === ' ' && !inText) || (e.key === 'Enter' && (e.ctrlKey || e.metaKey))) { if ($('[data-fc-rate]').hidden) { e.preventDefault(); reveal(); } }
-        else if (!inText && !$('[data-fc-rate]').hidden && /^[123]$/.test(e.key)) { e.preventDefault(); answer(+e.key - 1); }
+        else if (!inText && !$('[data-fc-rate]').hidden && /^[1234]$/.test(e.key)) { e.preventDefault(); answer(+e.key - 1); }
       });
       setup();
     });
@@ -723,7 +756,7 @@
   function quizItems(d, unit, onlyMiss) {
     var mc = d.mc.filter(function (x) { return x.units.indexOf(unit) >= 0; }).map(function (x) { return { kind: 'mc', id: x.id, unit: unit, q: x.q, o: x.o, a: x.a, e: x.e }; });
     var open = d.cards.filter(function (c) { return c.unit === unit; }).map(function (c) { return { kind: 'open', id: c.id, unit: unit, n: c.n, q: c.q, ctx: c.ctx, a: c.a, sec: c.sec, secT: c.secT }; });
-    var all = mc.concat(open);
+    var all = mc.concat(open).filter(function (x) { return !skipped(x.id); });
     return onlyMiss ? all.filter(function (x) { return state.miss[x.id]; }) : all;
   }
   function allMissItems(d) {
@@ -756,7 +789,14 @@
             record(it, ok);
             $('.qz-fb', host).innerHTML = '<p class="qz-verdict ' + (ok ? 'ok' : 'bad') + '">' + (ok ? '✓ Richtig.' : '✕ Nicht ganz. Richtig ist <b>' + 'ABCD'.charAt(it.a) + '</b>.') + '</p>' +
               (it.e ? '<p>' + esc(it.e) + '</p>' : '') + (!ok ? '<p class="note">Gespeichert unter Schwachstellen.</p>' : '') +
-              '<button class="cta" type="button" data-qz-next>' + (i + 1 < items.length ? 'Weiter' : 'Auswertung') + '</button>';
+              '<div class="qz-next-row"><button class="cta" type="button" data-qz-next>' + (i + 1 < items.length ? 'Weiter' : 'Auswertung') + '</button>' +
+              '<button type="button" class="linkbtn" data-qz-skip>Nicht prüfungsrelevant</button></div>';
+            $('[data-qz-skip]', host).onclick = function () {
+              var on = !skipped(it.id); setSkip(it.id, on);
+              res.missed = res.missed.filter(function (x) { return x !== it; });
+              if (!on && !ok) { record(it, false); res.missed.push(it); } // zurückgeholt: wieder als verpasst merken
+              this.textContent = on ? 'Ausgeblendet · zurücknehmen' : 'Nicht prüfungsrelevant';
+            };
             $('[data-qz-next]', host).focus({ preventScroll: true });
           });
         });
@@ -769,12 +809,13 @@
         $('[data-qz-show]', host).addEventListener('click', function () {
           $('.qz-fb', host).innerHTML = '<div class="fc-answer"><span class="eyebrow">Lösung aus dem Kurs</span><p>' + it.a + '</p></div>' +
             '<span class="eyebrow">Wie gut wusstest du es?</span><div class="rate-row">' +
-            '<button type="button" class="rate-b r0" data-r="0">Nochmal</button><button type="button" class="rate-b r1" data-r="1">Unsicher</button><button type="button" class="rate-b r2" data-r="2">Gewusst</button></div>';
+            '<button type="button" class="rate-b r0" data-r="0">Nochmal</button><button type="button" class="rate-b r1" data-r="1">Unsicher</button><button type="button" class="rate-b r2" data-r="2">Gewusst</button></div>' +
+            '<button type="button" class="skip-b" data-r="3">Nicht prüfungsrelevant · nicht mehr abfragen</button>';
           $$('[data-r]', host).forEach(function (b) {
             b.addEventListener('click', function () {
               var r = +b.getAttribute('data-r');
               rate(it.id, r); // fließt in Lernkarten und Schwachstellen
-              res.open++; if (r === 2) res.known++; else res.missed.push(it);
+              if (r !== 3) { res.open++; if (r === 2) res.known++; else res.missed.push(it); }
               next();
             });
           });
@@ -822,7 +863,7 @@
         runQuiz(host, items, function (res, stopped) {
           if (!stopped || res.mcN + res.open) { state.quiz[unit] = { mc: res.mc, mcN: res.mcN, known: res.known, open: res.open, t: Date.now() }; K.save(); }
           var left = missCount(unit);
-          host.innerHTML = '<span class="eyebrow">Auswertung</span><h2 id="quiz-t">' + (res.missed.length ? 'Gut gemacht, ' + res.missed.length + ' zum Wiederholen' : 'Alles gewusst') + '</h2>' +
+          host.innerHTML = '<span class="eyebrow">Auswertung</span><h2 id="quiz-t">' + (res.missed.length ? 'Gut gemacht, ' + res.missed.length + ' zum Wiederholen' : res.mc === res.mcN && res.known === res.open ? 'Alles gewusst' : 'Nichts zum Wiederholen') + '</h2>' +
             '<ul class="tally">' + (res.mcN ? '<li><b>' + res.mc + '/' + res.mcN + '</b> Auswahl richtig</li>' : '') + (res.open ? '<li><b>' + res.known + '/' + res.open + '</b> offene gewusst</li>' : '') + '</ul>' +
             (res.missed.length ? '<p>Diese Fragen sind unter <a href="merkheft.html#schwachstellen">Schwachstellen</a> gespeichert. Sie verschwinden, wenn du sie zweimal hintereinander richtig hast.</p>' + missedList(res.missed) : '<p>Morgen oder übermorgen kurz nochmal: Abrufen nach einer Pause verankert es am besten.</p>') +
             '<div class="qz-act">' + (left ? '<button class="cta" type="button" data-qz-again>Verpasstes nochmal (' + left + ')</button>' : '') + '<button class="cta ghost" type="button" data-qz-back>Zurück zum Start</button></div>';
@@ -895,7 +936,7 @@
     var open = function (c) { return { kind: 'open', id: c.id, unit: c.unit, n: c.n, q: c.q, ctx: c.ctx, a: c.a, sec: c.sec, secT: c.secT }; };
     take(d.cards.filter(function (c) { return isDue(c.id); }).sort(function (a, b) { return info(a.id).d - info(b.id).d; }).map(open), 8);
     // Neue Karten reihum aus allen gelernten Abschnitten, sonst käme alles aus dem ersten
-    var fresh = learned.map(function (u) { return d.cards.filter(function (c) { return c.unit === u && !info(c.id); }); }), rr = [];
+    var fresh = learned.map(function (u) { return d.cards.filter(function (c) { return c.unit === u && !info(c.id) && !skipped(c.id); }); }), rr = [];
     for (var k = 0; rr.length < 40 && fresh.some(function (l) { return l.length > k; }); k++) fresh.forEach(function (l) { if (l[k]) rr.push(l[k]); });
     take(rr.map(open), Math.max(3, 12 - items.length));
     var figs = d.figs.filter(function (f) { return learned.indexOf(f.unit) >= 0; });
