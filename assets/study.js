@@ -36,7 +36,7 @@
       return NodeFilter.FILTER_ACCEPT; } });
     var lw = w.toLowerCase(), n;
     while ((n = it.nextNode())) {
-      var i = n.data.toLowerCase().indexOf(lw);
+      var i = n.data.replace(/ /g, ' ').toLowerCase().indexOf(lw.replace(/ /g, ' ')); // geschützte Leerzeichen nach „N.“ usw.
       if (i < 0) continue;
       var r = document.createRange(); r.setStart(n, i); r.setEnd(n, i + w.length);
       var m = el('mark', 'hl'); r.surroundContents(m);
@@ -53,6 +53,11 @@
   var INTERVAL = [0, 1, 3, 7, 14, 30, 60];
   function today() { return Math.floor((Date.now() - 4 * 3600e3 - new Date().getTimezoneOffset() * 60e3) / 864e5); } // Tageswechsel um 4 Uhr
   function info(id) { return state.cards[id] || null; }
+  // Prüfungstermin (state.exam = "JJJJ-MM-TT") als Tageszahl wie today()
+  function examDay() {
+    if (!state.exam || !/^\d{4}-\d\d-\d\d$/.test(state.exam)) return null;
+    var t = new Date(state.exam + 'T12:00'); return Math.floor((t.getTime() - t.getTimezoneOffset() * 60e3) / 864e5);
+  }
   // „Nicht prüfungsrelevant“: state.skip[id] = 1. Die Frage bleibt im Kurs, wird aber nirgends mehr abgefragt.
   state.skip = state.skip || {};
   function skipped(id) { return !!state.skip[id]; }
@@ -66,12 +71,15 @@
     var c = info(id) || { b: 0, d: today(), n: 0 };
     // Beim ersten Mal gleich gewusst: direkt Fach 2 (3 Tage), sonst wäre es dasselbe wie „Unsicher“
     var b = r === 2 ? Math.min(fresh ? 2 : c.b + 1, 6) : r === 1 ? Math.max(1, c.b > 2 ? c.b - 1 : c.b) : 0;
-    var days = r === 2 ? INTERVAL[b] : r === 1 ? 1 : 0;
-    return { b: b, d: today() + days, n: (c.n || 0) + 1, r: r };
+    var days = r === 2 ? INTERVAL[b] : r === 1 ? 1 : 0, d = today() + days;
+    // Mit Prüfungstermin: jede Karte kommt spätestens am Vortag noch einmal, nicht erst danach
+    var ex = examDay(); if (ex != null && days > 0 && today() < ex - 1 && d > ex - 1) d = ex - 1;
+    return { b: b, d: d, n: (c.n || 0) + 1, r: r };
   }
   function rate(id, r) {
     if (r === 3) { setSkip(id, true); return info(id); }
     if (skipped(id)) delete state.skip[id]; // neu bewertet: wieder dabei
+    state.log = state.log || {}; var dk = dayKey(); state.log[dk] = (state.log[dk] || 0) + 1; // Lernkalender
     state.cards[id] = next(id, r);
     // Kursfragen (nicht Latein-Karten) zählen auch für die Schwachstellen; record() speichert
     if (/^\d\d-F\d+$/.test(id)) record({ id: id, unit: id.slice(0, 2) }, r === 2 ? true : r === 1 ? 'soft' : false);
@@ -117,7 +125,7 @@
         var c = info(id);
         var lv = skipped(id) ? 'nicht prüfungsrelevant' : c ? LEVEL(c) : '';
         btn.dataset.level = lv;
-        btn.innerHTML = (btn.getAttribute('aria-expanded') === 'true' ? 'Antwort ausblenden' : 'Antwort prüfen') + (lv ? ' <span class="qa-lv">· ' + lv + '</span>' : '');
+        btn.innerHTML = (btn.getAttribute('aria-expanded') === 'true' ? 'Antwort ausblenden' : 'Antwort zeigen') + (lv ? ' <span class="qa-lv">· ' + lv + '</span>' : '');
       }
       btn.addEventListener('click', function () {
         var open = btn.getAttribute('aria-expanded') === 'true';
@@ -126,10 +134,11 @@
           var a = answers[m[1]].cloneNode(true); a.removeChild(a.firstElementChild);
           panel = el('div', 'qa');
           panel.innerHTML = '<span class="eyebrow">Lösung aus dem Kurs</span><p class="qa-a">' + a.innerHTML.trim() + '</p>' +
-            '<div class="qa-rate"><span class="note">Selbst bewertet:</span>' +
+            '<div class="qa-rate"><span class="note">Wie gut wusstest du es?</span>' +
             '<button type="button" data-r="0">Nochmal</button><button type="button" data-r="1">Unsicher</button><button type="button" data-r="2">Gewusst</button>' +
             '<button type="button" class="qa-skip" data-r="3">Nicht prüfungsrelevant</button>' +
             '<span class="note qa-out" aria-live="polite"></span></div>';
+          mnemUI(panel, id);
           if (host.tagName === 'LI') host.appendChild(panel); else host.parentNode.insertBefore(panel, host.nextSibling);
           $$('[data-r]', panel).forEach(function (rb) {
             rb.addEventListener('click', function () {
@@ -301,7 +310,7 @@
         : hits.map(function (h, i) {
           var u = unitOf(d, h.unit);
           var href = jump(u.file, h.sec, h.word);
-          return '<li role="option" id="sr' + i + '"' + (i === 0 ? ' aria-selected="true"' : '') + '><a href="' + href + '"><span class="eyebrow">' + esc(h.kind) + ' · ' + (u.n === '·' ? 'Styleguide' : 'Abschnitt ' + u.n) + '</span><b>' + esc(h.title) + '</b><span class="s-snip">' + snippet(h.text, toks) + '</span></a></li>';
+          return '<li role="option" id="sr' + i + '"' + (i === 0 ? ' aria-selected="true"' : '') + '><a href="' + href + '"><span class="eyebrow">' + (h.kind === 'Abschnitt' ? '' : esc(h.kind) + ' · ') + (u.n === '·' ? 'Styleguide' : 'Abschnitt ' + u.n) + '</span><b>' + esc(h.title) + '</b><span class="s-snip">' + snippet(h.text, toks) + '</span></a></li>';
         }).join('');
     }
     q.addEventListener('input', function () { data().then(run); });
@@ -323,7 +332,7 @@
   function flashcards() {
     var root = $('.fc'); if (!root) return;
     var params = new URLSearchParams(location.search);
-    var deck = params.get('deck') === 't' ? 't' : 'q';
+    var deck = /^[tl]$/.test(params.get('deck') || '') ? params.get('deck') : 'q';
     var chosen = {}; (params.get('unit') || '').split(',').filter(Boolean).forEach(function (u) { chosen[u] = true; });
     var NEW_LIMIT = 12;
     var d, queue = [], i = 0, tally = { 0: 0, 1: 0, 2: 0, 3: 0 }, repeats = {};
@@ -334,8 +343,19 @@
       var done = UNIT_PAGES.filter(function (u) { return state.done && state.done[u]; });
       return done.length ? done : UNIT_PAGES;
     }
+    // Lückentext: der Satz aus dem Kurs, in dem der Begriff eingeführt wird, mit einer Lücke an seiner Stelle
+    function clozes(us) {
+      return d.terms.filter(function (t) {
+        var c = t.ctx || '';
+        return us.indexOf(t.unit) >= 0 && !/^\d/.test(t.term) && c.length > 40 && c.length < 280 && c.split(t.term).length === 2;
+      }).map(function (t) {
+        var i = t.ctx.indexOf(t.term);
+        return { id: 'L:' + t.term.toLowerCase(), unit: t.unit, sec: t.sec, secT: t.secT, cloze: { a: t.ctx.slice(0, i), b: t.ctx.slice(i + t.term.length), term: t.term } };
+      }).filter(function (c) { return !skipped(c.id); });
+    }
     function pool() {
       var us = units();
+      if (deck === 'l') return clozes(us);
       if (deck === 't') return d.terms.filter(function (t) { return t.lat && us.indexOf(t.unit) >= 0; })
         .map(function (t) { return { id: 'T:' + t.term.toLowerCase(), unit: t.unit, sec: t.sec, secT: t.secT, term: t }; })
         .filter(function (c) { return !skipped(c.id); });
@@ -355,7 +375,7 @@
       // Wissensstand je Abschnitt
       var rows = UNIT_PAGES.map(function (uid) {
         var u = unitOf(d, uid);
-        var ids = deck === 't' ? d.terms.filter(function (t) { return t.lat && t.unit === uid; }).map(function (t) { return 'T:' + t.term.toLowerCase(); })
+        var ids = deck === 'l' ? clozes([uid]).map(function (c) { return c.id; }) : deck === 't' ? d.terms.filter(function (t) { return t.lat && t.unit === uid; }).map(function (t) { return 'T:' + t.term.toLowerCase(); })
           : d.cards.filter(function (c) { return c.unit === uid; }).map(function (c) { return c.id; });
         ids = ids.filter(function (id) { return !skipped(id); });
         if (!ids.length) return '';
@@ -364,15 +384,53 @@
         var n = ids.length;
         return '<li><span class="m-n">' + u.n + '</span><span class="m-t">' + esc(u.t) + '</span><span class="m-bar" role="img" aria-label="' + sit + ' sitzen, ' + bau + ' im Aufbau, ' + (n - sit - bau) + ' neu"><i class="m-sit" style="width:' + (sit / n * 100) + '%"></i><i class="m-bau" style="width:' + (bau / n * 100) + '%"></i></span><span class="m-c">' + sit + ' / ' + n + '</span></li>';
       }).join('');
-      $('[data-fc-mastery]').innerHTML = '<span class="eyebrow">Wissensstand</span><ul class="m-list">' + rows + '</ul><p class="note"><span class="m-key m-sit"></span> sitzt (mehrfach gewusst) <span class="m-key m-bau"></span> im Aufbau <span class="m-key"></span> noch nicht geübt</p>' + skipList();
+      $('[data-fc-mastery]').innerHTML = '<span class="eyebrow">Wissensstand</span><ul class="m-list">' + rows + '</ul><p class="note"><span class="m-leg"><span class="m-key m-sit"></span> sitzt (mehrfach gewusst)</span> <span class="m-leg"><span class="m-key m-bau"></span> im Aufbau</span> <span class="m-leg"><span class="m-key"></span> noch nicht geübt</span></p>' + skipList();
+      progress();
       var all = Object.keys(state.cards).length;
       $('[data-fc-stats]').innerHTML = '<div><b>' + dueTotal() + '</b><span>heute fällig</span></div><div><b>' + Object.keys(state.cards).filter(function (k) { return state.cards[k].b >= 3; }).length + '</b><span>sitzen</span></div><div><b>' + all + '</b><span>schon geübt</span></div><div><b>' + (d.cards.length + d.terms.filter(function (t) { return t.lat; }).length) + '</b><span>Karten insgesamt</span></div>';
+      if (K.countUp) K.countUp($$('[data-fc-stats] b'));
+    }
+    // Fortschritt: Lernkalender (10 Wochen), fällige Karten der nächsten 7 Tage, die wackligsten Abschnitte
+    function progress() {
+      var box = $('.fc-progress');
+      if (!box) { box = el('section', 'fc-progress'); $('[data-fc-mastery]').insertAdjacentElement('afterend', box); }
+      var log = state.log || {}, days = state.days || {}, t = today(), now = new Date(Date.now() - 4 * 3600e3);
+      function key(d) { return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); }
+      // Kalender: Spalten = Wochen (Mo–So), die letzte Spalte ist die aktuelle Woche
+      var dow = (now.getDay() + 6) % 7, start = new Date(now); start.setDate(now.getDate() - dow - 7 * 9);
+      var cells = '', active = 0;
+      for (var i = 0; i < 70; i++) {
+        var dt = new Date(start); dt.setDate(start.getDate() + i);
+        var k = key(dt), n = (log[k] || 0) + ((days[k] && !log[k]) ? days[k].n : 0), future = dt > now;
+        if (n && !future) active++;
+        var lv = future ? 'f' : !n ? 0 : n < 6 ? 1 : n < 16 ? 2 : 3;
+        cells += '<i class="cal-d l' + lv + '" style="--k:' + i + '" title="' + dt.toLocaleDateString('de-DE', { day: 'numeric', month: 'short' }) + (future ? '' : ': ' + n + ' Antworten') + '"></i>';
+      }
+      // Vorschau: fällige Karten pro Tag
+      var fc = [0, 0, 0, 0, 0, 0, 0];
+      Object.keys(state.cards).forEach(function (k) { if (skipped(k)) return; var dd = state.cards[k].d - t; if (dd <= 0) fc[0]++; else if (dd < 7) fc[dd]++; });
+      var max = Math.max.apply(null, fc) || 1, wd = [], lang = document.documentElement.dataset.ui === 'en' ? 'en-GB' : 'de-DE';
+      for (var j = 0; j < 7; j++) { var x = new Date(now); x.setDate(now.getDate() + j); wd.push(x.toLocaleDateString(lang, { weekday: 'short' }).replace('.', '')); }
+      var bars = fc.map(function (n, i) { return '<li' + (i ? '' : ' class="is-today" aria-label="heute: ' + n + '"') + '><span class="fc-bar-n">' + n + '</span><i style="--k:' + i + ';height:' + Math.round(n / max * 100) + '%"></i><span class="fc-bar-d">' + wd[i] + '</span></li>'; }).join('');
+      // Wackligste Abschnitte: verpasste Fragen und Anteil „sitzt“
+      var weak = UNIT_PAGES.map(function (u) {
+        var ids = d.cards.filter(function (c) { return c.unit === u && !skipped(c.id); }).map(function (c) { return c.id; });
+        var seen = ids.filter(function (id) { return info(id); }), sit = ids.filter(function (id) { var c = info(id); return c && c.b >= 3; }).length;
+        var miss = Object.keys(state.miss).filter(function (k) { return state.miss[k].unit === u; }).length;
+        return { u: u, seen: seen.length, score: miss * 2 + (seen.length ? (seen.length - sit) / seen.length : 0), miss: miss };
+      }).filter(function (x) { return x.seen; }).sort(function (a, b) { return b.score - a.score; }).slice(0, 3);
+      box.innerHTML = '<span class="eyebrow">Fortschritt</span>' +
+        '<div class="pg-cal"><div class="cal" role="img" aria-label="Lernkalender der letzten zehn Wochen: an ' + active + ' Tagen gelernt">' + cells + '</div>' +
+        '<p class="note">' + (active ? 'An ' + active + (active === 1 ? ' Tag' : ' Tagen') + ' gelernt in den letzten zehn Wochen. Lücken sind normal, wichtig ist das Wiederkommen.' : 'Hier erscheint jeder Tag, an dem du lernst.') + '</p></div>' +
+        '<div class="pg-fc"><h2>Fällig in den nächsten Tagen</h2><ol class="fc-bars">' + bars + '</ol></div>' +
+        (weak.length ? '<div class="pg-weak"><h2>Am wackligsten</h2><ul>' + weak.map(function (x) { var u = unitOf(d, x.u); return '<li><a href="' + u.file + (x.miss ? '?quiz=miss#quiz' : '#quiz') + '"><span class="nb-n">' + esc(u.n) + '</span> ' + esc(u.t) + '</a><span class="note">' + (x.miss ? x.miss + ' verpasst' : 'noch im Aufbau') + '</span></li>'; }).join('') + '</ul></div>' : '');
     }
     // Ausgeblendete Fragen: aufklappbare Liste mit „Zurückholen“
     function skipList() {
       var ids = Object.keys(state.skip), txt = {};
       d.cards.forEach(function (c) { txt[c.id] = { unit: c.unit, t: '<b>' + c.n + '.</b> ' + c.q }; });
       d.mc.forEach(function (m) { txt[m.id] = { unit: m.units[0], t: esc(m.q) }; });
+      d.terms.forEach(function (t) { txt['L:' + t.term.toLowerCase()] = { unit: t.unit, t: 'Lückentext · ' + esc(t.term) }; });
       d.terms.forEach(function (t) { txt['T:' + t.term.toLowerCase()] = { unit: t.unit, t: esc(t.term) + (t.lat ? ' · ' + esc(t.lat) : '') }; });
       ids = ids.filter(function (id) { return txt[id]; }).sort(function (a, b) { return txt[a].unit < txt[b].unit ? -1 : txt[a].unit > txt[b].unit ? 1 : 0; });
       if (!ids.length) return '';
@@ -380,12 +438,14 @@
         ids.map(function (id) { var u = unitOf(d, txt[id].unit); return '<li><span><span class="nb-n">' + (u ? esc(u.n) : '') + '</span> ' + txt[id].t + '</span><button type="button" class="linkbtn" data-unskip="' + esc(id) + '">Zurückholen</button></li>'; }).join('') + '</ul></details>';
     }
     function cardHtml(c) {
+      if (c.cloze) return '<p class="cq-kind eyebrow">Lückentext · welcher Begriff fehlt?</p><p class="cq-q cq-cloze">' + esc(c.cloze.a) + '<span class="gap" role="img" aria-label="Lücke"></span>' + esc(c.cloze.b) + '</p>';
       if (c.term) return '<p class="cq-kind eyebrow">Fachbegriff</p><p class="cq-term">' + esc(c.term.term) + '</p><p class="cq-q">Wie lautet der andere Name?</p>';
       var h = '';
       if (c.ctx) h += '<div class="cq-ctx">' + (c.ctx.head ? '<span class="eyebrow">' + esc(c.ctx.head) + '</span>' : '') + '<p>' + c.ctx.html + '</p></div>';
       return h + '<p class="cq-q"><b>' + c.n + '.</b> ' + c.q + '</p>';
     }
     function answerHtml(c) {
+      if (c.cloze) return '<span class="eyebrow">Lösung</span><p class="cq-term">' + esc(c.cloze.term) + '</p><p class="fc-ctx">' + esc(c.cloze.a) + '<mark class="hl-term">' + esc(c.cloze.term) + '</mark>' + esc(c.cloze.b) + '</p>';
       if (c.term) return '<span class="eyebrow">Lösung</span><p class="cq-term">' + esc(c.term.lat) + '</p><p class="note">' + esc(c.term.ctx) + '</p>';
       return '<span class="eyebrow">Lösung aus dem Kurs</span><p>' + c.a + '</p>';
     }
@@ -396,6 +456,7 @@
       $('[data-fc-count]').textContent = (i + 1) + ' / ' + queue.length;
       $('[data-fc-bar]').style.width = (i / queue.length * 100) + '%';
       $('[data-fc-card]').innerHTML = cardHtml(c);
+      if (K.enter) K.enter($('[data-fc-card]'));
       $('[data-fc-answer]').hidden = true; $('[data-fc-rate]').hidden = true; $('[data-fc-show-row]').hidden = false;
       $('[data-fc-try]').value = '';
       [0, 1, 2].forEach(function (r) { $('[data-hint="' + r + '"]').textContent = hint(c.id, r); });
@@ -404,15 +465,19 @@
     function reveal() {
       if (!$('[data-fc-rate]').hidden) return;
       $('[data-fc-answer]').innerHTML = answerHtml(queue[i]);
+      mnemUI($('[data-fc-answer]'), queue[i].id);
       $('[data-fc-answer]').hidden = false; $('[data-fc-rate]').hidden = false; $('[data-fc-show-row]').hidden = true;
       $('.rate-b.r2').focus({ preventScroll: true });
     }
+    var leaving = false;
     function answer(r) {
+      if (leaving || $('[data-fc-rate]').hidden) return; // kein Doppeltipp, nur bei sichtbarer Bewertung
       var c = queue[i]; rate(c.id, r); tally[r]++;
-      if (r === 3) { i++; if (i < queue.length) show(); else finish(); return; }
       if (r === 0 && (repeats[c.id] = (repeats[c.id] || 0) + 1) <= 3) queue.push(c); // gleich noch einmal, höchstens dreimal
       i++;
-      if (i < queue.length) show(); else finish();
+      // Karte geht kurz zur Seite: „Gewusst“ nach rechts, „Nochmal“ nach links, sonst nach oben
+      var go = function () { leaving = false; if (i < queue.length) show(); else finish(); };
+      if (K.leave) { leaving = true; K.leave([$('[data-fc-card]'), $('[data-fc-answer]'), $('[data-fc-rate]')], r === 2 ? 1 : r === 0 ? -1 : 0, go); } else go();
     }
     function finish() {
       $('[data-fc-run]').hidden = true;
@@ -620,7 +685,7 @@
         var src = pending && !pending.id ? pending : lastPick;
         if (!src) { hide(); return; }
         lastPick = null;
-        var n = addNote(src); markQuote(n);
+        var n = addNote(src); markQuote(n); if (K.sweep) K.sweep(n.id);
         var s = getSelection(); if (s) s.removeAllRanges();
         if (act === 'note') { showNoteBox(n); return; }
         pop.innerHTML = '<p class="note">Gemerkt. <a href="merkheft.html">Zum Merkheft</a></p>';
@@ -655,8 +720,25 @@
       if (mk && (!getSelection() || getSelection().isCollapsed)) { var n = findNote(mk.getAttribute('data-note')); if (n) { e.preventDefault(); showView(n, mk); } return; }
       if (!e.target.closest('.sel-pop') && pending && pending.id) hide();
     });
+    // iOS schickt beim Tippen auf reinen Text kein „click“: Ansicht einer gespeicherten Stelle auch so schließen
+    document.addEventListener('pointerdown', function (e) {
+      if (!pop.hidden && pending && pending.id && !$('#sel-note') && !e.target.closest('.sel-pop, mark.saved')) hide();
+    }, true);
     document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !pop.hidden) hide(); });
-    window.addEventListener('scroll', function () { if (!pop.hidden && !(pending && pending.id && $('#sel-note'))) hide(); }, { passive: true });
+    // Beim Scrollen der Auswahl folgen statt zu verschwinden (am Handy verrutscht die Seite beim Markieren oft ein wenig)
+    var raf = 0;
+    window.addEventListener('scroll', function () {
+      if (pop.hidden || (pending && pending.id && $('#sel-note'))) return;
+      if (raf) return;
+      raf = requestAnimationFrame(function () {
+        raf = 0;
+        var s = getSelection();
+        if (pending && !pending.id && s && s.rangeCount && !s.isCollapsed) {
+          var r = s.getRangeAt(0).getBoundingClientRect();
+          if (r.bottom < 0 || r.top > document.documentElement.clientHeight) hide(); else place(r);
+        } else hide();
+      });
+    }, { passive: true });
   }
 
   function notebookPage() {
@@ -786,6 +868,11 @@
             var k = +b.getAttribute('data-k'), ok = k === it.a;
             $$('.qz-opt', host).forEach(function (x) { x.disabled = true; var kk = +x.getAttribute('data-k'); if (kk === it.a) x.classList.add('ok'); else if (kk === k) x.classList.add('bad'); });
             res.mcN++; if (ok) res.mc++; else res.missed.push(it);
+            // Verwechslungen: welche falsche Antwort statt der richtigen (state.conf[id] = { w: {k: Anzahl}, ok, t })
+            state.conf = state.conf || {};
+            var cf = state.conf[it.id];
+            if (!ok) { cf = cf || { w: {} }; cf.w[k] = (cf.w[k] || 0) + 1; cf.ok = 0; cf.t = Date.now(); state.conf[it.id] = cf; }
+            else if (cf) { cf.ok = (cf.ok || 0) + 1; cf.t = Date.now(); if (cf.ok >= 2) delete state.conf[it.id]; }
             record(it, ok);
             $('.qz-fb', host).innerHTML = '<p class="qz-verdict ' + (ok ? 'ok' : 'bad') + '">' + (ok ? '✓ Richtig.' : '✕ Nicht ganz. Richtig ist <b>' + 'ABCD'.charAt(it.a) + '</b>.') + '</p>' +
               (it.e ? '<p>' + esc(it.e) + '</p>' : '') + (!ok ? '<p class="note">Gespeichert unter Schwachstellen.</p>' : '') +
@@ -804,13 +891,14 @@
         host.innerHTML = head() + '<div class="qz-card">' + where(it) +
           (it.ctx ? '<div class="cq-ctx">' + (it.ctx.head ? '<span class="eyebrow">' + esc(it.ctx.head) + '</span>' : '') + '<p>' + it.ctx.html + '</p></div>' : '') +
           '<p class="cq-q"><b>' + it.n + '.</b> ' + it.q + '</p>' +
-          '<label class="fc-try"><span class="eyebrow">Deine Antwort (optional)</span><textarea rows="3"></textarea></label>' +
+          '<label class="fc-try"><span class="eyebrow">Deine Antwort (optional, wird nicht gespeichert)</span><textarea rows="3"></textarea></label>' +
           '<div class="qz-fb"><button class="cta" type="button" data-qz-show>Antwort zeigen</button></div></div>';
         $('[data-qz-show]', host).addEventListener('click', function () {
           $('.qz-fb', host).innerHTML = '<div class="fc-answer"><span class="eyebrow">Lösung aus dem Kurs</span><p>' + it.a + '</p></div>' +
             '<span class="eyebrow">Wie gut wusstest du es?</span><div class="rate-row">' +
             '<button type="button" class="rate-b r0" data-r="0">Nochmal</button><button type="button" class="rate-b r1" data-r="1">Unsicher</button><button type="button" class="rate-b r2" data-r="2">Gewusst</button></div>' +
             '<button type="button" class="skip-b" data-r="3">Nicht prüfungsrelevant · nicht mehr abfragen</button>';
+          mnemUI($('.qz-fb .fc-answer', host), it.id);
           $$('[data-r]', host).forEach(function (b) {
             b.addEventListener('click', function () {
               var r = +b.getAttribute('data-r');
@@ -867,6 +955,8 @@
             '<ul class="tally">' + (res.mcN ? '<li><b>' + res.mc + '/' + res.mcN + '</b> Auswahl richtig</li>' : '') + (res.open ? '<li><b>' + res.known + '/' + res.open + '</b> offene gewusst</li>' : '') + '</ul>' +
             (res.missed.length ? '<p>Diese Fragen sind unter <a href="merkheft.html#schwachstellen">Schwachstellen</a> gespeichert. Sie verschwinden, wenn du sie zweimal hintereinander richtig hast.</p>' + missedList(res.missed) : '<p>Morgen oder übermorgen kurz nochmal: Abrufen nach einer Pause verankert es am besten.</p>') +
             '<div class="qz-act">' + (left ? '<button class="cta" type="button" data-qz-again>Verpasstes nochmal (' + left + ')</button>' : '') + '<button class="cta ghost" type="button" data-qz-back>Zurück zum Start</button></div>';
+          if (!res.missed.length && K.bloom) K.bloom($('#quiz-t', host));
+          if (K.countUp) K.countUp($$('.tally b', host));
           var a = $('[data-qz-again]', host); if (a) a.onclick = function () { start(quizItems(d, unit, true)); };
           $('[data-qz-back]', host).onclick = intro;
           host.scrollIntoView({ block: 'start' });
@@ -877,6 +967,130 @@
         history.replaceState(null, '', location.pathname + location.hash);
         setTimeout(function () { start(quizItems(d, unit, true)); }, 50);
       }
+    });
+  }
+
+  // ---------- Wochenrückblick (Startseite) ----------
+  // Ab Montag bis zum Wegtippen: die letzte Woche in zwei Zeilen, ohne Druck. Erst, wenn es schon eine Woche Verlauf gibt.
+  function weekBox() {
+    var today_ = $('[data-today]'); if (!today_) return;
+    function dkey(d) { return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); }
+    var now = new Date(Date.now() - 4 * 3600e3), mon = new Date(now); mon.setHours(0, 0, 0, 0); mon.setDate(now.getDate() - (now.getDay() + 6) % 7);
+    var wk = dkey(mon); if (state.weekSeen === wk) return;
+    var log = state.log || {}, keys = Object.keys(log).sort();
+    var startPrev = new Date(mon); startPrev.setDate(mon.getDate() - 7);
+    if (!keys.length && !Object.keys(state.cards).length) return;      // noch gar nichts gelernt
+    if (keys.length && keys[0] >= wk) return;                          // erst diese Woche angefangen
+    var active = 0, answers = 0;
+    for (var i = 0; i < 7; i++) { var d = new Date(startPrev); d.setDate(startPrev.getDate() + i); var n = log[dkey(d)] || 0; if (n) { active++; answers += n; } }
+    var t0 = startPrev.getTime() + 4 * 3600e3, t1 = mon.getTime() + 4 * 3600e3;
+    var doneNew = Object.keys(state.doneT || {}).filter(function (u) { return state.done[u] && state.doneT[u] >= t0 && state.doneT[u] < t1; });
+    var misses = {}; Object.keys(state.miss).forEach(function (k) { var u = state.miss[k].unit; misses[u] = (misses[u] || 0) + 1; });
+    var worst = Object.keys(misses).sort(function (a, b) { return misses[b] - misses[a]; })[0];
+    data().then(function (d) {
+      var line1 = active ? 'Letzte Woche: an ' + active + (active === 1 ? ' Tag' : ' Tagen') + ' gelernt, ' + answers + (answers === 1 ? ' Antwort' : ' Antworten') + '.' +
+          (doneNew.length ? ' Neu erledigt: ' + doneNew.map(function (u) { var x = unitOf(d, u); return 'Abschnitt ' + (x ? x.n : u); }).join(', ') + '.' : '')
+        : 'Letzte Woche war Pause. Kein Problem: heute reichen zehn Minuten, um wieder hineinzukommen.';
+      var wu = worst && unitOf(d, worst);
+      var line2 = wu ? 'Am wackligsten gerade: Abschnitt ' + wu.n + ' · ' + misses[worst] + (misses[worst] === 1 ? ' verpasste Frage' : ' verpasste Fragen') + '.' : 'Gerade wackelt nichts. Schön so.';
+      var box = el('section', 'week', '<span class="eyebrow">Wochenrückblick</span><p>' + line1 + '</p><p class="note">' + line2 + '</p><button type="button" class="linkbtn" data-week-ok>Danke, ausblenden</button>');
+      today_.insertAdjacentElement('beforebegin', box);
+      $('[data-week-ok]', box).onclick = function () { state.weekSeen = wk; K.save(); box.remove(); };
+    });
+  }
+
+  // ---------- Eigene Eselsbrücke an einer Karte (state.mnem[id] = Text) ----------
+  // Erscheint bei jeder Antwort dieser Frage: Lernkarten, „Antwort zeigen“ im Kurs, Quiz. Liste im Merkheft.
+  function mnemUI(box, id) {
+    if (!box || !id) return;
+    var wrap = el('div', 'mn');
+    function view() {
+      var t = (state.mnem || {})[id];
+      wrap.innerHTML = t ? '<span class="eyebrow">Deine Eselsbrücke</span><p class="mn-t">' + esc(t) + '</p><button type="button" class="linkbtn" data-mn-edit>ändern</button>'
+        : '<button type="button" class="linkbtn mn-add" data-mn-edit>+ Eigene Eselsbrücke</button>';
+    }
+    function edit() {
+      var t = (state.mnem || {})[id] || '';
+      wrap.innerHTML = '<label class="mn-f"><span class="eyebrow">Deine Eselsbrücke</span><textarea rows="2" maxlength="300" placeholder="z. B. Postikus = Posten öffnet die Tür">' + esc(t) + '</textarea></label>' +
+        '<div class="mn-row"><button type="button" class="cta" data-mn-save>Speichern</button><button type="button" class="linkbtn" data-mn-cancel>Abbrechen</button>' + (t ? '<button type="button" class="linkbtn" data-mn-del>Entfernen</button>' : '') + '</div>';
+      var ta = $('textarea', wrap); ta.focus(); ta.setSelectionRange(ta.value.length, ta.value.length);
+    }
+    wrap.addEventListener('click', function (e) {
+      e.stopPropagation();
+      if (e.target.closest('[data-mn-edit]')) edit();
+      else if (e.target.closest('[data-mn-cancel]')) view();
+      else if (e.target.closest('[data-mn-save]') || e.target.closest('[data-mn-del]')) {
+        state.mnem = state.mnem || {};
+        var v = e.target.closest('[data-mn-del]') ? '' : $('textarea', wrap).value.trim();
+        if (v) state.mnem[id] = v; else delete state.mnem[id];
+        K.save(); view();
+      }
+    });
+    wrap.addEventListener('keydown', function (e) { e.stopPropagation(); if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) { var s = $('[data-mn-save]', wrap); if (s) s.click(); } });
+    view(); box.appendChild(wrap);
+  }
+  function mnemPage() {
+    var weak = $('[data-weak]'); if (!weak) return;
+    var host = el('section', 'mn-page'); host.id = 'eselsbruecken'; host.hidden = true;
+    (document.getElementById('verwechslungen') || weak).insertAdjacentElement('afterend', host);
+    data().then(function (d) {
+      var ids = Object.keys(state.mnem || {}); if (!ids.length) return;
+      var byId = {}; d.cards.forEach(function (c) { byId[c.id] = { q: '<b>' + c.n + '.</b> ' + c.q, unit: c.unit, sec: c.sec }; });
+      d.terms.forEach(function (t) { byId['T:' + t.term.toLowerCase()] = { q: esc(t.term), unit: t.unit, sec: t.sec }; byId['L:' + t.term.toLowerCase()] = { q: 'Lückentext · ' + esc(t.term), unit: t.unit, sec: t.sec }; });
+      ids = ids.filter(function (id) { return byId[id]; }); if (!ids.length) return;
+      host.hidden = false;
+      host.innerHTML = '<h2>Eselsbrücken</h2><p class="note">Deine eigenen Merkhilfen. Sie erscheinen bei jeder Antwort der Frage, auch in den Lernkarten.</p>' +
+        ids.map(function (id) { var x = byId[id], u = unitInfo(x.unit); return '<article class="mn-e" data-mn-id="' + esc(id) + '"><p class="mn-q">' + (u ? '<span class="nb-n">' + esc(u.n) + '</span> ' : '') + x.q + '</p></article>'; }).join('');
+      $$('.mn-e', host).forEach(function (a) { mnemUI(a, a.getAttribute('data-mn-id')); });
+    });
+  }
+
+  // ---------- Verwechslungen (Merkheft) ----------
+  // Aus den falsch gewählten Antworten: was du gewählt hast, was richtig ist, die Erklärung aus dem Kurs
+  // und, wenn vorhanden, für beide den Satz aus dem Kurs, in dem sie eingeführt werden.
+  function confPage() {
+    var weak = $('[data-weak]'); if (!weak) return;
+    var host = el('section', 'conf'); host.id = 'verwechslungen'; weak.insertAdjacentElement('afterend', host);
+    data().then(function (d) {
+      // Streng zuordnen: „lateralis“ ist nicht der Begriff „Lateral“. Gleich, oder als ganze Wörter ein mehrteiliger Fachname.
+      function termFor(opt) {
+        var o = ' ' + norm(opt).replace(/[^a-z0-9.]+/g, ' ') + ' ', best = null;
+        d.terms.forEach(function (t) {
+          [t.term, t.lat].forEach(function (name) {
+            if (!name) return;
+            var n = norm(name).replace(/[^a-z0-9.]+/g, ' ').trim();
+            var ok = o.trim() === n || (/[ .]/.test(n) && n.length >= 8 && o.indexOf(' ' + n + ' ') >= 0);
+            if (ok && (!best || t.term.length > best.term.length)) best = t;
+          });
+        });
+        return best;
+      }
+      function side(label, cls, opt) {
+        var t = termFor(opt), u = t && unitInfo(t.unit);
+        return '<div class="cf-side ' + cls + '"><span class="eyebrow">' + label + '</span><b>' + esc(opt) + '</b>' +
+          (t ? '<p>' + esc(t.ctx) + '</p>' + (u ? '<a class="note" href="' + jump(u.file, t.sec, t.term) + '">Abschnitt ' + esc(u.n) + ' →</a>' : '') : '') + '</div>';
+      }
+      function render() {
+        var conf = state.conf || {}, mcs = {};
+        d.mc.forEach(function (m) { mcs[m.id] = m; });
+        var ids = Object.keys(conf).filter(function (id) { return mcs[id] && !skipped(id); });
+        if (!ids.length) { host.innerHTML = ''; host.hidden = true; return; }
+        host.hidden = false;
+        host.innerHTML = '<h2 id="conf-t">Verwechslungen</h2><p class="note">Was du gewählt hast, neben dem, was richtig ist. Sie verschwinden, wenn du die Frage zweimal hintereinander richtig hast.</p>' +
+          '<div class="qz-act"><button class="cta" type="button" data-conf-run>Diese Fragen üben (' + ids.length + ')</button></div>' +
+          ids.map(function (id) {
+            var m = mcs[id], w = conf[id].w, k = Object.keys(w).sort(function (a, b) { return w[b] - w[a]; })[0];
+            return '<article class="cf-e"><p class="cf-q">' + esc(m.q) + '</p><div class="cf-pair">' + side('Gewählt' + (w[k] > 1 ? ' (' + w[k] + '×)' : ''), 'bad', m.o[+k]) + side('Richtig', 'ok', m.o[m.a]) + '</div>' +
+              (m.e ? '<p class="cf-e-x">' + esc(m.e) + '</p>' : '') + '</article>';
+          }).join('');
+        $('[data-conf-run]', host).onclick = function () {
+          var items = ids.map(function (id) { var m = mcs[id], u = (m.units || [])[0]; return { kind: 'mc', id: m.id, unit: u, q: m.q, o: m.o, a: m.a, e: m.e }; });
+          var box = el('div', 'quiz conf-run'); host.innerHTML = ''; host.appendChild(box);
+          runQuiz(box, items, function () { render(); host.scrollIntoView({ block: 'start' }); }, { showUnit: true, label: 'Verwechslung' });
+        };
+      }
+      render();
+      if (location.hash === '#verwechslungen') setTimeout(function () { host.scrollIntoView({ block: 'start' }); }, 50);
     });
   }
 
@@ -939,8 +1153,11 @@
     var fresh = learned.map(function (u) { return d.cards.filter(function (c) { return c.unit === u && !info(c.id) && !skipped(c.id); }); }), rr = [];
     for (var k = 0; rr.length < 40 && fresh.some(function (l) { return l.length > k; }); k++) fresh.forEach(function (l) { if (l[k]) rr.push(l[k]); });
     take(rr.map(open), Math.max(3, 12 - items.length));
-    var figs = d.figs.filter(function (f) { return learned.indexOf(f.unit) >= 0; });
-    var day = Math.floor(Date.now() / 864e5), fig = figs.length ? figs[day % figs.length] : null;
+    // Abbildung: zuerst eine fällige (am längsten überfällig), sonst eine noch nie geübte; sonst heute keine
+    var figs = d.figs.filter(function (f) { return learned.indexOf(f.unit) >= 0; }), fs = state.figs || {}, t = today();
+    var due = figs.filter(function (f) { return fs[f.abb] && fs[f.abb].d <= t; }).sort(function (a, b) { return fs[a.abb].d - fs[b.abb].d; });
+    var fresh = figs.filter(function (f) { return !fs[f.abb]; });
+    var day = Math.floor(Date.now() / 864e5), fig = due[0] || (fresh.length ? fresh[day % fresh.length] : null);
     return { items: interleave(items), fig: fig, learned: learned };
   }
   function todayCard() {
@@ -949,22 +1166,54 @@
     data().then(function (d) {
       function figLink(fig) {
         var u = unitInfo(fig.unit);
-        return '<a class="today-fig" href="' + u.file + '?fig=' + encodeURIComponent(fig.abb) + '"><span class="eyebrow">Zum Abschluss · Abbildung</span><b>' + esc(fig.abb) + ' beschriften</b><span class="note">Beschriftung ist verdeckt. Erst laut benennen, dann antippen. Abschnitt ' + esc(u.n) + ' · ' + esc(u.t) + '</span></a>';
+        var seen = (state.figs || {})[fig.abb];
+        return '<a class="today-fig" href="' + u.file + '?fig=' + encodeURIComponent(fig.abb) + '&find=1"><span class="eyebrow">Zum Abschluss · Abbildung' + (seen ? ' · wieder fällig' : ' · neu') + '</span><b>' + esc(fig.abb) + ' üben</b><span class="note">Beschriftung ist verdeckt, dann heißt es „Tippe auf …“. Dein Ergebnis bestimmt, wann sie wiederkommt. Abschnitt ' + esc(u.n) + ' · ' + esc(u.t) + '</span></a>';
       }
       function intro() {
         var p = todayPlan(d), done = state.days[dayKey()];
         var head = '<span class="eyebrow">Heute · etwa 15 Minuten</span><h2 id="today-t">' + (done ? 'Heute geschafft' : 'Deine Runde') + '</h2>';
         if (!p.learned.length) {
           host.innerHTML = head + '<p>Hier wartet jeden Tag eine kurze, gemischte Runde aus allem, was du schon gelernt hast. Lies zuerst <a href="01-gelenke-muskeln.html">Abschnitt 1</a>, dann geht es los.</p>';
-          return;
+          examBox(); return;
         }
         var nMiss = p.items.filter(function (x) { return state.miss[x.id]; }).length, nDue = p.items.filter(function (x) { return !state.miss[x.id] && info(x.id); }).length, nNew = p.items.length - nMiss - nDue;
         host.innerHTML = head +
           (done ? '<p>' + done.n + ' Fragen beantwortet, davon ' + done.ok + ' gewusst. Morgen wartet eine neue Mischung. Wenn du magst, gibt es hier noch eine Extrarunde.</p>' :
-            '<p>' + p.items.length + ' Fragen gemischt aus ' + p.learned.length + (p.learned.length === 1 ? ' Abschnitt' : ' Abschnitten') + ' und eine Abbildung. Du musst nichts auswählen.</p>') +
+            '<p>' + p.items.length + ' Fragen gemischt aus ' + p.learned.length + (p.learned.length === 1 ? ' Abschnitt' : ' Abschnitten') + (p.fig ? ' und eine Abbildung' : '') + '. Du musst nichts auswählen.</p>') +
           '<ul class="today-mix">' + (nMiss ? '<li><b>' + nMiss + '</b> ' + (nMiss === 1 ? 'Schwachstelle' : 'Schwachstellen') + '</li>' : '') + (nDue ? '<li><b>' + nDue + '</b> fällig</li>' : '') + (nNew ? '<li><b>' + nNew + '</b> neu</li>' : '') + (p.fig ? '<li><b>1</b> Abbildung</li>' : '') + '</ul>' +
           (p.items.length ? '<div class="qz-act"><button class="cta" type="button" data-today-go>' + (done ? 'Extrarunde' : 'Runde starten') + '</button></div>' : (p.fig ? figLink(p.fig) : ''));
         var go = $('[data-today-go]', host); if (go) go.onclick = function () { run(p); };
+        examBox();
+      }
+      // Prüfungstermin: Countdown und Lesetempo; einmal eintragen, jederzeit ändern
+      function examBox() {
+        var box = el('div', 'exam'), ex = examDay(), t = today();
+        var open = UNIT_PAGES.filter(function (u) { return !(state.done && state.done[u]); }).length;
+        if (ex != null && ex >= t) {
+          var left = ex - t, when = new Date(state.exam + 'T12:00').toLocaleDateString(document.documentElement.dataset.ui === 'en' ? 'en-GB' : 'de-DE', { weekday: 'long', day: 'numeric', month: 'long' });
+          var pace;
+          if (left === 0) pace = 'Heute ist Prüfung. Viel Erfolg!';
+          else if (!open) pace = 'Alles gelesen. Ab jetzt nur noch wiederholen: die Lernkarten kommen alle vor dem Termin noch einmal.';
+          else {
+            var spare = Math.max(1, left - Math.min(7, Math.floor(left / 3))); // die letzten Tage bleiben zum Wiederholen
+            var every = spare / open;
+            pace = 'Noch ' + open + (open === 1 ? ' Abschnitt' : ' Abschnitte') + ' offen: ' +
+              (every >= 2 ? 'etwa einer alle ' + Math.floor(every) + ' Tage' : every >= 1 ? 'etwa einer pro Tag' : 'etwa ' + Math.ceil(1 / every) + ' pro Tag') +
+              ', dann bleiben die letzten Tage zum Wiederholen.';
+          }
+          box.innerHTML = '<p class="exam-n"><b>' + (left === 0 ? 'Heute' : left === 1 ? 'Morgen' : 'Noch ' + left + ' Tage') + '</b> bis zur Prüfung <span class="note">(' + esc(when) + ')</span></p><p class="note">' + pace + '</p>' +
+            '<button type="button" class="linkbtn" data-exam-edit>Termin ändern</button>';
+        } else {
+          box.innerHTML = '<p><button type="button" class="linkbtn" data-exam-edit>' + (ex != null ? 'Prüfung vorbei? Neuen Termin eintragen' : 'Prüfungstermin eintragen') + '</button> <span class="note">· dann richtet sich die Wiederholung danach</span></p>';
+        }
+        host.appendChild(box);
+        $('[data-exam-edit]', box).onclick = function () {
+          box.innerHTML = '<label class="exam-f"><span class="eyebrow">Prüfungstermin</span><input type="date" data-exam-in value="' + esc(state.exam || '') + '" min="' + new Date().toISOString().slice(0, 10) + '"></label>' +
+            '<div class="qz-act"><button type="button" class="cta" data-exam-ok>Speichern</button>' + (state.exam ? '<button type="button" class="cta ghost" data-exam-rm>Termin entfernen</button>' : '') + '</div>';
+          var inp = $('[data-exam-in]', box); inp.focus();
+          $('[data-exam-ok]', box).onclick = function () { if (inp.value) { state.exam = inp.value; K.save(); } intro(); };
+          var rm = $('[data-exam-rm]', box); if (rm) rm.onclick = function () { delete state.exam; K.save(); intro(); };
+        };
       }
       function run(p) {
         host.classList.add('quiz');
@@ -976,6 +1225,7 @@
             '<ul class="tally"><li><b>' + ok + '/' + n + '</b> gewusst oder richtig</li></ul>' +
             (res.missed.length ? '<p>' + res.missed.length + ' davon sind unter <a href="merkheft.html#schwachstellen">Schwachstellen</a> gespeichert.</p>' : '') +
             (p.fig ? figLink(p.fig) : '') + '<div class="qz-act"><button class="cta ghost" type="button" data-today-back>Fertig</button></div>';
+          if (!stopped && K.bloom) K.bloom($('#today-t', host));
           $('[data-today-back]', host).onclick = intro;
           host.scrollIntoView({ block: 'start' });
         }, { showUnit: true, label: 'Heute' });
@@ -985,6 +1235,77 @@
     });
   }
 
-  inlineChecks(); highlight(); viewSwitch(); notebookInPage(); notebookPage(); noteCount(); zoomSetup(); searchSetup(); flashcards(); glossary(); badges();
-  unitQuiz(); weakPage(); missBadges(); todayCard();
+  // ---------- Begriffe beim Lesen: antippen → Satz aus dem Kurs, in dem er eingeführt wird ----------
+  // Nur die erste Erwähnung je Kapitel und nur Begriffe, die in einem anderen Kapitel eingeführt wurden.
+  // Der Text bleibt gleich; um das Wort kommt nur ein antippbarer <span>.
+  function glossTips() {
+    if (UNIT_PAGES.indexOf(page) < 0 && page !== '09') return;
+    var wrap = $('.wrap'); if (!wrap) return;
+    data().then(function (d) {
+      // Fachnamen, keine Alltagswörter („Pressen“, „Gleiten“): groß geschrieben und abgekürzt, lateinisch erklärt oder lang
+      var terms = d.terms.filter(function (t) {
+        return t.ctx && t.unit !== page && /^[A-ZÄÖÜ]/.test(t.term) && (/\b[A-Z][a-z]{0,3}\.\s/.test(t.term) || t.lat || t.term.length >= 10);
+      })
+        .sort(function (a, b) { return b.term.length - a.term.length; });
+      if (!terms.length) return;
+      function rx(s) { return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&').replace(/ /g, '[ \\u00a0]'); }
+      var re = new RegExp('(' + terms.map(function (t) { return rx(t.term); }).join('|') + ')', 'g');
+      var byNorm = {}; terms.forEach(function (t) { byNorm[t.term.replace(/\u00a0/g, ' ')] = t; });
+      var heads = $$('h2[id]', wrap), seen = {};
+      var nodes = [], it = document.createTreeWalker(wrap, NodeFilter.SHOW_TEXT, { acceptNode: function (n) {
+        return n.parentElement.closest('svg, script, style, h1, h2, h3, h4, button, a, summary, .term, .lat, .figure, .figcap, .eyebrow, .qa, .qa-btn, .quiz, .fig-tools, .atlas, .meta, .gl-ref, .rec, .exam-timer, .exam-hist, mark, .opts, .opt, .model, .q') ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT; } });
+      for (var n; (n = it.nextNode());) nodes.push(n);
+      function secOf(node) { var cur = ''; heads.forEach(function (h) { if (h.compareDocumentPosition(node) & Node.DOCUMENT_POSITION_FOLLOWING) cur = h.id; }); return cur; }
+      nodes.forEach(function (node) {
+        var txt = node.data, m, last = 0, frag = null, sec = null;
+        re.lastIndex = 0;
+        while ((m = re.exec(txt))) {
+          var before = txt.charAt(m.index - 1), after = txt.charAt(m.index + m[0].length);
+          if (/[A-Za-zÄÖÜäöüß]/.test(before) || /[A-Za-zÄÖÜäöüß]/.test(after)) continue; // nur ganze Wörter
+          var t = byNorm[m[0].replace(/\u00a0/g, ' ')]; if (!t) continue;
+          if (sec === null) sec = secOf(node);
+          var key = t.term; // einmal pro Seite reicht
+          if (seen[key]) continue;
+          seen[key] = 1;
+          frag = frag || document.createDocumentFragment();
+          frag.appendChild(document.createTextNode(txt.slice(last, m.index)));
+          var sp = el('span', 'gl-ref', null); sp.textContent = m[0]; sp.tabIndex = 0; sp.setAttribute('role', 'button'); sp.setAttribute('data-term', t.term);
+          sp.setAttribute('aria-label', m[0] + ': Erklärung zeigen');
+          frag.appendChild(sp); last = m.index + m[0].length;
+        }
+        if (frag) { frag.appendChild(document.createTextNode(txt.slice(last))); node.parentNode.replaceChild(frag, node); }
+      });
+      // Blase
+      var pop = el('div', 'gl-pop'); pop.hidden = true; pop.setAttribute('role', 'dialog'); document.body.appendChild(pop);
+      var cur = null;
+      function hide() { pop.hidden = true; if (cur) cur.setAttribute('aria-expanded', 'false'); cur = null; }
+      function show(sp) {
+        var t = byNorm[sp.getAttribute('data-term')]; if (!t) return;
+        var u = unitInfo(t.unit);
+        pop.innerHTML = '<p class="gl-pop-t"><b>' + esc(t.term) + '</b>' + (t.lat ? ' <span class="note">(' + esc(t.lat) + ')</span>' : '') + '</p><p class="gl-pop-c">' + esc(t.ctx) + '</p>' +
+          (u ? '<a href="' + jump(u.file, t.sec, t.term) + '">Eingeführt in Abschnitt ' + esc(u.n) + (t.secT ? ' · ' + esc(t.secT.replace(/^[\d.]+\s*·\s*/, '')) : '') + ' →</a>' : '');
+        pop.hidden = false; cur = sp; sp.setAttribute('aria-expanded', 'true');
+        var r = sp.getBoundingClientRect(), vw = document.documentElement.clientWidth, vh = document.documentElement.clientHeight, m = 10;
+        pop.style.left = '0px'; pop.style.top = '0px';
+        var w = pop.offsetWidth, h = pop.offsetHeight, x = Math.min(Math.max(m, r.left + r.width / 2 - w / 2), vw - w - m);
+        var y = r.bottom + 8 + h <= vh - m ? r.bottom + 8 : Math.max(m, r.top - h - 8);
+        pop.style.left = Math.round(x) + 'px'; pop.style.top = Math.round(y) + 'px';
+      }
+      document.addEventListener('click', function (e) {
+        var sp = e.target.closest('.gl-ref');
+        if (sp) { if (cur === sp) hide(); else show(sp); }
+      });
+      // Schließen beim Antippen daneben: iOS schickt auf reinem Text kein „click“, daher pointerdown
+      document.addEventListener('pointerdown', function (e) { if (!pop.hidden && !e.target.closest('.gl-pop, .gl-ref')) hide(); }, true);
+      document.addEventListener('keydown', function (e) {
+        var sp = e.target.closest && e.target.closest('.gl-ref');
+        if (sp && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); if (cur === sp) hide(); else show(sp); }
+        if (e.key === 'Escape') hide();
+      });
+      window.addEventListener('scroll', function () { if (!pop.hidden) hide(); }, { passive: true });
+    });
+  }
+
+  inlineChecks(); highlight(); glossTips(); viewSwitch(); notebookInPage(); notebookPage(); noteCount(); zoomSetup(); searchSetup(); flashcards(); glossary(); badges();
+  unitQuiz(); weakPage(); confPage(); mnemPage(); missBadges(); weekBox(); todayCard();
 })();

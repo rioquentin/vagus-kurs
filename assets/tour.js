@@ -8,12 +8,12 @@
   var hasSync = !!(window.KURS_SYNC && window.KURS_SYNC.url);
 
   var STEPS = [
-    { t: 'Willkommen', lead: 'Der N. vagus und die Stimme, in neun Einheiten zu je etwa zwanzig Minuten.',
-      body: 'Lies die Einheiten der Reihe nach. Was du geschafft hast, wird gespeichert, und die Seite merkt sich, wo du aufgehört hast.',
+    { t: 'Willkommen', lead: 'Der N. vagus und die Stimme, in zehn Abschnitten zu je etwa zwanzig Minuten.',
+      body: 'Lies die Abschnitte der Reihe nach. Was du geschafft hast, wird gespeichert, und die Seite merkt sich, wo du aufgehört hast.',
       art: '<div class="tv-path">' + [1, 2, 3, 4, 5, 6, 7, 8, '9–10'].map(function (n, i) { return '<span style="--i:' + i + '">' + n + '</span>'; }).join('') + '</div><p class="tv-cap">❦</p>' },
     { t: 'Erst denken, dann prüfen', lead: 'Neben jeder Frage im Text liegt die Lösung bereit.',
-      body: 'Antworte zuerst selbst, laut oder im Kopf. Dann „Antwort prüfen“ und ehrlich bewerten: Deine Bewertung bestimmt, wann die Frage wiederkommt.',
-      art: '<div class="tv-card"><p class="tv-q"><b>F1.</b> Zwischen welchen zwei Punkten spannt sich jede Stimmlippe?</p><span class="tv-pill tv-a1">Antwort prüfen</span>' +
+      body: 'Antworte zuerst selbst, laut oder im Kopf. Dann „Antwort zeigen“ und ehrlich bewerten: Deine Bewertung bestimmt, wann die Frage wiederkommt.',
+      art: '<div class="tv-card"><p class="tv-q"><b>F1.</b> Zwischen welchen zwei Punkten spannt sich jede Stimmlippe?</p><span class="tv-pill tv-a1">Antwort zeigen</span>' +
         '<div class="tv-ans tv-a2"><i></i><i class="short"></i></div><div class="tv-rate tv-a3"><span>Nochmal</span><span>Unsicher</span><span class="tv-on">Gewusst</span></div></div>' },
     { t: 'Abbildungen', lead: 'Tippe auf eine Abbildung, um sie groß zu sehen.',
       body: '„Beschriftung verdecken“ macht jede Abbildung zum Test: erst benennen, dann antippen. Über „Anatomie“ siehst du dieselbe Stelle in einer echten Zeichnung.',

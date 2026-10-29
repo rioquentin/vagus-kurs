@@ -1,0 +1,19 @@
+# Hält das kostenlose Supabase-Projekt wach (es pausiert nach ~7 Tagen ohne Datenbankzugriff).
+# Liest URL und öffentlichen Schlüssel aus der veröffentlichten Seite, braucht also kein Secret.
+name: Supabase wach halten
+on:
+  schedule:
+    - cron: '17 6 * * 1,4'   # montags und donnerstags, 06:17 UTC
+  workflow_dispatch:
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Datenbank einmal abfragen
+        run: |
+          cfg=$(curl -fsS https://rioquentin.github.io/vagus-kurs/assets/sync-config.js)
+          url=$(printf '%s' "$cfg" | grep -o 'https://[a-z0-9]*\.supabase\.co' | head -1)
+          key=$(printf '%s' "$cfg" | grep -o 'sb_publishable_[A-Za-z0-9_-]*' | head -1)
+          code=$(curl -s -o /dev/null -w '%{http_code}' "$url/rest/v1/user_state?select=user_id&limit=1" -H "apikey: $key" -H "Authorization: Bearer $key")
+          echo "Antwort: $code"
+          test "$code" -lt 500

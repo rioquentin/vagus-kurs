@@ -4,14 +4,30 @@
   "lang": "de",
   "start_url": "./",
   "display": "standalone",
-  "background_color": "#F3F5F5",
-  "theme_color": "#1B2329",
+  "background_color": "#f8f0f0",
+  "theme_color": "#f8f0f0",
   "icons": [
     {
       "src": "assets/icon.svg",
       "sizes": "any",
       "type": "image/svg+xml",
       "purpose": "any"
+    },
+    {
+      "src": "assets/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "assets/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "assets/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
     }
   ]
 }

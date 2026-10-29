@@ -1438,3 +1438,388 @@ html[data-ui="en"].ui-ready body{animation:fade-in .2s ease both}
 .skip-list li>span{min-width:0}
 .skip-list .linkbtn{flex:none;color:var(--ink-2)}
 @media (max-width:480px){.skip-b kbd{display:none}}
+/* ==========================================================================
+   Feinschliff (zuletzt geladen). Nur Darstellung: Texte, Abbildungen und Farbcode des Kurses bleiben unverändert.
+   Jede Regel antwortet auf einen Befund aus dev/audit (siehe docs/chantier.md).
+   ========================================================================== */
+
+/* ---- iOS: keine automatische Textvergrößerung im Querformat, kein grauer Tipp-Blitz ---- */
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+a,button,summary,label,[role=button],.qz-opt,.rate-b,.unit,.chip{-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+
+/* ---- Lesetext: die optische Größenangleichung (und damit die gewählte Textgröße im Lesemodus) gilt überall.
+   Kursregeln mit „font:“-Kurzschrift setzten sie still zurück: Seite 00 und 9–10 standen dadurch eine Stufe kleiner. ---- */
+main{font-size-adjust:var(--fsa)}
+:where(main .wrap) :is(p,li,td,dd,h1,h2,h3,h4,blockquote,summary,figcaption,.stem,.small,.why,.caption,.model,.opt,.check){font-size-adjust:var(--fsa)!important}
+
+/* ---- Lesbarkeit: nichts unter ~13,5 px (Plex) bzw. 15 px (Cormorant, kleine x-Höhe) ---- */
+:where(.wrap) th,:where(.wrap) dt{font-size:13.5px}
+:where(.wrap) .meta{font:italic 500 16.5px/1.35 var(--f-body);font-size-adjust:.47;color:var(--ink-2);gap:4px 20px}
+:where(.wrap) .meta span:first-child{font-style:normal}
+:where(.wrap) .tag{font-size:12.5px;padding-block:1px}
+:where(.wrap) .src{font-size:13px}
+:where(.wrap) .segs a,:where(.wrap) .stages button,:where(.wrap) .ctrl button,:where(.wrap) .toc a{font-size:14px}
+:where(.wrap) .opt .k{font-size:14px}
+:where(.wrap) .refs,:where(.wrap) .refs em{font-size:15px}
+.m-c{font-size:13.5px}
+.gl-az a{font-size:15px}
+.gl-src,.gl-src a{font-size:15px}
+
+/* ---- Kontrast: Gewähltes bleibt rosa, aber im dunkleren Textrosa (Weiß auf Rosa hatte 3,4:1, jetzt 5,4:1; dunkel 7,6:1) ---- */
+.chip[aria-pressed="true"],.seg[aria-checked="true"],.view-sw button[aria-pressed="true"]{background:var(--rose-text);border-color:var(--rose-text);color:var(--paper)}
+
+/* ---- Formularbeschriftungen in der Textschrift statt in der schmalen Abbildungsschrift ---- */
+.acc-body label,.gate-form label{font:600 16px/1.3 var(--f-body);font-size-adjust:var(--fsa);letter-spacing:0}
+.acc-body label .note,.gate-form label .note{font:italic 500 15px/1.3 var(--f-body);color:var(--ink-2)}
+.m-leg{white-space:nowrap;margin-right:10px}
+
+/* ---- Tippflächen: kleine Knöpfe behalten ihr Aussehen, bekommen aber eine unsichtbare 44-px-Fläche ---- */
+.tts-btn,.linkbtn,.z-open,.lbl-btn,.nb-check,.sel-pop button,.qz-next-row .linkbtn,.skip-list .linkbtn{position:relative}
+.tts-btn::after,.linkbtn::after,.z-open::after,.lbl-btn::after,.nb-check::after{content:"";position:absolute;inset:50% auto auto 50%;width:max(100%,44px);height:max(100%,44px);transform:translate(-50%,-50%)}
+input[type=checkbox],input[type=radio]{width:20px;height:20px;accent-color:var(--ink);vertical-align:-4px;cursor:pointer}
+:where(.wrap) input[type=checkbox],:where(.wrap) input[type=radio]{width:22px;height:22px}
+
+/* ---- Fühlbare Rückmeldung beim Tippen (Druck), nur ohne „Bewegung reduzieren“ ---- */
+@media (prefers-reduced-motion:no-preference){
+  .cta,.chip,.seg,.rate-b,.skip-b,.qz-opt:not(:disabled),.qa-btn,.qa-rate button,.tbtn,.done-btn,.view-sw button,.tts-btn,.z-open,.lbl-btn{transition:transform .12s cubic-bezier(.2,.8,.2,1),background-color .25s ease,color .25s ease,border-color .25s ease,opacity .25s ease}
+  .cta:active,.chip:active,.seg:active,.rate-b:active,.skip-b:active,.qz-opt:not(:disabled):active,.qa-btn:active,.qa-rate button:active,.done-btn:active,.view-sw button:active,.tts-btn:active,.z-open:active,.lbl-btn:active{transform:scale(.97)}
+  .tbtn:active{transform:scale(.92)}
+}
+
+/* ---- Tastatur: ein einheitlicher, gut sichtbarer Fokusring; scrollbare Abbildungen sind erreichbar ---- */
+/* Fokusring selbst kommt aus gentle.css (rosa, 2 px) */
+.scroll[tabindex]:focus-visible{outline-offset:-2px}
+
+/* ---- Typografie im Detail ---- */
+:where(.wrap) :is(h1,h2,h3),.home-hero h1,.tool h1,.tool h2{text-wrap:balance}
+:where(.wrap) :is(p,li,dd,blockquote),.cq-q,.qa-a,.fc-answer p{text-wrap:pretty}
+:where(.wrap) p,:where(.wrap) li{hanging-punctuation:first allow-end}
+::selection{background:color-mix(in srgb,var(--rose-deep) 30%,transparent);color:inherit}
+textarea,input{caret-color:var(--rose-deep)}
+html{scrollbar-color:color-mix(in srgb,var(--ink-2) 45%,transparent) transparent}
+
+/* ---- Dialoge und Schublade: Scrollen läuft nicht in die Seite dahinter durch ---- */
+dialog,.drawer,.sidebar,.z-stage,.s-results{overscroll-behavior:contain}
+
+/* ---- Druck: ein sauberes Lernblatt pro Abschnitt (Lösungen werden beim Drucken aufgeklappt, siehe tools.js) ---- */
+@page{margin:16mm 15mm 18mm}
+@page{@bottom-center{content:"Vagus-Kurs · " counter(page) " / " counter(pages);font:italic 9pt Georgia,serif;color:#7b5a5e}}
+@media print{
+  :root{--fsa:.47}
+  html,body{background:#fff!important;color:#000}
+  body{font-size:11.5pt}
+  *{print-color-adjust:exact;-webkit-print-color-adjust:exact}
+  .quiz,.done-row,.view-sw,.atlas,.miss-banner,.swipe-hint,.print-row,dialog,.readbar,.tts-bar,.skip-b,.qa-skip,.sel-pop,.ui-toast{display:none!important}
+  .scroll{overflow:visible!important;box-shadow:none!important}
+  .scroll svg,.wrap svg{min-width:0!important;max-width:100%;height:auto}
+  .wrap .figure[hidden]{display:block!important} /* beim Druck immer das Schema, auch wenn gerade die Anatomie gezeigt wird */
+  :where(.wrap) :is(h1,h2,h3){break-after:avoid;text-wrap:balance}
+  :where(.wrap) :is(p,li){orphans:3;widows:3}
+  :where(.wrap) a{color:inherit;text-decoration:none}
+  :where(.wrap) details>summary{list-style:none}
+  :where(.wrap) details>summary::-webkit-details-marker{display:none}
+  mark.saved{background:#fde7ec!important}
+}
+.print-row{display:flex;flex-wrap:wrap;gap:4px 12px;align-items:baseline;margin:-28px 0 40px;font-size:16px;color:var(--ink-2)}
+.print-row .linkbtn{color:var(--ink-2)}
+
+/* ---- Prüfungstermin in der Tagesrunde ---- */
+.exam{margin-top:22px;padding-top:16px;border-top:1px solid var(--rule);display:grid;gap:6px;justify-items:start}
+.exam p{margin:0}
+.exam-n{font-size:19px}
+.exam-n b{font-weight:600}
+.exam .linkbtn{color:var(--ink-2);font-size:16px}
+.exam-f{display:grid;gap:6px}
+.exam-f input{font:500 18px/1.2 var(--f-body);padding:10px 12px;border:1.5px solid var(--rule);border-radius:12px;background:var(--plate);color:var(--ink);min-height:44px}
+:root[data-input="pointer"] :is(button,a,summary,[tabindex]):focus-visible{outline:none!important}
+
+/* ---- Lernkarten: Platz freihalten, bis die Zahlen geladen sind (sonst springt die Seite) ---- */
+[data-fc-plan]:empty{min-height:26px}
+[data-fc-stats]:empty{min-height:164px}
+[data-fc-mastery]:empty{min-height:420px}
+@media (min-width:700px){[data-fc-stats]:empty{min-height:80px}}
+
+/* ---- Hinweis unten (offline usw.) ---- */
+.ui-toast{position:fixed;left:50%;bottom:calc(18px + env(safe-area-inset-bottom,0px));z-index:90;max-width:min(92vw,440px);padding:11px 16px;border-radius:14px;background:var(--ink);color:var(--paper);font:500 16px/1.35 var(--f-body);box-shadow:0 8px 24px rgba(40,20,24,.18);transform:translate(-50%,12px);opacity:0;pointer-events:none;transition:opacity .25s ease,transform .25s ease}
+.ui-toast.on{opacity:1;transform:translate(-50%,0)}
+
+/* Druck immer im hellen Schema (im dunklen kamen sonst dunkle Kästen mit blasser Schrift aufs Papier). Werte von dev/audit/printvars.mjs */
+@media print{:root:is([data-theme],:not([data-theme])){--paper:#f8f0f0;--plate:#fffbfb;--ink:#3a2226;--ink-2:#6e5155;--rule:#e8d5d8;--muted:#b39497;--muted-fill:#f1e2e4;--muscle-tint:#F3E3DA;--action-fill:#fbeff1;--flag-fill:#fbecee;--q-fill:#f6eaeb;--cover:#FBF6F1;--ok:#1E7A45;--ok-fill:#E3F2E8;--bad:#B3261E;--bad-fill:#FBE5E3;--paper-2:#f1e2e4;--rose-deep:#c4637c;--btn-bg:#3a2226;--btn-fg:#f4b9c8;--rose-text:#a3435c}}
+
+/* ---- Lesemodus: Erinnerung und Sicherung ---- */
+.rd-time{display:inline-flex;align-items:center;gap:8px;font:italic 500 17px/1 var(--f-body);color:var(--ink-2)}
+.rd-time input{font:500 17px/1 var(--f-body);color:var(--ink);background:var(--plate);border:1.5px solid var(--rule);border-radius:999px;padding:8px 12px;min-height:40px}
+.rd-msg:empty{display:none}
+
+/* ---- Fokus beim Lesen: Kopfzeile weicht aus (app.js), der Lesefortschritt bleibt als feine Linie oben ---- */
+.topbar{transition:transform .28s cubic-bezier(.2,.8,.2,1)}
+@media (max-width:1119px){:root.bar-away .topbar{transform:translateY(calc(-100% + 2px))}} /* breit: Platz genug, Seitenleiste klebt an der Kopfzeile */
+@media (prefers-reduced-motion:reduce){.topbar{transition:none}}
+@media print{:root.bar-away .topbar{transform:none}}
+
+/* ---- Lückentext ---- */
+.cq-cloze{line-height:1.55}
+.cq-cloze .gap{display:inline-block;width:5.5em;height:.9em;margin:0 .2em;vertical-align:-.08em;border-bottom:2px solid var(--rose-text);background:color-mix(in srgb,var(--rose-deep) 10%,transparent);border-radius:3px 3px 0 0}
+.fc-ctx{font-size:18px;color:var(--ink-2);margin:6px 0 0}
+.fc-ctx .hl-term{background:color-mix(in srgb,var(--rose-deep) 22%,transparent);color:var(--ink);border-radius:3px;padding:0 2px}
+
+/* ---- Fortschritt (Lernkarten) ---- */
+.fc-progress{display:grid;gap:26px;margin-top:28px;padding:22px;border:1.5px solid var(--rule);border-radius:16px;background:var(--plate)}
+.fc-progress h2,.fc-progress h3{font:600 19px/1.2 var(--f-display);margin:0 0 10px}
+.cal{display:grid;grid-template-rows:repeat(7,1fr);grid-auto-flow:column;grid-auto-columns:1fr;gap:4px;max-width:360px;aspect-ratio:10/7;margin-bottom:8px}
+.cal-d{border-radius:3px;background:var(--paper-2)}
+.cal-d.l1{background:color-mix(in srgb,var(--rose-deep) 35%,var(--paper-2))}
+.cal-d.l2{background:color-mix(in srgb,var(--rose-deep) 65%,var(--paper-2))}
+.cal-d.l3{background:var(--rose-text)}
+.cal-d.lf{background:transparent;outline:1px dashed var(--rule);outline-offset:-1px}
+.fc-bars{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(7,1fr);gap:8px;align-items:end;height:130px}
+.fc-bars li{display:grid;grid-template-rows:auto 1fr auto;justify-items:center;height:100%;gap:4px;max-width:none}
+.fc-bars i{align-self:end;width:100%;max-width:34px;min-height:2px;background:var(--rose-text);border-radius:4px 4px 0 0;opacity:.85}
+.fc-bars li:first-child i{background:var(--ink)}
+.fc-bar-n{font-size:15px;font-variant-numeric:lining-nums tabular-nums}
+.fc-bar-d{font-size:14px;color:var(--ink-2)}
+.pg-weak ul{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.pg-weak li{display:flex;justify-content:space-between;gap:12px;align-items:baseline;max-width:none}
+.fc-bars .is-today .fc-bar-d{font-weight:700;color:var(--ink)}
+.pg-weak .note{white-space:nowrap}
+
+/* ---- Abbildung: „Finden üben“ ---- */
+svg .lbl-cover.ok{fill:color-mix(in srgb,var(--ok) 14%,transparent);stroke:var(--ok);stroke-width:1.6;stroke-dasharray:none}
+svg .lbl-cover.bad{fill:color-mix(in srgb,var(--bad) 35%,var(--plate));stroke:var(--bad);stroke-dasharray:none}
+svg .lbl-cover.hint{stroke:var(--rose-deep);stroke-width:3;stroke-dasharray:none;animation:lbl-hint .7s ease-in-out 2}
+@keyframes lbl-hint{50%{stroke-width:6}}
+@media (prefers-reduced-motion:reduce){svg .lbl-cover.hint{animation:none}}
+.lbl-q:empty{display:none}
+.lbl-q{flex-basis:100%;display:flex;flex-wrap:wrap;gap:4px 12px;align-items:baseline;font-size:18px;padding:8px 12px;border-radius:12px;background:var(--q-fill)}
+.lbl-q b{font-weight:600}
+.lbl-bar{flex-wrap:wrap}
+.fig-tools .z-open{position:relative} /* sonst bezieht sich die 44-px-Fläche auf die ganze Zeile und überdeckt „Beschriftung verdecken“ */
+
+/* ---- Probeprüfung mit Uhr ---- */
+.exam-timer{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;margin:4px 0 8px}
+.exam-clock{position:fixed;z-index:70;left:50%;bottom:calc(14px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);display:flex;gap:16px;align-items:center;padding:9px 18px;border-radius:999px;background:var(--plate);border:1.5px solid var(--rule);box-shadow:0 8px 24px rgba(40,20,24,.14);font:500 17px/1 var(--f-body);white-space:nowrap}
+.exam-clock .ec-t{font-variant-numeric:lining-nums tabular-nums;font-weight:600;min-width:7.2em}
+.exam-clock .linkbtn{color:var(--ink-2)}
+.exam-clock.late{border-color:var(--rose-text)}
+.exam-clock.over .ec-t{color:var(--rose-text)}
+.exam-hist:empty{display:none}
+.exam-hist{margin:18px 0}
+.exam-hist ol{list-style:none;margin:8px 0 0;padding:0;display:grid;gap:6px}
+.exam-hist li{display:grid;grid-template-columns:5.5em 5em 4em 1fr;gap:10px;align-items:baseline;max-width:none;font-variant-numeric:lining-nums tabular-nums}
+@media print{.exam-timer,.exam-clock,.exam-hist{display:none!important}}
+
+/* ---- Ziffern: überall Versalziffern (Mediäval-„1“ sieht aus wie „I“), außer in den kursiven Einleitungen.
+   „font:“-Kurzschrift in Kursregeln setzte sie sonst still zurück (z. B. „Abschnitt 1 von 10“, „1 / 30 Punkte“). ---- */
+body :where(*):not(svg, svg *, .home-hero p, .home-hero p *, .tool .wrap > header p, .tool .wrap > header p *){font-variant-numeric:lining-nums!important}
+:where(table) td,.fc-bar-n,.exam-clock .ec-t,.exam-hist li,.z-pct,.fc-count,.m-c,.lbl-q .note{font-variant-numeric:lining-nums tabular-nums!important}
+
+/* ---- Mündliche Frage: Aufnahme ---- */
+.rec{display:grid;gap:8px;margin-top:14px}
+.rec-row{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center}
+.rec .cta.on{background:var(--rose-text);border-color:var(--rose-text);color:var(--paper)}
+.rec-t{font-variant-numeric:lining-nums tabular-nums!important;font-size:18px;color:var(--ink-2)}
+.rec-msg:empty{display:none}
+.rec-list{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.rec-list li{display:grid;grid-template-columns:1fr auto;gap:6px 12px;align-items:center;max-width:none}
+.rec-list audio{grid-column:1/-1;width:100%;height:40px}
+.rec-d{font-size:16px;color:var(--ink-2)}
+@media print{.rec{display:none!important}}
+
+/* ---- Begriffe beim Lesen antippen ---- */
+.gl-ref{cursor:pointer;text-decoration:underline dotted color-mix(in srgb,var(--rose-text) 70%,transparent);text-decoration-thickness:1.5px;text-underline-offset:.18em;border-radius:3px}
+.gl-ref:hover,.gl-ref[aria-expanded="true"]{background:color-mix(in srgb,var(--rose-deep) 14%,transparent)}
+.gl-pop{position:fixed;z-index:85;width:min(340px,calc(100vw - 20px));padding:14px 16px;border-radius:14px;background:var(--plate);border:1.5px solid var(--rule);box-shadow:0 10px 30px rgba(40,20,24,.16);display:grid;gap:8px;font-size:17px;line-height:1.45}
+.gl-pop p{margin:0}
+.gl-pop-t b{font-weight:600}
+.gl-pop-c{color:var(--ink-2)}
+.gl-pop a{font-size:15.5px;color:var(--rose-text)}
+@media print{.gl-ref{text-decoration:none;background:none}.gl-pop{display:none!important}}
+
+/* „hidden“ heißt versteckt, auch wenn eine Regel display setzt (Begriffsblase, Uhrleiste …) */
+[hidden]{display:none!important}
+
+/* ---- Verwechslungen (Merkheft) ---- */
+.conf{display:grid;gap:16px;margin-top:48px}
+.conf>h2{font:400 34px/1.1 var(--f-black);margin:0;font-size-adjust:none}
+.cf-e{display:grid;gap:12px;padding:18px;border:1.5px solid var(--rule);border-radius:16px;background:var(--plate)}
+.cf-q{margin:0;font-weight:600}
+.cf-pair{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:10px}
+.cf-side{display:grid;gap:6px;align-content:start;padding:12px 14px;border-radius:12px;border-left:4px solid}
+.cf-side.bad{border-color:var(--bad);background:var(--bad-fill)}
+.cf-side.ok{border-color:var(--ok);background:var(--ok-fill)}
+.cf-side p{margin:0;font-size:16px;color:var(--ink-2)}
+.cf-e-x{margin:0;font-size:16.5px;color:var(--ink-2)}
+.rec-list .linkbtn{justify-self:end;color:var(--ink-2)}
+
+/* ---- Eigene Eselsbrücke ---- */
+.mn{display:grid;gap:6px;justify-items:start;margin-top:12px;padding-top:12px;border-top:1px dashed var(--rule)}
+.mn-t{margin:0;font-style:italic;font-size:18px;color:var(--ink)}
+.mn .linkbtn{color:var(--ink-2);font-size:15.5px}
+.mn-add{font-style:italic}
+.mn-f{display:grid;gap:6px;width:100%}
+.mn-f textarea{width:100%;font:italic 500 17px/1.4 var(--f-body);padding:10px 12px;border:1.5px solid var(--rule);border-radius:12px;background:var(--plate);color:var(--ink);resize:vertical}
+.mn-row{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center}
+.mn-page{display:grid;gap:14px;margin-top:48px}
+.mn-page>h2{font:400 34px/1.1 var(--f-black);margin:0;font-size-adjust:none}
+.mn-e{padding:16px 18px;border:1.5px solid var(--rule);border-radius:16px;background:var(--plate)}
+.mn-q{margin:0}
+.mn-e .mn{margin-top:8px}
+@media print{.mn-add,.mn .linkbtn{display:none!important}}
+
+/* ---- Wochenrückblick ---- */
+.week{display:grid;gap:6px;justify-items:start;padding:18px 20px;margin-bottom:22px;border-radius:16px;background:var(--q-fill);border:1.5px solid var(--rule)}
+.week p{margin:0}
+.week .linkbtn{color:var(--ink-2);font-size:15.5px;margin-top:4px}
+
+/* ---- Abschnitt 5.3: Tonhöhe live ---- */
+.pitch{display:grid;gap:10px;margin-top:28px;padding:20px;border:1.5px solid var(--rule);border-radius:16px;background:var(--plate)}
+.pitch p{margin:0}
+.pitch-row{display:flex;flex-wrap:wrap;gap:8px 18px;align-items:center}
+.pitch .cta.on{background:var(--rose-text);border-color:var(--rose-text);color:var(--paper)}
+.pitch-now{font:600 22px/1 var(--f-body);font-variant-numeric:lining-nums tabular-nums!important;min-width:8em}
+.pitch-cv{width:100%;height:170px;display:block;border-radius:10px;background:var(--paper)}
+.pitch-msg:empty{display:none}
+@media print{.pitch{display:none!important}}
+
+/* ---- iPhone: Tipp „Zum Home-Bildschirm“ ---- */
+.a2hs{display:grid;gap:8px;margin:0 0 26px;padding:18px 20px;border-radius:16px;border:1.5px dashed var(--rose-deep);background:var(--plate)}
+.a2hs p{margin:0}
+.a2hs-steps{margin:4px 0 0;padding-left:1.3em;display:grid;gap:6px}
+.a2hs-row{display:flex;flex-wrap:wrap;gap:8px 18px;align-items:center;margin-top:4px}
+.a2hs .linkbtn{color:var(--ink-2)}
+.a2hs-steps b{font-weight:700;color:var(--ink)}
+
+/* ==========================================================================
+   Bewegung, zweiter Durchgang (nach Emil Kowalski, „Animations on the Web“):
+   Erscheinen = ease-out, unter 300 ms, nur transform und opacity; Häufiges kaum animiert.
+   „Bewegung reduzieren“ schaltet alles ab (globale Regel in gentle.css).
+   ========================================================================== */
+:root{--eo:cubic-bezier(.23,1,.32,1);--eio:cubic-bezier(.645,.045,.355,1)}
+@keyframes sheet-in{from{opacity:0;transform:translateY(18px)}}
+@keyframes pop-in{from{opacity:0;transform:scale(.97)}}
+@keyframes grow-x{from{transform:scaleX(0)}}
+@keyframes grow-y{from{transform:scaleY(0)}}
+@keyframes bloom{0%{opacity:0;transform:scale(.6) rotate(-25deg)}60%{opacity:1}100%{opacity:1;transform:none}}
+@keyframes mark-pop{0%{transform:scale(.7)}60%{transform:scale(1.12)}100%{transform:none}}
+
+/* Dialoge: am Handy kurz von unten, sonst leicht wachsend; Hintergrund gleich lang (gehören zusammen) */
+dialog[open]:not(.gate):not(.zoom):not(.draw){animation:pop-in .22s var(--eo) both}
+dialog[open]::backdrop{animation:fade-in .22s var(--eo) both}
+@media (max-width:640px){dialog[open]:not(.gate):not(.zoom):not(.draw){animation:sheet-in .26s var(--eo) both}}
+
+/* Fortschritt oben: Balken füllt sich, statt zu springen */
+.prog i::after{transition:transform .6s var(--eo)}
+
+/* Wissensstand, Vorschau, Kalender: wachsen und erscheinen einmal beim Laden */
+.m-bar i{transform-origin:0 50%;animation:grow-x .6s var(--eo) both}
+.fc-bars i{transform-origin:50% 100%;animation:grow-y .5s var(--eo) both;animation-delay:calc(var(--k,0) * 40ms)}
+.cal-d{animation:fade-in .35s ease both;animation-delay:calc(var(--k,0) * 5ms)}
+
+/* Kleine Freude: Blüte ❦ neben einer geschafften Überschrift, Häkchen beim Erledigen */
+.bloom{display:inline-block;margin-left:.35em;color:var(--rose-text);font-size:.8em;vertical-align:.05em;animation:bloom .55s var(--eo) both}
+.done-btn.just .mark{animation:mark-pop .38s var(--eo)}
+
+/* ==========================================================================
+   Bewegung, dritter Durchgang: mehr Stellen, gleiche Ruhe (ease-out, transform/opacity).
+   ========================================================================== */
+/* Beim Scrollen auftauchen (app.js setzt .rv nur für Dinge unterhalb des ersten Bildschirms) */
+.rv{opacity:0;transform:translateY(16px)}
+.rv.rv-in{opacity:1;transform:none;transition:opacity .5s var(--eo),transform .6s var(--eo)}
+@media print{.rv{opacity:1!important;transform:none!important}}
+
+/* Antwort klappt von oben nach unten auf, statt nur einzublenden */
+@keyframes unfold{from{opacity:.15;clip-path:inset(0 0 100% 0 round 14px)}to{opacity:1;clip-path:inset(0 0 0 0 round 14px)}}
+.qa:not([hidden]),.fc-answer:not([hidden]),.qz-fb .fc-answer{animation:unfold .42s var(--eo) both}
+
+/* Auswahlfragen: richtig leuchtet kurz auf, falsch schüttelt leicht den Kopf (Kurs und Prüfung) */
+@keyframes nope{0%,100%{transform:none}20%{transform:translateX(-5px)}45%{transform:translateX(4px)}70%{transform:translateX(-2px)}}
+@keyframes yes{0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--ok) 45%,transparent)}100%{box-shadow:0 0 0 10px transparent}}
+.qz-opt.bad,:where(.wrap) .opt.bad{animation:nope .36s var(--eio)}
+.qz-opt.ok,:where(.wrap) .opt.ok{animation:yes .7s var(--eo)}
+
+/* Fortschrittsstreifen in Quiz und Lernkarten gleitet nach */
+.fc-bar i{transition:width .45s var(--eo)}
+
+/* Inhaltsverzeichnis am Handy: gleitet herein (vorher nur Überblenden) */
+@media (max-width:1119px){
+  .sidebar{transform:translateX(-18px)!important;transition:opacity .28s var(--eo),transform .32s var(--eo),visibility 0s .32s!important}
+  .sidebar.open{transform:none!important;transition:opacity .28s var(--eo),transform .32s var(--eo)!important}
+}
+
+/* Gerade gemerkt: Textmarker-Strich von links nach rechts */
+@keyframes sweep{from{background-size:0% .5em}to{background-size:100% .5em}}
+mark.saved.fresh{box-shadow:none;background:linear-gradient(color-mix(in srgb,var(--rose-deep) 28%,transparent),color-mix(in srgb,var(--rose-deep) 28%,transparent)) no-repeat 0 92%/0% .5em;animation:sweep .55s var(--eo) var(--d,0ms) forwards}
+
+/* Startseite: das Plakat „vagus vagus vagus“ schiebt sich Zeile für Zeile herein */
+@keyframes poster-in{from{opacity:0;transform:translateX(-22px)}}
+.poster span{animation:poster-in .7s var(--eo) both}
+.poster span:nth-child(2){animation-delay:.08s}
+.poster span:nth-child(3){animation-delay:.16s}
+
+/* Fällig-Zähler und Badges tauchen sanft auf */
+@keyframes badge-in{from{opacity:0;transform:scale(.6)}}
+[data-due]:not([hidden]),[data-miss-n]:not([hidden]),[data-notes-n]:not([hidden]){animation:badge-in .3s var(--eo) both}
+
+/* Farbschema wechselt als weiche Überblendung (View Transition aus app.js) */
+::view-transition-old(root),::view-transition-new(root){animation-duration:.35s;animation-timing-function:ease}
+
+/* ==========================================================================
+   Eröffnung beim Ankommen: der Goldene Schnitt entsteht wie mit Kreide an der Tafel (~3 s, einmal pro Besuch,
+   Tippen überspringt; Entscheidung im <head>). Ablauf: Rahmen → Quadrat für Quadrat → Spirale, die Tafel
+   zoomt dabei leicht heraus („entfaltet sich“) → φ ≈ 1,618 → Titel → Tafel hebt sich.
+   ========================================================================== */
+.intro{display:none}
+.intro-on .intro{display:grid;place-items:center;position:fixed;inset:0;z-index:200;cursor:pointer;
+  background:radial-gradient(120% 90% at 50% 40%,#5d4740 0%,#4a3833 55%,#3a2a27 100%);
+}
+.intro-on.intro-open .intro{animation:intro-lift .7s var(--eo) .12s both}
+.intro-in{display:grid;justify-items:center;gap:14px;text-align:center;width:min(86vw,560px)}
+.intro-open .intro-in{animation:intro-up .4s cubic-bezier(.4,0,.6,1) both}
+.gold{width:100%;height:auto;overflow:visible;animation:gold-unfold 4.6s cubic-bezier(.22,.9,.3,1) both}
+.gold path{fill:none;stroke:#f6dde3;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1;stroke-dashoffset:1}
+.gold .g-frame{stroke-width:1.5;animation:draw 1.05s var(--eio) .1s both}
+.gold .g-cut{stroke-width:1.15;opacity:.9;animation:draw .5s ease-out both;animation-delay:calc(1s + var(--i) * .2s)}
+.gold .g-spiral{stroke:#f6c3cf;stroke-width:2.1;animation:draw 2.6s cubic-bezier(.45,.05,.35,1) 1.3s both}
+.intro-phi{font:italic 500 22px/1 var(--f-body);color:#f2cfd7;letter-spacing:.02em;font-size-adjust:none;animation:intro-write 1.2s cubic-bezier(.4,.1,.4,1) 3.6s both}
+.intro-t{font:400 46px/1 var(--f-black);color:#f9e2e8;font-size-adjust:none;animation:intro-rise 1s var(--eo) 4.15s both}
+@keyframes draw{to{stroke-dashoffset:0}}
+.garden path{fill:none;stroke:#f2cfd7;stroke-width:.4;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1;stroke-dashoffset:1;opacity:.58;
+  animation:draw var(--d,.8s) cubic-bezier(.3,.7,.3,1) both;animation-delay:var(--t,1.4s)}
+.garden .gd-petal{opacity:.66}
+.garden .gd-hatch{stroke-width:.28;opacity:.42}
+.garden .gd-dot{fill:#f2cfd7;stroke:none;opacity:0;transform-box:fill-box;transform-origin:center;animation:bud .45s var(--eo) both;animation-delay:var(--t,3s)}
+@keyframes bud{from{opacity:0;transform:scale(.2)}to{opacity:.6;transform:none}}
+@keyframes gold-unfold{from{transform:scale(1.22) rotate(-2deg)}to{transform:none}}
+@keyframes intro-rise{from{opacity:0;transform:translateY(8px)}}
+@keyframes intro-write{from{opacity:0;clip-path:inset(0 100% 0 0)}to{opacity:1;clip-path:inset(0 0 0 0)}}
+@keyframes intro-up{to{opacity:0;transform:translateY(-26px)}}
+/* Tafel hebt sich: von unten nach oben weggeschnitten, die Seite dahinter setzt sich leicht */
+@keyframes intro-lift{to{clip-path:inset(0 0 100% 0)}}
+@keyframes page-settle{from{opacity:.4;transform:scale(.985)}}
+.intro-on.intro-open .shell{animation:page-settle .7s var(--eo) .25s both}
+/* „Zum Kurs“: erscheint, wenn alles gezeichnet ist; erst der Klick hebt die Tafel */
+.intro-go{margin-top:14px;padding:13px 28px;border:0;border-radius:999px;background:#f4b9c8;color:#3a2226;font:600 18px/1 var(--f-body);font-size-adjust:none;letter-spacing:.01em;cursor:pointer;
+  box-shadow:0 10px 30px rgba(0,0,0,.25);animation:intro-rise .7s var(--eo) 4.8s both;transition:transform .15s var(--eo),background-color .2s ease}
+.intro-go span{display:inline-block;transition:transform .2s var(--eo)}
+.intro-go:hover{background:#f8cdd8}.intro-go:hover span{transform:translateX(3px)}
+.intro-go:active{transform:scale(.97)}
+.intro-go:focus-visible{outline:2px solid #f4b9c8!important;outline-offset:4px}
+/* Tippen während des Zeichnens: alles läuft in einem Atemzug zu Ende */
+.intro-ff .intro *{animation-delay:0s!important;animation-duration:.35s!important}
+@media (prefers-reduced-motion:reduce){.intro-on .intro{display:none}}
+@media print{.intro{display:none!important}}
+
+/* ---- „Neu im Kurs“ ---- */
+dialog.news .lg-head h2{margin:0}
+.news-lead{margin:0;font-style:italic;color:var(--ink-2)}
+.news-g{display:grid;gap:8px}
+.news-g ul{list-style:none;margin:0;padding:0;display:grid;gap:12px}
+dialog.news[open]{display:flex;flex-direction:column;overflow:hidden;max-height:min(88dvh,760px)}
+dialog.news .lg-body{overflow:auto;min-height:0;overscroll-behavior:contain}
+.news-g li{display:grid;gap:2px;padding-left:12px;border-left:2px solid color-mix(in srgb,var(--rose-deep) 45%,transparent);max-width:none}
+.news-g li b{font-weight:600;font-size:17px}
+.news-g li span{color:var(--ink-2);font-size:15.5px;line-height:1.42}
+.news-g li a{font-size:15px;color:var(--rose-text);white-space:nowrap}
+.news-act{display:flex;flex-wrap:wrap;gap:8px 18px;align-items:center;padding:14px 26px calc(16px + env(safe-area-inset-bottom,0px));border-top:1px solid var(--rule);background:var(--plate)}
+.news-act .linkbtn{color:var(--ink-2)}
+@media (prefers-reduced-motion:no-preference){.news-g li{animation:fade-in .5s var(--eo) both}.news-g li:nth-child(2){animation-delay:.05s}.news-g li:nth-child(3){animation-delay:.1s}.news-g li:nth-child(4){animation-delay:.15s}.news-g li:nth-child(n+5){animation-delay:.2s}}

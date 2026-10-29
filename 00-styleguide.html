@@ -4,30 +4,66 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Visueller Styleguide · Vagus-Kurs</title>
-<script>try{var s=JSON.parse(localStorage.getItem('vagus-kurs:v1')||'{}'),d=document.documentElement,r=s.read||{};if(s.theme)d.dataset.theme=s.theme;if(s.ui==='en'){d.dataset.ui='en';setTimeout(function(){d.classList.add('ui-ready')},1500)}d.dataset.size=r.size||'m';if(r.font==='sans'){d.dataset.font='sans';document.write('<link id="font-sans" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap">')}}catch(e){}</script>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=UnifrakturMaguntia&family=IBM+Plex+Sans+Condensed:wght@400;600&display=swap">
-<link rel="stylesheet" href="assets/course.css?v=mvskrek1">
-<script>window.KURS_BUILD='mvskrek1'</script>
+<script>try{var s=JSON.parse(localStorage.getItem('vagus-kurs:v1')||'{}'),d=document.documentElement,r=s.read||{};if(s.theme)d.dataset.theme=s.theme;if(s.ui==='en'){d.dataset.ui='en';document.write('<script src="assets/i18n-en.js?v=mvstfi9a" defer><\/script>');setTimeout(function(){d.classList.add('ui-ready')},1500)}d.dataset.size=r.size||'m';if(r.font==='sans')d.dataset.font='sans';}catch(e){}</script>
+<script>try{var s=JSON.parse(localStorage.getItem('vagus-kurs:v1')||'{}'),q=location.search+location.hash;if(!sessionStorage.getItem('vagus-kurs:intro')&&(s.gate||s.tour)&&!/[?&](fig|hl|note|quiz)=|access_token|type=recovery|#(note|heute|schwachstellen|verwechslungen)/.test(q)&&!(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches)){document.documentElement.classList.add('intro-on');sessionStorage.setItem('vagus-kurs:intro','1')}}catch(e){}</script>
+<link rel="preload" href="assets/fonts/CormorantGaramond-500-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/UnifrakturMaguntia-400-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="assets/fonts/fonts.css?v=mvstfi9a">
+<link rel="stylesheet" href="assets/course.css?v=mvstfi9a">
+<script>window.KURS_BUILD='mvstfi9a'</script>
 <link rel="manifest" href="manifest.webmanifest">
-<meta name="theme-color" content="#1B2329">
+<meta name="theme-color" content="#f8f0f0" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#2e2321" media="(prefers-color-scheme: dark)">
 <link rel="icon" href="assets/icon.svg" type="image/svg+xml">
-<script src="assets/app.js?v=mvskrek1" defer></script>
-<script src="assets/sync-config.js?v=mvskrek1" defer></script>
-<script src="assets/sync.js?v=mvskrek1" defer></script>
-<script src="assets/study.js?v=mvskrek1" defer></script>
-<script src="assets/tools.js?v=mvskrek1" defer></script>
-<script src="assets/tour.js?v=mvskrek1" defer></script>
-<script src="assets/i18n-en.js?v=mvskrek1" defer></script>
-<script src="assets/i18n.js?v=mvskrek1" defer></script>
+<link rel="apple-touch-icon" href="assets/icon-180.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Vagus-Kurs">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="format-detection" content="telephone=no">
+<meta name="description" content="Lernkurs Logopädie: der N. vagus und die Stimme. Zehn Abschnitte mit Abbildungen, Lernkarten, Quiz und Merkheft.">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="de_DE">
+<meta property="og:title" content="Visueller Styleguide · Vagus-Kurs">
+<meta property="og:description" content="Zehn Abschnitte mit Abbildungen, Lernkarten, Quiz und Merkheft.">
+<meta property="og:image" content="https://rioquentin.github.io/vagus-kurs/assets/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<script src="assets/peony.js?v=mvstfi9a" defer></script>
+<script src="assets/app.js?v=mvstfi9a" defer></script>
+<script src="assets/sync-config.js?v=mvstfi9a" defer></script>
+<script src="assets/sync.js?v=mvstfi9a" defer></script>
+<script src="assets/study.js?v=mvstfi9a" defer></script>
+<script src="assets/tools.js?v=mvstfi9a" defer></script>
+<script src="assets/tour.js?v=mvstfi9a" defer></script>
+<script src="assets/i18n.js?v=mvstfi9a" defer></script>
 </head>
 <body data-page="00">
+<div class="intro" role="dialog" aria-label="Vagus-Kurs"><div class="intro-in">
+<svg class="gold" viewBox="-6 -6 173.8 112" role="presentation">
+<defs><filter id="chalk" x="-5%" y="-5%" width="110%" height="110%"><feTurbulence type="fractalNoise" baseFrequency="1.4" numOctaves="2" seed="7"/><feColorMatrix values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 2.2 -0.3"/><feComposite in="SourceGraphic" operator="in" result="grain"/><feTurbulence type="fractalNoise" baseFrequency=".08" numOctaves="1" seed="3" result="warp"/><feDisplacementMap in="grain" in2="warp" scale="1.2"/></filter></defs>
+<g filter="url(#chalk)">
+<path class="g-frame" d="M0 0H161.8V100H0Z" pathLength="1"/>
+<path class="g-cut" style="--i:0" d="M100 0L100 100" pathLength="1"/>
+<path class="g-cut" style="--i:1" d="M100 61.8L161.8 61.8" pathLength="1"/>
+<path class="g-cut" style="--i:2" d="M123.61 61.8L123.61 100" pathLength="1"/>
+<path class="g-cut" style="--i:3" d="M100 76.39L123.61 76.39" pathLength="1"/>
+<path class="g-cut" style="--i:4" d="M114.59 61.8L114.59 76.39" pathLength="1"/>
+<path class="g-cut" style="--i:5" d="M114.59 70.82L123.61 70.82" pathLength="1"/>
+<path class="g-cut" style="--i:6" d="M118.03 70.82L118.03 76.39" pathLength="1"/>
+<path class="g-cut" style="--i:7" d="M114.59 72.95L118.03 72.95" pathLength="1"/>
+<path class="g-cut" style="--i:8" d="M116.72 70.82L116.72 72.95" pathLength="1"/>
+<path class="g-cut" style="--i:9" d="M116.72 72.14L118.03 72.14" pathLength="1"/>
+<path class="g-spiral" d="M0 100 A100 100 0 0 1 100 0 A61.8 61.8 0 0 1 161.8 61.8 A38.2 38.2 0 0 1 123.61 100 A23.61 23.61 0 0 1 100 76.39 A14.59 14.59 0 0 1 114.59 61.8 A9.02 9.02 0 0 1 123.61 70.82 A5.57 5.57 0 0 1 118.03 76.39 A3.44 3.44 0 0 1 114.59 72.95 A2.13 2.13 0 0 1 116.72 70.82 A1.32 1.32 0 0 1 118.03 72.14" pathLength="1"/>
+</g></svg>
+<span class="intro-phi" aria-hidden="true">φ ≈ 1,618</span><b class="intro-t">Vagus-Kurs</b>
+<button type="button" class="intro-go" data-intro-go>Zum Kurs <span aria-hidden="true">→</span></button></div></div>
 <a class="skip" href="#main">Zum Inhalt springen</a>
 <header class="topbar">
   <button class="tbtn menu-btn" type="button" data-open-nav aria-controls="sidebar" aria-expanded="false" aria-label="Inhaltsverzeichnis öffnen"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
   <a class="brand" href="index.html"><b><i class="b-long">N. vagus und Stimme</i><i class="b-short">Vagus-Kurs</i></b><span>Lernkurs</span></a>
-  <a class="tbtn prog" href="index.html#fortschritt" title="Erledigte Abschnitte"><i></i><span data-prog>0 / 9</span></a>
+  <a class="tbtn prog" href="index.html#fortschritt" title="Erledigte Abschnitte"><i></i><span data-prog>0 / 10</span></a>
   <button class="tbtn" type="button" data-open-search aria-keyshortcuts="/" aria-label="Kurs durchsuchen"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg><span class="lbl">Suchen</span></button>
   <button class="tbtn" type="button" data-open-legend aria-label="Farb- und Formcode"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="6" height="6" rx="1"/><rect x="4" y="14" width="6" height="6" rx="3"/><path d="M14 7h6M14 17h6"/></svg><span class="lbl">Legende</span></button>
   <button class="tbtn acc-btn" type="button" data-open-account hidden><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8.5" r="3.5"/><path d="M5 20c.8-3.6 3.6-5.5 7-5.5s6.2 1.9 7 5.5"/></svg><span class="lbl">Anmelden</span><i class="acc-dot" data-acc-dot aria-hidden="true"></i></button>
@@ -38,7 +74,7 @@
 </header>
 <div class="shell">
 <nav class="sidebar" id="sidebar" aria-label="Kursinhalt">
-  <div class="side-head"><span class="eyebrow">Kernpfad · 9 Einheiten</span><button class="tbtn side-close" type="button" data-close-nav aria-label="Schließen"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+  <div class="side-head"><span class="eyebrow">Kernpfad · 10 Abschnitte</span><button class="tbtn side-close" type="button" data-close-nav aria-label="Schließen"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
   <ol class="ctoc">
     <li><a class="ctoc-unit" href="01-gelenke-muskeln.html" data-unit="01"><span class="ctoc-n">1</span><span class="ctoc-t">Gelenke und innere Kehlkopfmuskeln</span><span class="mark"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 6.3l2.3 2.3 4.7-5"/></svg></span></a></li>
     <li><a class="ctoc-unit" href="02-n-laryngeus-superior.html" data-unit="02"><span class="ctoc-n">2</span><span class="ctoc-t">N. laryngeus superior</span><span class="mark"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 6.3l2.3 2.3 4.7-5"/></svg></span></a></li>
@@ -76,9 +112,9 @@
   <div class="scroll"><table>
     <thead><tr><th>Swatch</th><th>Meaning</th><th>Backup signal (never colour alone)</th></tr></thead>
     <tbody>
-      <tr><td><div class="sw" style="background:var(--c-nerve)"></div></td><td><strong>Nerve</strong> (general), trunk of the N. vagus</td><td>Label starts with <code>N.</code> or <code>R.</code>; drawn as a solid line with arrowheads</td></tr>
-      <tr><td><div class="sw" style="background:var(--c-sln)"></div></td><td><strong>N. laryngeus superior</strong> (SLN) and its two branches</td><td>Tag <code>SLN</code> on every structure it supplies</td></tr>
-      <tr><td><div class="sw" style="background:var(--c-rln)"></div></td><td><strong>N. laryngeus recurrens</strong> (RLN, inferior laryngeal nerve)</td><td>Tag <code>RLN</code> on every structure it supplies</td></tr>
+      <tr><td><div class="sw" style="background:var(--c-nerve)"></div></td><td><strong>Nerve</strong> (general), trunk of the N. vagus</td><td>Label starts with <code>N.</code> or <code>R.</code>; drawn as a solid line with arrowheads</td></tr>
+      <tr><td><div class="sw" style="background:var(--c-sln)"></div></td><td><strong>N. laryngeus superior</strong> (SLN) and its two branches</td><td>Tag <code>SLN</code> on every structure it supplies</td></tr>
+      <tr><td><div class="sw" style="background:var(--c-rln)"></div></td><td><strong>N. laryngeus recurrens</strong> (RLN, inferior laryngeal nerve)</td><td>Tag <code>RLN</code> on every structure it supplies</td></tr>
       <tr><td><div class="sw" style="background:var(--c-artery)"></div></td><td><strong>Artery</strong> (only as landmarks: aortic arch, subclavian, thyroid arteries)</td><td>Label starts with <code>A.</code>; solid fill</td></tr>
       <tr><td><div class="sw" style="background:var(--c-vein)"></div></td><td><strong>Vein</strong></td><td>Label starts with <code>V.</code>; solid fill</td></tr>
       <tr><td><svg width="46" height="28" aria-hidden="true"><rect x=".5" y=".5" width="45" height="27" rx="3" fill="var(--c-muscle)"/><path d="M6 24 L20 4 M16 24 L30 4 M26 24 L40 4" stroke="#fff" stroke-opacity=".45"/></svg></td><td><strong>Muscle</strong> (red-brown)</td><td>Label starts with <code>M.</code>; thin fibre lines in the fibre direction</td></tr>
@@ -96,12 +132,12 @@
   <div class="scroll"><table>
     <thead><tr><th>Shape</th><th>Means</th><th>Example</th></tr></thead>
     <tbody>
-      <tr><td><svg width="90" height="36" aria-hidden="true"><rect x="2" y="4" width="86" height="28" fill="var(--muted-fill)" stroke="var(--ink-2)" stroke-width="1.5"/></svg></td><td>Structure (nerve, muscle, cartilage)</td><td>M. cricoarytaenoideus posterior</td></tr>
+      <tr><td><svg width="90" height="36" aria-hidden="true"><rect x="2" y="4" width="86" height="28" fill="var(--muted-fill)" stroke="var(--ink-2)" stroke-width="1.5"/></svg></td><td>Structure (nerve, muscle, cartilage)</td><td>M. cricoarytaenoideus posterior</td></tr>
       <tr><td><svg width="90" height="36" aria-hidden="true"><rect x="2" y="4" width="86" height="28" rx="14" fill="var(--action-fill)" stroke="var(--ink-2)" stroke-width="1.5"/></svg></td><td>Function or action</td><td>Opens the glottis</td></tr>
       <tr><td><svg width="90" height="44" aria-hidden="true"><path d="M45 3 L86 22 L45 41 L4 22 Z" fill="var(--action-fill)" stroke="var(--ink-2)" stroke-width="1.5"/></svg></td><td>Decision or diagnostic question</td><td>Fold mobile?</td></tr>
       <tr><td><svg width="90" height="36" aria-hidden="true"><rect x="2" y="4" width="86" height="28" rx="3" fill="var(--flag-fill)" stroke="var(--c-artery)" stroke-width="3"/><text x="10" y="23" font-size="13" font-weight="700" fill="var(--c-artery)">!</text></svg></td><td>Red flag: refer to ENT/phoniatrics. Always carries a “!”</td><td>Stridor, hoarseness &gt; 3–4 weeks</td></tr>
       <tr><td><svg width="90" height="20" aria-hidden="true"><defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="var(--ink-2)"/></marker></defs><line x1="4" y1="10" x2="84" y2="10" class="ink-line" marker-end="url(#ah)"/></svg></td><td>Nerve path or direct causation. The arrowhead shows the direction of the signal: towards a muscle = motor, towards the nerve = sensory</td><td>RLN → PCA</td></tr>
-      <tr><td><svg width="90" height="20" aria-hidden="true"><line x1="4" y1="10" x2="84" y2="10" class="ink-line" stroke-dasharray="6 5" marker-end="url(#ah)"/></svg></td><td>Indirect, minor or debated link</td><td>R. internus → interarytenoid twigs</td></tr>
+      <tr><td><svg width="90" height="20" aria-hidden="true"><line x1="4" y1="10" x2="84" y2="10" class="ink-line" stroke-dasharray="6 5" marker-end="url(#ah)"/></svg></td><td>Indirect, minor or debated link</td><td>R. internus → interarytenoid twigs</td></tr>
       <tr><td><svg width="90" height="36" aria-hidden="true"><rect x="4" y="5" width="82" height="26" fill="var(--muted-fill)" class="focus"/></svg></td><td>Focus: the one element this figure teaches</td><td>Bold dark outline</td></tr>
     </tbody>
   </table></div>
@@ -279,9 +315,9 @@
     <div class="card">
       <span class="eyebrow">Hand-drawing prompt · redraw from memory</span>
       <ol class="draw">
-        <li>Draw a yellow box “N. vagus” on the left.</li>
-        <li>Split it: two teal boxes on top (R. externus, R. internus = SLN), one violet box below (RLN).</li>
-        <li>From R. externus, one arrow to “CT”. From R. internus, an arrow pointing <em>back</em> from “sensation above”.</li>
+        <li>Draw a yellow box “N. vagus” on the left.</li>
+        <li>Split it: two teal boxes on top (R. externus, R. internus = SLN), one violet box below (RLN).</li>
+        <li>From R. externus, one arrow to “CT”. From R. internus, an arrow pointing <em>back</em> from “sensation above”.</li>
         <li>From RLN, four arrows: PCA, LCA, IA, TA. Add “sensation below” pointing back.</li>
         <li>Write one action per muscle. Box the PCA and write “only opener”.</li>
         <li>Check against the map. Anything missing becomes a flashcard.</li>
@@ -309,8 +345,8 @@
   classDef action fill:#fff,stroke:#4A5862,color:#1B2329
   classDef flag fill:#FDECEC,stroke:#C62828,stroke-width:3px,color:#1B2329
   classDef lesion fill:#F8D8E5,stroke:#C2185B,stroke-width:3px,color:#1B2329
-  X["N. vagus (CN X)"]:::nerve --> R["RLN"]:::rln
-  R --> P["M. cricoarytaenoideus post. (PCA)"]:::muscle
+  X["N. vagus (CN X)"]:::nerve --> R["RLN"]:::rln
+  R --> P["M. cricoarytaenoideus post. (PCA)"]:::muscle
   P --> A("Opens the glottis"):::action
   Q{"Fold mobile?"} -.-> F["! Stridor: refer to ENT"]:::flag</pre>
   </div>
@@ -434,6 +470,8 @@
     <div class="rd-row"><span class="eyebrow">Schrift</span><div class="rd-opts"><button type="button" class="chip" data-read-font="serif">Gentle (Cormorant)</button><button type="button" class="chip rd-sans" data-read-font="sans">Ruhig (Atkinson, serifenlos)</button></div><p class="note">Für lange Lernsitzungen, am Handy oder abends ist die serifenlose Schrift oft angenehmer.</p></div>
     <div class="rd-row"><span class="eyebrow">Textgröße</span><div class="rd-opts"><button type="button" class="chip" data-read-size="s">klein</button><button type="button" class="chip" data-read-size="m">normal</button><button type="button" class="chip" data-read-size="l">groß</button><button type="button" class="chip" data-read-size="xl">sehr groß</button></div><p class="note">Abbildungen behalten ihre Größe; zum Vergrößern auf die Abbildung tippen.</p></div>
     <div class="rd-row"><span class="eyebrow">Vorlesen · Tempo</span><div class="rd-opts"><button type="button" class="chip" data-read-rate="0.85">ruhig</button><button type="button" class="chip" data-read-rate="1">normal</button><button type="button" class="chip" data-read-rate="1.2">zügig</button></div><p class="note">Zum Vorlesen unter jeder Abschnittsüberschrift auf „Vorlesen“ tippen. Die Stimme kommt vom Gerät.</p></div>
+    <div class="rd-row"><span class="eyebrow">Tägliche Erinnerung</span><div class="rd-opts"><label class="rd-time">um <input type="time" value="19:00" data-ics-time></label><button type="button" class="chip" data-ics>In den Kalender eintragen</button></div><p class="note">Legt einen täglichen Termin von 15 Minuten in deinem Kalender an, mit Hinweis und Link zur Tagesrunde. Löschen kannst du ihn dort jederzeit.</p></div>
+    <div class="rd-row"><span class="eyebrow">Lernstand sichern</span><div class="rd-opts"><button type="button" class="chip" data-backup>Als Datei sichern</button><button type="button" class="chip" data-restore>Aus Datei laden</button><input type="file" accept=".json,application/json" data-restore-file hidden></div><p class="note">Karten, Merkheft, Schwachstellen und Einstellungen in einer Datei. Beim Laden wird zusammengeführt: Neueres bleibt erhalten.</p><p class="note rd-msg" data-backup-msg aria-live="polite"></p></div>
     <p class="note"><button class="linkbtn" type="button" data-open-tour>Anleitung noch einmal ansehen</button></p>
   </div>
 </dialog>
