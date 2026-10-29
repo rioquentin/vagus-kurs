@@ -1823,3 +1823,43 @@ dialog.news .lg-body{overflow:auto;min-height:0;overscroll-behavior:contain}
 .news-act{display:flex;flex-wrap:wrap;gap:8px 18px;align-items:center;padding:14px 26px calc(16px + env(safe-area-inset-bottom,0px));border-top:1px solid var(--rule);background:var(--plate)}
 .news-act .linkbtn{color:var(--ink-2)}
 @media (prefers-reduced-motion:no-preference){.news-g li{animation:fade-in .5s var(--eo) both}.news-g li:nth-child(2){animation-delay:.05s}.news-g li:nth-child(3){animation-delay:.1s}.news-g li:nth-child(4){animation-delay:.15s}.news-g li:nth-child(n+5){animation-delay:.2s}}
+
+/* ---- Lernkarten-Stapelwahl: drei Optionen sauber nebeneinander, und wenn es eng wird, sauber untereinander
+   (vorher brach die dritte Option in der Pillenform um) ---- */
+.fc-deck{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:3px;width:100%;max-width:640px;border-radius:24px;justify-self:stretch}
+.fc-deck .seg{border-radius:999px;text-align:center;padding:11px 14px;line-height:1.15;text-wrap:balance;min-height:44px}
+@media (max-width:600px){.fc-deck{grid-template-columns:1fr;border-radius:26px}}
+
+/* ---- Schmale Bildschirme (320 px): Gitter-Spalten richten sich nach dem Fenster, nicht nach dem Inhalt ---- */
+dialog.search[open]{grid-template-columns:minmax(0,1fr)}
+.s-head input{min-width:0;flex:1 1 auto;width:100%}
+.lg-body{grid-template-columns:minmax(0,1fr)}
+.lg-body table{table-layout:fixed}
+.lg-body td,.lg-body th{overflow-wrap:anywhere;hyphens:auto}
+
+/* iOS zoomt beim Antippen in jedes Eingabefeld unter 16 px hinein und bleibt dort: auf Touch-Geräten mindestens 16 px */
+@media (pointer:coarse){
+  input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=color]):not([type=file]),textarea,select{font-size:max(16px,1em)!important}
+}
+
+/* Seitenzoom am iPhone (Safari „aA“ 150–200 % ≙ 260–195 CSS-px) */
+@media (max-width:340px){.pg-weak li{flex-wrap:wrap;gap:2px 12px}.pg-weak .note{white-space:normal}}
+@media (max-width:300px){
+  .m-list li{grid-template-columns:22px minmax(0,1fr) auto;gap:4px 8px}
+  .m-list .m-bar{grid-column:2/-1;grid-row:2}
+  :where(.wrap) .opts{grid-template-columns:minmax(0,1fr)!important}
+  :where(.wrap) .opt{min-width:0;overflow-wrap:anywhere}
+  .qa-btn{white-space:normal}
+  .pitch-now{min-width:0}
+  .gl-q{flex-basis:100%;min-width:0;width:100%}
+  .m-leg{white-space:normal}
+  :where(.wrap) .qhead{flex-wrap:wrap}
+  :where(.wrap) .stem{min-width:0;overflow-wrap:anywhere}
+  .quiz{grid-template-columns:minmax(0,1fr);padding:18px 14px 20px}
+  .pager,.nav2{grid-template-columns:minmax(0,1fr)!important}
+  :where(.wrap) .check>span{min-width:0;overflow-wrap:anywhere}
+  /* Dialoge: Raster dürfen schmaler werden als ihr längstes Wort oder die Eigenbreite eines Felds */
+  dialog[open] *{min-width:0}
+  dialog[open]{overflow-wrap:anywhere}
+  dialog[open] :is(input,textarea,select){width:100%;max-width:100%}
+}

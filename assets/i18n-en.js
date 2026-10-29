@@ -264,7 +264,7 @@ window.KURS_EN = {
   'An # Tagen gelernt in den letzten zehn Wochen. Lücken sind normal, wichtig ist das Wiederkommen.': 'Studied on # days in the last ten weeks. Gaps are normal; what matters is coming back.',
   'An # Tag gelernt in den letzten zehn Wochen. Lücken sind normal, wichtig ist das Wiederkommen.': 'Studied on # day in the last ten weeks. Gaps are normal; what matters is coming back.',
   'Hier erscheint jeder Tag, an dem du lernst.': 'Every day you study shows up here.', 'Lernkalender der letzten zehn Wochen: an # Tagen gelernt': 'Study calendar of the last ten weeks: # days studied',
-  'Lückentext': 'Cloze', 'Lückentext · welcher Begriff fehlt?': 'Cloze · which term is missing?', 'Fachbegriff': 'Term','Wie lautet der andere Name?': 'What is the other name?', 'Lösung': 'Answer',
+  'Lückentext': 'Fill in the blanks', 'Lückentext · welcher Begriff fehlt?': 'Fill in the blanks · which term is missing?', 'Fachbegriff': 'Term','Wie lautet der andere Name?': 'What is the other name?', 'Lösung': 'Answer',
   'Deine Antwort (optional, wird nicht gespeichert)': 'Your answer (optional, not saved)', 'Leertaste': 'Space',
   'heute nochmal': 'again today', 'morgen': 'tomorrow', 'in # Tagen': 'in # days',
   'Runde beendet': 'Round finished', '# Antworten': '# answers', 'gewusst': 'known', 'unsicher': 'unsure', 'nochmal': 'again',
