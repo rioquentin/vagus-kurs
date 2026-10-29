@@ -84,6 +84,7 @@
   }
   function open() { if (!dlg) build(); go(0); dlg.showModal(); $('[data-tour="next"]', dlg).focus(); }
   function finish(toStart) {
+    if (!state.tour && K.NEWS_ID) state.newsSeen = K.NEWS_ID; // wer gerade neu anfängt, braucht „Neu im Kurs“ nicht
     state.tour = Date.now(); K.save();
     if (dlg.open) dlg.close();
     var started = state.done && Object.keys(state.done).length;

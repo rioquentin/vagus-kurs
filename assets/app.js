@@ -174,6 +174,7 @@
     try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) {}
     prev = JSON.parse(JSON.stringify(state));
     render(); theme();
+    document.dispatchEvent(new CustomEvent('kurs:adopt'));
   }
   window.Kurs = { state: state, save: save, adopt: adopt, render: render, page: page, key: KEY, theme: function () { theme(true); } };
 
@@ -222,11 +223,15 @@
       ['iPhone', 'Leg den Kurs auf den Home-Bildschirm, dann bleibst du auch nach einer Pause angemeldet.', null],
     ]],
   ];
+  var newsShown = false;
   function whatsNew() {
-    var used = Object.keys(state.cards || {}).length || state.last || Object.keys(state.done || {}).length;
     var later = false; try { later = sessionStorage.getItem('vagus-kurs:news-later') === NEWS_ID; } catch (e) {}
-    if (!used || !state.tour || state.newsSeen === NEWS_ID || later || /[?&](note|hl|fig|quiz)=|access_token/.test(location.search + location.hash)) return;
-    if (document.querySelector('dialog[open]')) return;
+    // Für alle, die das Willkommen hinter sich haben. Ganz Neue bekommen die Anleitung; deren Ende markiert die Neuigkeiten als gesehen.
+    if (newsShown || !(state.gate || state.tour) || state.newsSeen === NEWS_ID || later || /[?&](note|hl|fig|quiz)=|access_token/.test(location.search + location.hash)) return;
+    if (root.classList.contains('intro-on')) return; // kommt nach „Zum Kurs“
+    var busy = document.querySelector('dialog[open]');
+    if (busy) { busy.addEventListener('close', function () { setTimeout(whatsNew, 400); }, { once: true }); return; } // erst, wenn das andere Fenster zu ist
+    newsShown = true;
     var esc = function (s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); };
     var dlg = document.createElement('dialog'); dlg.className = 'legend news'; dlg.setAttribute('aria-labelledby', 'news-t');
     dlg.innerHTML = '<i class="orn tl" aria-hidden="true">❦</i><i class="orn tr" aria-hidden="true">❦</i><i class="orn bl" aria-hidden="true">❦</i><i class="orn br" aria-hidden="true">❦</i>' +
@@ -248,7 +253,9 @@
     dlg.addEventListener('close', function () { setTimeout(function () { dlg.remove(); }, 300); });
     dlg.showModal();
   }
+  window.Kurs.NEWS_ID = NEWS_ID;
   window.Kurs.afterIntro(function () { setTimeout(whatsNew, 450); });
+  document.addEventListener('kurs:adopt', function () { setTimeout(whatsNew, 600); }); // Daten vom Konto kamen erst nach dem Laden
 
   // ---- Fokus beim Lesen: Kopfzeile weicht nach unten scrollend aus, kommt beim kleinsten Zurückscrollen wieder ----
   if (UNITS.indexOf(page) >= 0 || page === '00') {
