@@ -1,0 +1,27 @@
+# Tägliche Mitteilung „heute fällig“ an alle Geräte, die sie eingeschaltet haben (Lesemodus › Mitteilung aufs Gerät).
+# Läuft stündlich; Supabase entscheidet, wessen Stunde dran ist. Braucht die Secrets VAPID_PRIVATE_KEY und PUSH_TOKEN.
+name: Erinnerungen senden
+on:
+  schedule:
+    - cron: '7 * * * *'
+  workflow_dispatch:
+jobs:
+  send:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: .github/push
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Senden
+        working-directory: .github/push
+        env:
+          VAPID_PRIVATE_KEY: ${{ secrets.VAPID_PRIVATE_KEY }}
+          PUSH_TOKEN: ${{ secrets.PUSH_TOKEN }}
+        run: |
+          npm init -y >/dev/null && npm pkg set type=module
+          npm i web-push@3.6.7 >/dev/null
+          node send.mjs

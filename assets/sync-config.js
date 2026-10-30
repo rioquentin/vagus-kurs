@@ -1,1 +1,1 @@
-window.KURS_SYNC={"url":"https://xqgpqvufecxkgjwyybwq.supabase.co","key":"sb_publishable_cYR6XLWYGsfejD7uIY1Q4Q_KqFV0XQ4"};
+window.KURS_SYNC={"url":"https://xqgpqvufecxkgjwyybwq.supabase.co","key":"sb_publishable_cYR6XLWYGsfejD7uIY1Q4Q_KqFV0XQ4","vapid":"BNUciwitlhkNKBB3TX3aANc1OHY1h7P1k_uStDSFSCioBISzRUSInfdlljIirGduDHqEi5PWN7GQGTwyM1ZiU2o"};

@@ -1863,3 +1863,7 @@ dialog.search[open]{grid-template-columns:minmax(0,1fr)}
   dialog[open]{overflow-wrap:anywhere}
   dialog[open] :is(input,textarea,select){width:100%;max-width:100%}
 }
+
+/* Lesemodus › Frühere Stände: die Auswahl nimmt sonst die Breite der längsten Option an und schiebt das Fenster auf */
+#reading .rd-row{min-width:0;grid-template-columns:minmax(0,1fr)}
+#reading [data-snap]{flex:1 1 100%;min-width:0;max-width:100%;text-overflow:ellipsis}

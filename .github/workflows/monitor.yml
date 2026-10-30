@@ -1,0 +1,28 @@
+# Prüft jeden Montag die veröffentlichte Seite in Chromium und Safari (WebKit), am Handy und am Rechner,
+# und schaut, ob Besucher Fehler gemeldet haben. Schlägt die Prüfung fehl, schickt GitHub eine E-Mail
+# (Standard für fehlgeschlagene geplante Workflows). Ergebnis: Actions › „Seite prüfen“ › Zusammenfassung.
+name: Seite prüfen
+on:
+  schedule:
+    - cron: '23 5 * * 1'   # montags, 05:23 UTC
+  workflow_dispatch:
+jobs:
+  live:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: .github/monitor
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Playwright installieren
+        working-directory: .github/monitor
+        run: |
+          npm init -y >/dev/null
+          npm i playwright@1.64.1
+          npx playwright install --with-deps chromium webkit
+      - name: Seite prüfen
+        working-directory: .github/monitor
+        run: node live.mjs

@@ -176,7 +176,9 @@
     render(); theme();
     document.dispatchEvent(new CustomEvent('kurs:adopt'));
   }
-  window.Kurs = { state: state, save: save, adopt: adopt, render: render, page: page, key: KEY, theme: function () { theme(true); } };
+  // Früheren Stand zurückholen (tools.js, „Frühere Stände“): alles gilt als eben geändert, damit es beim Abgleich mit dem Konto gewinnt
+  function restore(next) { adopt(next); prev = {}; save(); }
+  window.Kurs = { state: state, save: save, adopt: adopt, restore: restore, render: render, page: page, key: KEY, theme: function () { theme(true); } };
 
   if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')) {
     navigator.serviceWorker.register('sw.js').catch(function () {});
@@ -204,7 +206,12 @@
 
   // ---- „Neu im Kurs“: einmal nach einem Update, für alle, die schon gelernt haben ----
   // „Verstanden“ merkt sich die Ausgabe (state.newsSeen, mit dem Konto abgeglichen); „Später“ nur für diesen Besuch.
-  var NEWS_ID = '2026-10-29';
+  var NEWS_ID = '2026-10-30', NEWS_PREV = '2026-10-29';
+  // Neu in dieser Ausgabe; wer die vorige schon gesehen hat, bekommt nur das, alle anderen auch die vorige darunter
+  var NEWS_NEW = ['Ganz neu', [
+    ['Mitteilung aufs Gerät', 'Im „Aa“-Menü einschalten: höchstens einmal am Tag, wenn Karten fällig sind, sonntags ein kurzer Wochenrückblick, und 7 Tage sowie 1 Tag vor der Prüfung ein Hinweis. Am iPhone über das Symbol auf dem Home-Bildschirm.', null],
+    ['Frühere Stände', 'Ebenfalls im „Aa“-Menü: Der Kurs merkt sich jeden Tag deinen Stand, sieben Tage lang. Falls einmal etwas fehlt, holst du es mit zwei Tippern zurück.', null],
+  ]];
   var NEWS = [
     ['Lernen', [
       ['Prüfungstermin', 'In „Heute“ auf der Startseite eintragen: Countdown, Lesetempo, und jede Karte kommt vor dem Termin noch einmal.', 'index.html#heute'],
@@ -236,7 +243,7 @@
     var dlg = document.createElement('dialog'); dlg.className = 'legend news'; dlg.setAttribute('aria-labelledby', 'news-t');
     dlg.innerHTML = '<i class="orn tl" aria-hidden="true">❦</i><i class="orn tr" aria-hidden="true">❦</i><i class="orn bl" aria-hidden="true">❦</i><i class="orn br" aria-hidden="true">❦</i>' +
       '<div class="lg-head"><h2 id="news-t">Neu im Kurs</h2></div><div class="lg-body"><p class="news-lead">Seit deinem letzten Besuch ist einiges dazugekommen. Alles ist freiwillig; der Kurs selbst ist unverändert.</p>' +
-      NEWS.map(function (grp) {
+      [NEWS_NEW].concat(state.newsSeen === NEWS_PREV ? [] : NEWS).map(function (grp) {
         return '<section class="news-g"><span class="eyebrow">' + esc(grp[0]) + '</span><ul>' + grp[1].map(function (it) {
           return '<li><b>' + esc(it[0]) + '</b><span>' + esc(it[1]) + (it[2] ? ' <a href="' + esc(it[2]) + '" data-news-go>Zeigen →</a>' : '') + '</span></li>';
         }).join('') + '</ul></section>';

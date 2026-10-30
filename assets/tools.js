@@ -325,16 +325,50 @@
     $$('.tts-btn').forEach(function (b) { b.setAttribute('aria-pressed', !!curSec && b.closest('section') === curSec.closest('section')); });
   }
   function mark(b) { $$('.tts-now').forEach(function (x) { x.classList.remove('tts-now'); }); if (b) { b.classList.add('tts-now'); var r = b.getBoundingClientRect(); if (r.top < 80 || r.bottom > innerHeight - 80) b.scrollIntoView({ block: 'center' }); } }
+  // Ein Absatz wird in Sätze zerlegt (Chrome bricht Äußerungen nach etwa 15 s ab, ohne „end“ zu melden).
+  // Safari und Chrome verlieren „end“ außerdem gelegentlich ganz (die Äußerung wird vom Speicher aufgeräumt):
+  // deshalb eine feste Referenz und ein Wächter, der weitergeht, wenn die Stimme still ist.
+  function chunks(t) {
+    var parts = t.match(/[^.!?;:]+[.!?;:]*\s*/g) || [t], out = [], cur = '';
+    parts.forEach(function (p) { if ((cur + p).length > 220 && cur) { out.push(cur); cur = p; } else cur += p; });
+    if (cur.trim()) out.push(cur);
+    return out.map(function (s) { return s.trim(); }).filter(Boolean);
+  }
+  var parts = [], pi = 0, live = null, token = 0, guard = 0, quiet = 0;
+  function advance(tk) {
+    if (tk !== token || !playing) return;
+    token++; pi++;
+    if (pi >= parts.length) { qi++; pi = 0; parts = []; }
+    speakNext();
+  }
   function speakNext() {
     if (qi >= queue.length) { stop(); return; }
-    var b = queue[qi], u = new SpeechSynthesisUtterance(say(b.textContent));
+    var b = queue[qi];
+    if (!parts.length) { parts = chunks(say(b.textContent)); pi = 0; if (!parts.length) { qi++; return speakNext(); } }
+    var tk = ++token, u = new SpeechSynthesisUtterance(parts[pi]);
     u.lang = 'de-DE'; if (voice) u.voice = voice; u.rate = (state.read && state.read.rate) || 1;
-    u.onend = function () { if (playing) { qi++; speakNext(); } };
-    u.onerror = function (e) { if (e.error !== 'interrupted' && e.error !== 'canceled') { qi++; speakNext(); } };
-    mark(b); synth.speak(u);
+    u.onend = function () { advance(tk); };
+    u.onerror = function (e) { if (e.error !== 'interrupted' && e.error !== 'canceled') advance(tk); };
+    live = u; // feste Referenz, sonst geht „end“ verloren
+    if (pi === 0) mark(b);
+    synth.speak(u);
+    // Wächter: hat die Stimme angefangen und ist danach gut 1 s still (nichts mehr in der Warteschlange), gilt der Satz
+    // als fertig. Hat sie nach 6 s gar nicht angefangen, auch weiter. Das Anlaufen (am iPhone bis ~1 s) zählt nicht als Stille.
+    clearInterval(guard); quiet = 0;
+    var started = false, t0 = Date.now();
+    guard = setInterval(function () {
+      if (tk !== token || !playing) { clearInterval(guard); return; }
+      if (synth.speaking && !synth.paused) started = true;
+      var silent = !synth.speaking && !synth.pending;
+      if (started && silent) { if (++quiet >= 5) { clearInterval(guard); advance(tk); } }
+      else if (!started && Date.now() - t0 > 6000) { clearInterval(guard); advance(tk); }
+      else quiet = 0;
+    }, 250);
   }
-  function play(h2) { synth.cancel(); curSec = h2; queue = blocks(h2); qi = 0; playing = true; speakNext(); speakUI(); }
-  function stop() { playing = false; synth.cancel(); curSec = null; mark(null); speakUI(); }
+  function resetParts() { parts = []; pi = 0; token++; clearInterval(guard); }
+  // resetParts() vor synth.cancel(): Safari meldet beim Abbrechen manchmal „end“, das sonst einen Absatz überspränge
+  function play(h2) { resetParts(); synth.cancel(); curSec = h2; queue = blocks(h2); qi = 0; playing = true; speakNext(); speakUI(); }
+  function stop() { playing = false; resetParts(); synth.cancel(); curSec = null; mark(null); speakUI(); }
   function ttsSetup() {
     if (!synth || !window.SpeechSynthesisUtterance || !/^\d\d$/.test(K.page)) return; // nur auf Kursseiten
     pickVoice(); if (synth.onvoiceschanged !== undefined) synth.onvoiceschanged = pickVoice;
@@ -353,8 +387,8 @@
       var a = e.target.closest('[data-tts]'); if (!a) return;
       var act = a.getAttribute('data-tts');
       if (act === 'stop') stop();
-      else if (act === 'pause') { if (playing) { playing = false; synth.cancel(); } else { playing = true; speakNext(); } speakUI(); }
-      else if (act === 'next' || act === 'prev') { synth.cancel(); qi = Math.max(0, Math.min(queue.length - 1, qi + (act === 'next' ? 1 : -1))); if (playing) speakNext(); else mark(queue[qi]); }
+      else if (act === 'pause') { if (playing) { playing = false; resetParts(); synth.cancel(); } else { playing = true; speakNext(); } speakUI(); }
+      else if (act === 'next' || act === 'prev') { resetParts(); synth.cancel(); qi = Math.max(0, Math.min(queue.length - 1, qi + (act === 'next' ? 1 : -1))); if (playing) speakNext(); else mark(queue[qi]); }
       else if (act === 'sec') { var i = heads.indexOf(curSec); if (i >= 0 && i + 1 < heads.length) play(heads[i + 1]); else stop(); }
     });
     window.addEventListener('pagehide', function () { synth.cancel(); });
@@ -413,6 +447,138 @@
     document.body.appendChild(a); a.click(); setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 500);
   }
   function stamp(d) { return d.toISOString().replace(/[-:]/g, '').replace(/\.\d+Z$/, 'Z'); }
+  // Mitteilung aufs Gerät (Web Push): einmal am Tag zur gewählten Stunde, nur wenn Karten oder Abbildungen fällig sind.
+  // Das Gerät steht in push_subs (supabase/monitor-push.sql); GitHub (.github/workflows/push.yml) verschickt stündlich.
+  // Stunde und An/Aus gelten pro Gerät, deshalb nicht im Lernstand, sondern in localStorage bzw. beim Browser.
+  function pushSetup() {
+    var row = $('[data-push-row]'), cfg = window.KURS_SYNC, S = window.KursSync; if (!row || !cfg || !cfg.vapid || !S || !S.rest) return;
+    row.hidden = false;
+    var on = $('[data-push]', row), off = $('[data-push-off]', row), hour = $('[data-push-hour]', row), note = $('[data-push-note]', row);
+    var ios = /iP(hone|ad|od)/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+    var can = 'serviceWorker' in navigator && 'PushManager' in window && 'Notification' in window;
+    try { hour.value = localStorage.getItem('vagus-kurs:push-hour') || '19'; } catch (e) {}
+    function say(t) { note.textContent = t; }
+    function key() {
+      var s = cfg.vapid.replace(/-/g, '+').replace(/_/g, '/'); s += '==='.slice((s.length + 3) % 4);
+      var raw = atob(s), a = new Uint8Array(raw.length); for (var i = 0; i < raw.length; i++) a[i] = raw.charCodeAt(i); return a;
+    }
+    function current() { return navigator.serviceWorker.ready.then(function (r) { return r.pushManager.getSubscription(); }); }
+    function store(s) {
+      var j = s.toJSON(), tz = 'Europe/Berlin'; try { tz = Intl.DateTimeFormat().resolvedOptions().timeZone || tz; } catch (e) {}
+      return S.rest('/rest/v1/push_subs?on_conflict=endpoint', { method: 'POST', headers: { Prefer: 'resolution=merge-duplicates,return=minimal' },
+        body: { endpoint: j.endpoint, user_id: S.userId(), p256dh: j.keys.p256dh, auth: j.keys.auth, tz: tz, hour: +hour.value } });
+    }
+    function show(active) {
+      on.hidden = active; off.hidden = !active; on.disabled = false;
+      say(active ? 'An: täglich ab ' + hour.value + ' Uhr, wenn es etwas gibt. Gilt für dieses Gerät.'
+        : 'Höchstens einmal am Tag: wenn Karten fällig sind, sonntags ein kurzer Wochenrückblick, 7 Tage und 1 Tag vor der Prüfung ein Hinweis. Gilt für dieses Gerät.');
+    }
+    function refresh() {
+      if (!can) { on.disabled = true; off.hidden = true; return say(ios ? 'Am iPhone geht das nur, wenn der Kurs auf dem Home-Bildschirm liegt: Teilen › Zum Home-Bildschirm, dann von dort öffnen.' : 'Dieser Browser kann keine Mitteilungen empfangen.'); }
+      if (!S.hasSession()) { on.disabled = true; off.hidden = true; return say('Dafür brauchst du ein Konto (oben „Anmelden“), damit der Kurs weiß, was fällig ist.'); }
+      if (Notification.permission === 'denied') { on.disabled = true; off.hidden = true; return say('Mitteilungen sind für diese Seite blockiert. Erlauben lässt sich das in den Einstellungen des Browsers.'); }
+      current().then(function (s) { show(!!s && Notification.permission === 'granted'); }).catch(function () { show(false); });
+    }
+    on.addEventListener('click', function () {
+      on.disabled = true; say('Einen Moment …');
+      // Die Erlaubnis muss direkt aus dem Tippen heraus erfragt werden (Safari)
+      Promise.resolve(Notification.requestPermission()).then(function (p) {
+        if (p !== 'granted') throw new Error(p);
+        return navigator.serviceWorker.ready.then(function (r) { return r.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: key() }); });
+      }).then(function (s) {
+        return store(s).then(function () { show(true); K.toast && K.toast('Erinnerung an. Die erste kommt, sobald etwas fällig ist.'); },
+          function (e) { s.unsubscribe(); throw e; });
+      }).catch(function (e) {
+        if (e && (e.message === 'denied' || e.message === 'default')) return refresh();
+        on.disabled = false; say('Hat nicht geklappt' + (navigator.onLine ? '' : ' (offline)') + '. Bitte später noch einmal versuchen.');
+      });
+    });
+    off.addEventListener('click', function () {
+      off.disabled = true;
+      current().then(function (s) {
+        if (!s) return;
+        var ep = s.endpoint;
+        return s.unsubscribe().then(function () { return S.rest('/rest/v1/push_subs?endpoint=eq.' + encodeURIComponent(ep), { method: 'DELETE' }).catch(function () {}); });
+      }).then(function () { off.disabled = false; show(false); }, function () { off.disabled = false; refresh(); });
+    });
+    hour.addEventListener('change', function () {
+      try { localStorage.setItem('vagus-kurs:push-hour', hour.value); } catch (e) {}
+      if (!can || !S.hasSession()) return;
+      current().then(function (s) { if (s) return store(s).then(function () { show(true); }); }).catch(function () {});
+    });
+    // Beim Öffnen der Einstellungen den Zustand neu lesen (An-/Abmelden ändert ihn)
+    document.addEventListener('click', function (e) { if (e.target.closest && e.target.closest('[data-open-reading]')) setTimeout(refresh, 0); });
+    refresh();
+    // Einmal pro Besuch das Gerät auffrischen (Zeitzone nach einer Reise, gelöschter Eintrag)
+    if (can && S.hasSession() && Notification.permission === 'granted') setTimeout(function () { current().then(function (s) { if (s) store(s).catch(function () {}); }); }, 5000);
+  }
+
+  // Frühere Stände: einmal am Tag (beim ersten Öffnen, vor dem Abgleich) den ganzen Lernstand in IndexedDB merken, 7 Tage lang,
+  // dazu die letzten 3 Stände unmittelbar vor einem Wiederherstellen. Sicherheitsnetz, falls ein Abgleich oder eine Datei etwas überschreibt.
+  function snapSetup() {
+    var row = $('[data-snap-row]'); if (!row || !window.indexedDB) return;
+    var sel = $('[data-snap]', row), go = $('[data-snap-go]', row), note = $('[data-snap-note]', row), KEEP = 7;
+    function db() {
+      return new Promise(function (ok, no) {
+        var r = indexedDB.open('vagus-kurs-stand', 1);
+        r.onupgradeneeded = function () { r.result.createObjectStore('snaps'); };
+        r.onsuccess = function () { ok(r.result); }; r.onerror = function () { no(r.error); };
+      });
+    }
+    function tx(mode, fn) { return db().then(function (d) { return new Promise(function (ok, no) { var t = d.transaction('snaps', mode), s = t.objectStore('snaps'), out = fn(s); t.oncomplete = function () { ok(out && out.result); }; t.onerror = function () { no(t.error); }; }); }); }
+    function all() { return db().then(function (d) { return new Promise(function (ok) { var out = [], c = d.transaction('snaps').objectStore('snaps').openCursor(); c.onsuccess = function () { var x = c.result; if (x) { out.push({ k: x.key, v: x.value }); x.continue(); } else ok(out); }; c.onerror = function () { ok([]); }; }); }); }
+    function day(t) { var d = new Date(t - 4 * 3600e3); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); }
+    function raw() { try { return JSON.parse(localStorage.getItem(K.key) || 'null'); } catch (e) { return null; } }
+    function sum(s) {
+      var c = Object.keys(s.cards || {}).length, n = (s.notes || []).length, d = Object.keys(s.done || {}).length;
+      var pl = function (x, one, many) { return x + ' ' + (x === 1 ? one : many); };
+      return en() ? pl(c, 'card', 'cards') + ' · ' + pl(n, 'note', 'notes') + ' · ' + d + ' of 10 done' : pl(c, 'Karte', 'Karten') + ' · ' + pl(n, 'Notiz', 'Notizen') + ' · ' + d + ' von 10 erledigt';
+    }
+    // Beschriftung gleich in der Sprache der Oberfläche (enthält Daten, passt nicht ins Wörterbuch von i18n.js)
+    function en() { return document.documentElement.dataset.ui === 'en'; }
+    function label(x) {
+      var t = new Date(x.v.t), today = day(Date.now()), y = day(Date.now() - 864e5), k = x.k.replace(/^vor-.*/, ''), loc = en() ? 'en-GB' : 'de-DE';
+      var when = k === today ? (en() ? 'This morning' : 'Heute früh') : k === y ? (en() ? 'Yesterday' : 'Gestern') : t.toLocaleDateString(loc, { weekday: 'short', day: 'numeric', month: 'numeric' });
+      if (!k) when = (en() ? 'Before restoring, ' : 'Vor dem Wiederherstellen, ') + t.toLocaleDateString(loc, { day: 'numeric', month: 'numeric' }) + ' ' + t.toLocaleTimeString(loc, { hour: '2-digit', minute: '2-digit' });
+      return when + ' · ' + sum(x.v.s);
+    }
+    function list() {
+      return all().then(function (xs) {
+        xs.sort(function (a, b) { return b.v.t - a.v.t; });
+        sel.innerHTML = xs.map(function (x) { return '<option value="' + x.k + '">' + label(x) + '</option>'; }).join('');
+        row.hidden = !xs.length; return xs;
+      });
+    }
+    // Aufräumen: 7 Tage + 3 „vor dem Wiederherstellen“
+    function prune() {
+      return all().then(function (xs) {
+        var days = xs.filter(function (x) { return !/^vor-/.test(x.k); }).sort(function (a, b) { return b.v.t - a.v.t; }).slice(KEEP);
+        var befores = xs.filter(function (x) { return /^vor-/.test(x.k); }).sort(function (a, b) { return b.v.t - a.v.t; }).slice(3);
+        var gone = days.concat(befores); if (gone.length) return tx('readwrite', function (s) { gone.forEach(function (x) { s.delete(x.k); }); });
+      });
+    }
+    var s0 = raw(), today = day(Date.now());
+    var ready = (s0 && Object.keys(s0).length > 2 ? tx('readonly', function (s) { return s.get(today); }).then(function (have) {
+      if (!have) return tx('readwrite', function (s) { s.put({ t: Date.now(), s: s0 }, today); }).then(prune);
+    }) : Promise.resolve()).then(list).catch(function () { row.hidden = true; });
+    var armed = 0;
+    go.addEventListener('click', function () {
+      // Zweimal tippen statt Bestätigungsfenster
+      if (Date.now() - armed > 4000) { armed = Date.now(); go.textContent = 'Wirklich? Noch einmal tippen'; setTimeout(function () { if (Date.now() - armed >= 4000) go.textContent = 'Wiederherstellen'; }, 4100); return; }
+      armed = 0; go.disabled = true;
+      var key = sel.value;
+      tx('readonly', function (s) { return s.get(key); }).then(function (x) {
+        if (!x || !x.s) throw new Error('fehlt');
+        return tx('readwrite', function (s) { s.put({ t: Date.now(), s: JSON.parse(JSON.stringify(state)) }, 'vor-' + Date.now()); }).then(prune).then(function () {
+          K.restore(x.s);
+          note.textContent = 'Wiederhergestellt. Die Seite lädt neu …';
+          setTimeout(function () { location.reload(); }, 900);
+        });
+      }).catch(function () { go.disabled = false; go.textContent = 'Wiederherstellen'; note.textContent = 'Das ging nicht. Der jetzige Stand ist unverändert.'; });
+    });
+    document.addEventListener('click', function (e) { if (e.target.closest && e.target.closest('[data-open-reading]')) ready.then(list).catch(function () {}); });
+  }
+
   function keepSetup() {
     var ics = $('[data-ics]'); if (!ics) return;
     ics.addEventListener('click', function () {
@@ -660,6 +826,6 @@
     b.querySelector('button').addEventListener('click', function () { window.print(); });
   }
 
-  readSetup(); labelSetup(); drawSetup(); ttsSetup(); phoneFigures(); printSetup(); keepSetup(); examSetup(); oralSetup(); pitchSetup();
+  readSetup(); labelSetup(); drawSetup(); ttsSetup(); phoneFigures(); printSetup(); keepSetup(); snapSetup(); pushSetup(); examSetup(); oralSetup(); pitchSetup();
   window.KursTools = { cover: cover, uncover: uncover };
 })();

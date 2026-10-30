@@ -68,7 +68,9 @@
       var va = a[p[0]] || {}, vb = b[p[0]] || {}, ta = a[p[1]] || {}, tb = b[p[1]] || {};
       out[p[0]] = {}; out[p[1]] = {};
       Object.keys(va).concat(Object.keys(vb), Object.keys(ta), Object.keys(tb)).forEach(function (k) {
-        var useA = (ta[k] || 0) >= (tb[k] || 0);
+        // Gleichstand (z. B. beide ohne Zeitstempel, Daten aus der Zeit davor): die Seite nehmen, die einen Wert hat.
+        // Ein echtes Löschen trägt immer einen neueren Zeitstempel und gewinnt weiterhin.
+        var useA = (ta[k] || 0) > (tb[k] || 0) || ((ta[k] || 0) === (tb[k] || 0) && va[k] !== undefined);
         var v = useA ? va[k] : vb[k];
         if (v !== undefined) out[p[0]][k] = v;
         out[p[1]][k] = Math.max(ta[k] || 0, tb[k] || 0);
@@ -265,5 +267,8 @@
       .then(function (s) { setSession(s); return sync().then(function () { return { session: true }; }); });
   }
   window.KursSync = { sync: sync, merge: merge, signup: signup, login: login, niceError: niceError,
-    hasSession: function () { return !!session; } };
+    hasSession: function () { return !!session; },
+    // Angemeldete Anfrage an eine weitere Tabelle (z. B. push_subs in tools.js)
+    rest: function (path, opt) { return fresh().then(function () { return api(path, opt || {}); }); },
+    userId: function () { return session && session.user.id; } };
 })();

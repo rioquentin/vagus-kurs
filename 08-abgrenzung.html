@@ -4,13 +4,14 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>8 · Abgrenzung und Warnzeichen · Vagus-Kurs</title>
-<script>try{var s=JSON.parse(localStorage.getItem('vagus-kurs:v1')||'{}'),d=document.documentElement,r=s.read||{};if(s.theme)d.dataset.theme=s.theme;if(s.ui==='en'){d.dataset.ui='en';document.write('<script src="assets/i18n-en.js?v=mvttl32y" defer><\/script>');setTimeout(function(){d.classList.add('ui-ready')},1500)}d.dataset.size=r.size||'m';if(r.font==='sans')d.dataset.font='sans';}catch(e){}</script>
+<script>window.__kErr=[];addEventListener('error',function(e){__kErr.push(e)},true);addEventListener('unhandledrejection',function(e){__kErr.push(e)})</script>
+<script>try{var s=JSON.parse(localStorage.getItem('vagus-kurs:v1')||'{}'),d=document.documentElement,r=s.read||{};if(s.theme)d.dataset.theme=s.theme;if(s.ui==='en'){d.dataset.ui='en';document.write('<script src="assets/i18n-en.js?v=mvv2q140" defer><\/script>');setTimeout(function(){d.classList.add('ui-ready')},1500)}d.dataset.size=r.size||'m';if(r.font==='sans')d.dataset.font='sans';}catch(e){}</script>
 <script>try{var s=JSON.parse(localStorage.getItem('vagus-kurs:v1')||'{}'),q=location.search+location.hash;if(!sessionStorage.getItem('vagus-kurs:intro')&&(s.gate||s.tour)&&!/[?&](fig|hl|note|quiz)=|access_token|type=recovery|#(note|heute|schwachstellen|verwechslungen)/.test(q)&&!(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches)){document.documentElement.classList.add('intro-on');sessionStorage.setItem('vagus-kurs:intro','1')}}catch(e){}</script>
 <link rel="preload" href="assets/fonts/CormorantGaramond-500-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/UnifrakturMaguntia-400-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="assets/fonts/fonts.css?v=mvttl32y">
-<link rel="stylesheet" href="assets/course.css?v=mvttl32y">
-<script>window.KURS_BUILD='mvttl32y'</script>
+<link rel="stylesheet" href="assets/fonts/fonts.css?v=mvv2q140">
+<link rel="stylesheet" href="assets/course.css?v=mvv2q140">
+<script>window.KURS_BUILD='mvv2q140'</script>
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="theme-color" content="#f8f0f0" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#2e2321" media="(prefers-color-scheme: dark)">
@@ -30,14 +31,15 @@
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
-<script src="assets/peony.js?v=mvttl32y" defer></script>
-<script src="assets/app.js?v=mvttl32y" defer></script>
-<script src="assets/sync-config.js?v=mvttl32y" defer></script>
-<script src="assets/sync.js?v=mvttl32y" defer></script>
-<script src="assets/study.js?v=mvttl32y" defer></script>
-<script src="assets/tools.js?v=mvttl32y" defer></script>
-<script src="assets/tour.js?v=mvttl32y" defer></script>
-<script src="assets/i18n.js?v=mvttl32y" defer></script>
+<script src="assets/peony.js?v=mvv2q140" defer></script>
+<script src="assets/app.js?v=mvv2q140" defer></script>
+<script src="assets/sync-config.js?v=mvv2q140" defer></script>
+<script src="assets/report.js?v=mvv2q140" defer></script>
+<script src="assets/sync.js?v=mvv2q140" defer></script>
+<script src="assets/study.js?v=mvv2q140" defer></script>
+<script src="assets/tools.js?v=mvv2q140" defer></script>
+<script src="assets/tour.js?v=mvv2q140" defer></script>
+<script src="assets/i18n.js?v=mvv2q140" defer></script>
 </head>
 <body data-page="08">
 <div class="intro" role="dialog" aria-label="Vagus-Kurs"><div class="intro-in">
@@ -427,7 +429,9 @@
     <div class="rd-row"><span class="eyebrow">Textgröße</span><div class="rd-opts"><button type="button" class="chip" data-read-size="s">klein</button><button type="button" class="chip" data-read-size="m">normal</button><button type="button" class="chip" data-read-size="l">groß</button><button type="button" class="chip" data-read-size="xl">sehr groß</button></div><p class="note">Abbildungen behalten ihre Größe; zum Vergrößern auf die Abbildung tippen.</p></div>
     <div class="rd-row"><span class="eyebrow">Vorlesen · Tempo</span><div class="rd-opts"><button type="button" class="chip" data-read-rate="0.85">ruhig</button><button type="button" class="chip" data-read-rate="1">normal</button><button type="button" class="chip" data-read-rate="1.2">zügig</button></div><p class="note">Zum Vorlesen unter jeder Abschnittsüberschrift auf „Vorlesen“ tippen. Die Stimme kommt vom Gerät.</p></div>
     <div class="rd-row"><span class="eyebrow">Tägliche Erinnerung</span><div class="rd-opts"><label class="rd-time">um <input type="time" value="19:00" data-ics-time></label><button type="button" class="chip" data-ics>In den Kalender eintragen</button></div><p class="note">Legt einen täglichen Termin von 15 Minuten in deinem Kalender an, mit Hinweis und Link zur Tagesrunde. Löschen kannst du ihn dort jederzeit.</p></div>
+    <div class="rd-row" data-push-row hidden><span class="eyebrow">Mitteilung aufs Gerät</span><div class="rd-opts"><label class="rd-time">um <select data-push-hour aria-label="Uhrzeit der Mitteilung"><option value="6">6 Uhr</option><option value="7">7 Uhr</option><option value="8">8 Uhr</option><option value="9">9 Uhr</option><option value="10">10 Uhr</option><option value="11">11 Uhr</option><option value="12">12 Uhr</option><option value="13">13 Uhr</option><option value="14">14 Uhr</option><option value="15">15 Uhr</option><option value="16">16 Uhr</option><option value="17">17 Uhr</option><option value="18">18 Uhr</option><option value="19" selected>19 Uhr</option><option value="20">20 Uhr</option><option value="21">21 Uhr</option><option value="22">22 Uhr</option><option value="23">23 Uhr</option></select></label><button type="button" class="chip" data-push>Erinnern, wenn etwas fällig ist</button><button type="button" class="chip" data-push-off hidden>Ausschalten</button></div><p class="note" data-push-note></p></div>
     <div class="rd-row"><span class="eyebrow">Lernstand sichern</span><div class="rd-opts"><button type="button" class="chip" data-backup>Als Datei sichern</button><button type="button" class="chip" data-restore>Aus Datei laden</button><input type="file" accept=".json,application/json" data-restore-file hidden></div><p class="note">Karten, Merkheft, Schwachstellen und Einstellungen in einer Datei. Beim Laden wird zusammengeführt: Neueres bleibt erhalten.</p><p class="note rd-msg" data-backup-msg aria-live="polite"></p></div>
+    <div class="rd-row" data-snap-row hidden><span class="eyebrow">Frühere Stände</span><div class="rd-opts"><select data-snap aria-label="Früheren Stand wählen"></select><button type="button" class="chip" data-snap-go>Wiederherstellen</button></div><p class="note" data-snap-note>Der Kurs merkt sich auf diesem Gerät jeden Tag deinen Stand, sieben Tage lang. Vor dem Wiederherstellen wird auch der jetzige Stand gemerkt, du kannst also zurück.</p></div>
     <p class="note"><button class="linkbtn" type="button" data-open-tour>Anleitung noch einmal ansehen</button></p>
   </div>
 </dialog>

@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Vagus-Kurs · Tableau de bord</title>
+<script>try{var s=JSON.parse(localStorage.getItem('vagus-kurs:v1')||'{}');if(s.theme)document.documentElement.dataset.theme=s.theme}catch(e){}</script>
+<link rel="stylesheet" href="assets/fonts/fonts.css?v=mvv2q140">
+<link rel="stylesheet" href="assets/course.css?v=mvv2q140">
+<link rel="icon" href="assets/icon.svg" type="image/svg+xml">
+<style>
+  .tb{max-width:1080px;margin:0 auto;padding:28px 16px 80px;font-variant-numeric:lining-nums tabular-nums}
+  .tb *{font-variant-numeric:lining-nums tabular-nums}
+  .tb-head{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:8px 20px;border-bottom:1px solid var(--rule);padding-bottom:14px}
+  .tb-head h1{font:400 clamp(30px,6vw,44px)/1 var(--f-black);margin:0;color:var(--ink)}
+  .tb-head .meta{font:500 15px/1.4 var(--f-body);color:var(--ink-2)}
+  .tb-tabs{display:flex;gap:4px;margin:20px 0 24px;padding:3px;border:1px solid var(--rule);border-radius:999px;width:max-content;max-width:100%;background:var(--plate)}
+  .tb-tabs button{border:0;background:none;color:var(--ink-2);font:600 15px/1 var(--f-body);padding:11px 18px;border-radius:999px;cursor:pointer;min-height:44px}
+  .tb-tabs button[aria-selected="true"]{background:var(--btn-bg);color:var(--btn-fg)}
+  .tb-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:14px}
+  .tb-card{background:var(--plate);border:1px solid var(--rule);border-radius:16px;padding:18px 20px;min-width:0}
+  .tb-card h2{font:400 22px/1.15 var(--f-black);margin:0 0 12px;color:var(--ink)}
+  .tb-card h3{font:600 17px/1.3 var(--f-body);margin:18px 0 8px;color:var(--ink)}
+  .tb-k{font:600 11.5px/1.2 var(--f-label);letter-spacing:.09em;text-transform:uppercase;color:var(--ink-2)}
+  .tb-big{font:500 40px/1.05 var(--f-display);color:var(--ink);margin:6px 0 4px}
+  .tb-big small{font-size:17px;color:var(--ink-2);margin-left:6px}
+  .tb-sub{font:500 15px/1.45 var(--f-body);color:var(--ink-2);margin:0}
+  .tb-ok{color:var(--ok,#1E7A45)} .tb-bad{color:var(--rose-deep)}
+  .tb-sec{margin-top:26px}
+  .tb-sec > h2{font:400 24px/1.1 var(--f-black);margin:0 0 12px}
+  .tb-list{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+  .tb-err{background:var(--plate);border:1px solid var(--rule);border-radius:14px;padding:14px 16px}
+  .tb-err summary{cursor:pointer;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 14px;align-items:baseline;list-style:none}
+  .tb-err summary::-webkit-details-marker{display:none}
+  .tb-err .m{font:600 16px/1.35 var(--f-body);color:var(--ink);overflow-wrap:anywhere}
+  .tb-err .n{font:600 13px/1 var(--f-label);background:var(--flag-fill);color:var(--rose-deep);border-radius:999px;padding:5px 9px}
+  .tb-err .w{grid-column:1/-1;font:500 14px/1.4 var(--f-body);color:var(--ink-2)}
+  .tb-err pre{white-space:pre-wrap;overflow-wrap:anywhere;font:13px/1.45 ui-monospace,Consolas,monospace;background:var(--paper);border:1px solid var(--rule);border-radius:10px;padding:10px 12px;margin:12px 0 0;max-height:260px;overflow:auto}
+  .tb-runs{width:100%;border-collapse:collapse;font:500 15px/1.4 var(--f-body)}
+  .tb-runs td,.tb-runs th{padding:8px 6px;border-bottom:1px solid var(--rule);text-align:left;vertical-align:top}
+  .tb-runs th{font:600 11.5px/1.2 var(--f-label);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-2)}
+  .tb-runs a{color:var(--rose-deep)}
+  .tb-dots{display:flex;gap:3px;flex-wrap:wrap}
+  .tb-dots i{width:9px;height:9px;border-radius:50%;background:var(--ok,#1E7A45)} .tb-dots i.x{background:var(--rose-deep)} .tb-dots i.o{background:var(--muted)}
+  .tb-btn{border:1.5px solid var(--rule);background:var(--paper);color:var(--ink);font:600 15px/1 var(--f-body);border-radius:999px;padding:11px 16px;cursor:pointer;min-height:44px}
+  .tb-btn:hover{border-color:var(--ink-2)}
+  .tb-note{border-left:3px solid var(--rose-deep);background:var(--flag-fill);border-radius:0 12px 12px 0;padding:12px 16px;font:500 15.5px/1.5 var(--f-body);color:var(--ink);margin:0 0 18px}
+  .tb-msg{font:500 18px/1.55 var(--f-body);color:var(--ink);max-width:60ch}
+  .tb-msg code,.tb-note code{font:14px ui-monospace,Consolas,monospace;background:var(--paper-2);padding:1px 5px;border-radius:5px}
+  .tb-seg{display:grid;grid-template-columns:repeat(9,minmax(0,1fr));gap:4px;margin:8px 0 4px}
+  .tb-seg span{height:12px;border-radius:4px;background:var(--muted-fill)} .tb-seg span.v{background:color-mix(in srgb,var(--rose-deep) 40%,transparent)} .tb-seg span.d{background:var(--rose-deep)}
+  .tb-heat{display:grid;grid-template-columns:repeat(14,minmax(0,1fr));gap:3px;margin-top:8px;max-width:400px}
+  .tb-heat span{aspect-ratio:1;border-radius:3px;background:var(--muted-fill)}
+  .tb-heat span[data-l="1"]{background:color-mix(in srgb,var(--rose-deep) 30%,transparent)} .tb-heat span[data-l="2"]{background:color-mix(in srgb,var(--rose-deep) 62%,transparent)} .tb-heat span[data-l="3"]{background:var(--rose-deep)}
+  .tb-units{width:100%;border-collapse:collapse;font:500 15px/1.35 var(--f-body);margin-top:6px}
+  .tb-units td{padding:6px 4px;border-bottom:1px solid var(--rule);vertical-align:middle}
+  .tb-units td:first-child{font:600 12.5px/1 var(--f-label);color:var(--ink-2);width:3em;white-space:nowrap}
+  .tb-units td.num{text-align:right;white-space:nowrap;color:var(--ink-2)}
+  .tb-bar{height:8px;border-radius:99px;background:var(--muted-fill);overflow:hidden;min-width:60px}
+  .tb-bar i{display:block;height:100%;background:var(--rose-deep)}
+  .tb-facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,130px),1fr));gap:10px;margin:4px 0 0}
+  .tb-facts div{background:var(--paper);border:1px solid var(--rule);border-radius:12px;padding:10px 12px}
+  .tb-facts b{display:block;font:500 26px/1.1 var(--f-display);color:var(--ink)}
+  .tb-facts span{font:500 13.5px/1.3 var(--f-body);color:var(--ink-2)}
+  .tb-live{margin-bottom:14px}
+  .tb-live-h{display:flex;flex-wrap:wrap;justify-content:space-between;gap:4px 12px;align-items:baseline}
+  .tb-pulse{display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--ok,#1E7A45);margin-right:8px;vertical-align:1px;box-shadow:0 0 0 0 color-mix(in srgb,var(--ok,#1E7A45) 50%,transparent);animation:tb-pulse 2s infinite}
+  .tb-pulse.off{background:var(--muted);animation:none}
+  @keyframes tb-pulse{70%{box-shadow:0 0 0 8px transparent}100%{box-shadow:0 0 0 0 transparent}}
+  @media (prefers-reduced-motion:reduce){.tb-pulse{animation:none}}
+  .tb-who{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);gap:2px 16px;padding:10px 0;border-top:1px solid var(--rule);font:500 16px/1.4 var(--f-body);color:var(--ink)}
+  .tb-who b{font-weight:600;overflow-wrap:anywhere}
+  .tb-who .tb-sub{grid-column:1/-1}
+  @media (max-width:520px){.tb-who{grid-template-columns:minmax(0,1fr)}}
+  [hidden]{display:none!important}
+  @media (max-width:520px){.tb-runs .hide-s{display:none}}
+</style>
+</head>
+<body>
+<main class="tb">
+  <header class="tb-head"><h1>Tableau de bord</h1><span class="meta" data-meta>Chargement …</span></header>
+  <div data-gate class="tb-sec" hidden><p class="tb-msg" data-gate-msg></p></div>
+  <div data-app hidden>
+    <div class="tb-tabs" role="tablist">
+      <button role="tab" aria-selected="true" data-tab="sante">Santé du site</button>
+      <button role="tab" aria-selected="false" data-tab="progres">Progression</button>
+    </div>
+    <section data-panel="sante"></section>
+    <section data-panel="progres" hidden></section>
+  </div>
+</main>
+<script>window.KURS_UNITS = [{"id":"01","n":"1","t":"Gelenke und innere Kehlkopfmuskeln"},{"id":"02","n":"2","t":"N. laryngeus superior"},{"id":"03","n":"3","t":"N. laryngeus recurrens"},{"id":"04","n":"4","t":"Die Gesamtkarte"},{"id":"05","n":"5","t":"Stimmentstehung"},{"id":"06","n":"6","t":"Schutzfunktionen"},{"id":"07","n":"7","t":"Kehlkopflähmungen im Überblick"},{"id":"08","n":"8","t":"Abgrenzung und Warnzeichen"},{"id":"09","n":"9–10","t":"Wiederholung und Probeprüfung"}]; window.KURS_BUILD = 'mvv2q140';</script>
+<script src="assets/sync-config.js?v=mvv2q140"></script>
+<script src="assets/tableau.js?v=mvv2q140"></script>
+</body>
+</html>
