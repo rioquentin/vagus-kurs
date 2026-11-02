@@ -6,7 +6,11 @@ import { chromium, webkit } from 'playwright';
 import fs from 'fs';
 const B = process.env.SITE || 'https://rioquentin.github.io/vagus-kurs/';
 const PAGES = ['index', '01-gelenke-muskeln', '02-n-laryngeus-superior', '03-n-laryngeus-recurrens', '04-gesamtkarte', '05-stimmentstehung', '06-schutzfunktionen',
-  '07-laehmungen', '08-abgrenzung', '09-10-wiederholung-pruefung', 'begriffe', 'lernkarten', 'merkheft'];
+  '07-laehmungen', '08-abgrenzung', '09-10-wiederholung-pruefung', 'begriffe', 'lernkarten', 'merkheft',
+  // zweiter Kurs (seit November 2026) und die beiden Kursübersichten
+  'vagus', 'laryngitis', 'laryngitis-00-handout-check', 'laryngitis-01-einordnung', 'laryngitis-02-pathophysiologie', 'laryngitis-03-laryngitis-acuta',
+  'laryngitis-04-nicht-infektioes', 'laryngitis-05-chronische-laryngitis', 'laryngitis-06-reflux-granulom', 'laryngitis-07-pseudokrupp',
+  'laryngitis-08-kindliche-notfaelle', 'laryngitis-09-logopaedie', 'laryngitis-10-pruefung'];
 const STATE = { tour: 1, gate: 1, last: '03', done: { '01': true } };
 const bad = [], info = [];
 const within = (pr, ms, what) => Promise.race([pr, new Promise((_, no) => setTimeout(() => no(new Error(`${what}: keine Antwort nach ${ms / 1000} s`)), ms))]);
@@ -60,6 +64,21 @@ for (const [en, eng] of [['Chromium', chromium], ['Safari (WebKit)', webkit]]) {
     await p.goto(B + 'lernkarten.html', { waitUntil: 'networkidle' }).catch(() => {});
     await step('Lernkarten', async () => { await p.locator('[data-fc-start]').click(); await p.locator('[data-fc-show]').click({ timeout: 5000 });
       return (await p.locator('[data-fc-answer]').isVisible()) ? 'ok' : 'Antwort lässt sich nicht aufdecken'; });
+    // Laryngitis: Karten eines Abschnitts, echte Bilder (Atlas), Suche über beide Kurse
+    await p.goto(B + 'lernkarten.html?unit=L03', { waitUntil: 'networkidle' }).catch(() => {});
+    await step('Lernkarten Laryngitis', async () => { await p.locator('[data-fc-start]').click(); await p.waitForTimeout(300);
+      return /^Laryngitis · Abschnitt 3/.test((await p.locator('[data-fc-where]').textContent()) || '') ? 'ok' : 'Karten aus Laryngitis 3 starten nicht'; });
+    await p.goto(B + 'laryngitis-08-kindliche-notfaelle.html', { waitUntil: 'networkidle' }).catch(() => {});
+    await step('Echte Bilder', async () => {
+      await p.locator('.view-sw button[data-view="atlas"]').first().evaluate((x) => x.click()); await p.waitForTimeout(300);
+      const r = await p.evaluate(async () => { const imgs = [...document.querySelectorAll('[data-atlas]:not([hidden]) img')];
+        await Promise.all(imgs.map((i) => { i.loading = 'eager'; return i.complete ? 1 : new Promise((ok) => { i.onload = i.onerror = ok; }); }));
+        return { n: imgs.length, bad: imgs.filter((i) => !i.naturalWidth).length, over: document.documentElement.scrollWidth - document.documentElement.clientWidth }; });
+      return !r.n ? 'Panel „Echte Bilder“ fehlt' : r.bad ? r.bad + ' Bild(er) laden nicht' : r.over > 1 ? 'Panel ragt ' + r.over + 'px heraus' : 'ok';
+    });
+    await step('Suche Laryngitis', async () => { await p.locator('[data-open-search]').first().click(); await p.keyboard.type('Pseudokrupp'); await p.waitForTimeout(600);
+      const hits = await p.locator('#search .eyebrow').allTextContents(); await p.evaluate(() => document.querySelectorAll('dialog[open]').forEach((d) => d.close()));
+      return hits.some((h) => /^Laryngitis · /.test(h)) ? 'ok' : 'Suche findet keinen Laryngitis-Abschnitt'; });
     if (en === 'Chromium' && dev === 'Handy') {
       await step('Offline', async () => { await p.goto(B + 'index.html', { waitUntil: 'networkidle' }); await p.evaluate(() => Promise.race([navigator.serviceWorker.ready, new Promise((ok) => setTimeout(ok, 10000))])); await p.waitForTimeout(3000);
         await ctx.setOffline(true); const r = await p.goto(B + '03-n-laryngeus-recurrens.html').catch(() => null); const ok = r && (await p.locator('main h1').count());
@@ -86,7 +105,7 @@ function finish(extra = []) {
 const groups = new Map();
 for (const x of bad.concat(extra)) { const i = x.indexOf(': '); const k = i > 0 ? x.slice(i + 2) : x, w = i > 0 ? x.slice(0, i) : ''; if (!groups.has(k)) groups.set(k, []); if (w && !groups.get(k).includes(w)) groups.get(k).push(w); }
 const uniq = [...groups].map(([k, w]) => w.length > 3 ? `${k} (${w.length}×: ${w.slice(0, 3).join(', ')} …)` : w.length ? `${w.join(', ')}: ${k}` : k);
-const text = (uniq.length ? `## ✗ ${uniq.length} Problem(e)\n\n` + uniq.map((x) => '- ' + x).join('\n') : '## ✓ Alles in Ordnung\n\n13 Seiten · Chromium + Safari · Handy + Rechner') + (info.length ? '\n\n' + info.map((x) => '- ' + x).join('\n') : '') + '\n';
+const text = (uniq.length ? `## ✗ ${uniq.length} Problem(e)\n\n` + uniq.map((x) => '- ' + x).join('\n') : '## ✓ Alles in Ordnung\n\n' + PAGES.length + ' Seiten (N. vagus + Laryngitis) · Chromium + Safari · Handy + Rechner') + (info.length ? '\n\n' + info.map((x) => '- ' + x).join('\n') : '') + '\n';
 console.log(text);
 if (process.env.GITHUB_STEP_SUMMARY) fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, text);
 process.exit(uniq.length ? 1 : 0);
