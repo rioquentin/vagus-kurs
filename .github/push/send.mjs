@@ -16,17 +16,24 @@ const r = await rpc('push_batch', { p_token: token });
 if (r.status === 404) { console.log('push_batch fehlt in Supabase (supabase/monitor-push.sql) – nichts zu tun.'); process.exit(0); }
 if (!r.ok) { console.error('push_batch:', r.status, await r.text()); process.exit(1); }
 const rows = await r.json();
-// Höchstens eine Mitteilung am Tag. Vorrang: Prüfung in 7 Tagen / morgen › Sonntag Wochenrückblick › fällige Karten.
+// Höchstens eine Mitteilung am Tag. Vorrang: Prüfung in 7 Tagen / morgen (je Kurs) › Sonntag Wochenrückblick › fällige Karten.
+// Zwei Kurse: exam_in / done gehören zum Vagus-Kurs, exam_in_l / done_l zur Laryngitis.
 function message(x) {
   const en = x.ui === 'en', due = x.due || 0, figs = x.figs || 0, pl = (n, one, many) => `${n} ${n === 1 ? one : many}`;
   const dueTxt = [due ? (en ? pl(due, 'card', 'cards') + ' due' : pl(due, 'Karte', 'Karten') + ' fällig') : '', figs ? (en ? pl(figs, 'figure', 'figures') : pl(figs, 'Abbildung', 'Abbildungen')) : ''].filter(Boolean).join(' · ');
-  const T = (de, e) => (en ? 'Vagus course · ' + e : 'Vagus-Kurs · ' + de);
-  if (x.exam_in === 7) return { title: T('noch 7 Tage bis zur Prüfung', 'exam in 7 days'), url: '09-10-wiederholung-pruefung.html',
+  const T = (de, e) => (en ? 'Logopedics · ' + e : 'Logopädie-Kurse · ' + de);
+  const C = [
+    { name: en ? 'Vagus' : 'Vagus', exam: x.exam_in, done: x.done || 0, page: '09-10-wiederholung-pruefung.html' },
+    { name: 'Laryngitis', exam: x.exam_in_l, done: x.done_l || 0, page: 'laryngitis-10-pruefung.html' },
+  ];
+  const progress = C.filter((c) => c.done).map((c) => `${c.name} ${c.done}/10`).join(', ');
+  const seven = C.find((c) => c.exam === 7), one = C.find((c) => c.exam === 1);
+  if (one) return { title: T(`morgen ist Prüfung · ${one.name}`, `exam tomorrow · ${one.name}`), url: 'index.html#heute',
+    body: en ? `Go over the shaky points briefly, then rest. ${one.done} of 10 sections done.` : `Kurz die wackligen Punkte durchgehen, dann ausruhen. ${one.done} von 10 Abschnitten erledigt.` };
+  if (seven) return { title: T(`noch 7 Tage bis zur Prüfung · ${seven.name}`, `exam in 7 days · ${seven.name}`), url: seven.page,
     body: (en ? 'A good moment for the mock exam: 40 minutes, then you know where you stand.' : 'Guter Moment für die Probeprüfung: 40 Minuten, danach weißt du, wo du stehst.') + (dueTxt ? ' · ' + dueTxt : '') };
-  if (x.exam_in === 1) return { title: T('morgen ist Prüfung', 'exam tomorrow'), url: 'index.html#heute',
-    body: en ? `Go over the shaky points briefly, then rest. ${x.done} of 10 sections done.` : `Kurz die wackligen Punkte durchgehen, dann ausruhen. ${x.done} von 10 Abschnitten erledigt.` };
   if (x.dow === 0) return { title: T('deine Woche', 'your week'), url: 'index.html#heute',
-    body: (x.week ? (en ? `${pl(x.week, 'card', 'cards')} practised on ${pl(x.week_days, 'day', 'days')} · ${x.done} of 10 sections done` : `${pl(x.week, 'Karte', 'Karten')} geübt an ${pl(x.week_days, 'Tag', 'Tagen')} · ${x.done} von 10 Abschnitten erledigt`)
+    body: (x.week ? (en ? `${pl(x.week, 'card', 'cards')} practised on ${pl(x.week_days, 'day', 'days')}` : `${pl(x.week, 'Karte', 'Karten')} geübt an ${pl(x.week_days, 'Tag', 'Tagen')}`) + (progress ? ' · ' + (en ? 'done: ' : 'erledigt: ') + progress : '')
       : (en ? 'A quiet week. Ten minutes today is a good start.' : 'Eine ruhige Woche. Zehn Minuten heute sind ein guter Anfang.')) + (dueTxt ? ' · ' + dueTxt : '') };
   if (!dueTxt) return null;
   const min = Math.max(2, Math.round(due * 0.5 + figs));

@@ -100,12 +100,12 @@
       $$('.lbl-cover', svg).forEach(function (x) { if (textOf(x) === want) { x.classList.add('hint'); setTimeout(function () { x.classList.remove('hint'); }, 1400); } });
     }
   }
-  // Abbildungen wie Karten wiederholen: state.figs["Abb. 1.1"] = { b: Fach, d: fällig am (Tag), s: letzte Quote }
+  // Abbildungen wie Karten wiederholen: state.figs["Abb. 1.1"] = { b: Fach, d: fällig am (Tag), s: letzte Quote }; Laryngitis „L:Abb. 1.1“
   var FIG_DAYS = [1, 3, 7, 14, 30];
   function dayNow() { return Math.floor((Date.now() - 4 * 3600e3 - new Date().getTimezoneOffset() * 60e3) / 864e5); }
   function figSchedule(host, ratio) {
     var cap = $('.figcap b', host); if (!cap) return '';
-    var abb = cap.textContent.trim(); state.figs = state.figs || {};
+    var abb = (K.course === 'l' ? 'L:' : '') + cap.textContent.trim(); state.figs = state.figs || {};
     var f = state.figs[abb] || { b: 0 }, first = !state.figs[abb], b = ratio >= 0.9 ? Math.min(first ? 2 : (f.b || 0) + 1, FIG_DAYS.length) : ratio >= 0.6 ? Math.max(1, f.b || 0) : 0;
     var days = b ? FIG_DAYS[b - 1] : 1;
     state.figs[abb] = { b: b, d: dayNow() + days, s: Math.round(ratio * 100) / 100 }; K.save();
@@ -370,7 +370,7 @@
   function play(h2) { resetParts(); synth.cancel(); curSec = h2; queue = blocks(h2); qi = 0; playing = true; speakNext(); speakUI(); }
   function stop() { playing = false; resetParts(); synth.cancel(); curSec = null; mark(null); speakUI(); }
   function ttsSetup() {
-    if (!synth || !window.SpeechSynthesisUtterance || !/^\d\d$/.test(K.page)) return; // nur auf Kursseiten
+    if (!synth || !window.SpeechSynthesisUtterance || !/^L?\d\d$/.test(K.page)) return; // nur auf Kursseiten beider Kurse
     pickVoice(); if (synth.onvoiceschanged !== undefined) synth.onvoiceschanged = pickVoice;
     var heads = $$('.wrap section > h2[id]');
     if (!heads.length) return;
@@ -616,12 +616,14 @@
     });
   }
 
-  // ---------- Probeprüfung (Seite 9–10): mit Uhr und Verlauf ----------
+  // ---------- Probeprüfung (Vagus Seite 9–10, Laryngitis Seite 10): mit Uhr und Verlauf, je Kurs getrennt ----------
+  var EXAM_PAGE = { '09': 'v', L10: 'l' };
   // Der Kurs schlägt „etwa 40 Minuten“ vor. Die Uhr läuft unten mit; „Prüfung auswerten“ (Kursskript) wird mitgeschrieben.
   function examSetup() {
     var exam = $('#exam'), grade = $('#grade'), result = $('#result');
-    if (K.page !== '09' || !exam || !grade || !result) return;
-    var LIMIT = 40 * 60, KEY_T = 'vagus-kurs:examclock', clock = null, tick = null;
+    if (!EXAM_PAGE[K.page] || !exam || !grade || !result) return;
+    var CK = EXAM_PAGE[K.page], mine = function (x) { return (x.c || 'v') === CK; }; // Einträge ohne Kurs stammen aus dem Vagus-Kurs
+    var LIMIT = 40 * 60, KEY_T = 'vagus-kurs:examclock' + (CK === 'l' ? ':l' : ''), clock = null, tick = null;
     var bar = el('div', 'exam-timer', '<button type="button" class="cta" data-clock-start>Mit Uhr starten · 40 Minuten</button><span class="note">Die Zeit läuft unten mit. Ohne Uhr geht es wie gewohnt.</span>');
     exam.insertAdjacentElement('beforebegin', bar);
     var hist = el('div', 'exam-hist'); grade.insertAdjacentElement('beforebegin', hist);
@@ -652,7 +654,7 @@
     });
     // Ergebnis mitschreiben, wenn das Kursskript auswertet
     function showHist() {
-      var h = state.examLog || [];
+      var h = (state.examLog || []).filter(mine);
       hist.innerHTML = h.length ? '<span class="eyebrow">Deine Probeprüfungen</span><ol>' + h.slice(-6).reverse().map(function (x) {
         return '<li><span>' + new Date(x.t).toLocaleDateString(document.documentElement.dataset.ui === 'en' ? 'en-GB' : 'de-DE', { day: 'numeric', month: 'short' }) + '</span><b>' + x.tot + ' / ' + x.max + '</b><span>' + x.pct + ' %</span><span class="note">' + (x.min ? x.min + ' Min.' : 'ohne Uhr') + '</span></li>';
       }).join('') + '</ol>' : '';
@@ -660,10 +662,11 @@
     new MutationObserver(function () {
       var big = result.querySelector('.big'); if (result.hidden || !big) return;
       var m = /(\d+)\s*\/\s*(\d+)[^\d]+(\d+)\s*%/.exec(big.textContent); if (!m) return;
-      var log = state.examLog || [], recent = log.filter(function (x) { return Date.now() - x.t <= 60e3; })[0], c = load();
+      var log = state.examLog || [], recent = log.filter(function (x) { return mine(x) && Date.now() - x.t <= 60e3; })[0], c = load();
       var entry = { t: Date.now(), tot: +m[1], max: +m[2], pct: +m[3], min: c ? Math.max(1, Math.round(used(c) / 60)) : recent ? recent.min : 0 };
+      if (CK === 'l') entry.c = 'l';
       if (recent && recent.tot === entry.tot && recent.min === entry.min) return; // gleiche Auswertung, schon notiert
-      state.examLog = log.filter(function (x) { return x !== recent; }).concat([entry]).slice(-20); // erneutes Auswerten ersetzt
+      state.examLog = log.filter(function (x) { return x !== recent; }).concat([entry]).slice(-30); // erneutes Auswerten ersetzt
       K.save(); store(null); render(); showHist();
     }).observe(result, { childList: true, subtree: true, attributes: true, attributeFilter: ['hidden'] });
     showHist(); render();
@@ -672,7 +675,7 @@
   // ---------- Mündliche Frage: sich selbst aufnehmen und anhören ----------
   // Aufnahmen bleiben nur auf diesem Gerät (IndexedDB), werden nie synchronisiert oder hochgeladen.
   function oralSetup() {
-    var oral = $('#oral'); if (K.page !== '09' || !oral) return;
+    var oral = $('#oral'); if (!EXAM_PAGE[K.page] || !oral) return;
     var box = el('div', 'rec', '<div class="rec-row"><button type="button" class="cta" data-rec>● Aufnahme starten</button><span class="rec-t" aria-live="off"></span></div>' +
       '<p class="note">Sprich die 5 Minuten laut, dann hör dir zu und hake ab, was drin war. Die Aufnahme bleibt nur auf diesem Gerät.</p><p class="note rec-msg" aria-live="polite"></p><ol class="rec-list"></ol>');
     oral.insertAdjacentElement('afterend', box);
@@ -820,7 +823,7 @@
       opened.forEach(function (d) { d.open = false; }); opened = [];
       $$('.lbl-cover').forEach(function (r) { r.style.display = ''; });
     });
-    var row = $('.done-row'); if (!row || !/^\d\d$/.test(K.page)) return;
+    var row = $('.done-row'); if (!row || !/^L?\d\d$/.test(K.page)) return;
     var b = el('div', 'print-row', '<button type="button" class="linkbtn">Als Lernblatt drucken oder als PDF sichern</button><span class="note">mit Lösungen, ohne Knöpfe</span>');
     row.insertAdjacentElement('afterend', b);
     b.querySelector('button').addEventListener('click', function () { window.print(); });

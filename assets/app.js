@@ -2,7 +2,12 @@
 // Gespeichert wird im Browser (localStorage); mit Konto gleicht sync.js den Stand zwischen Geräten ab.
 (function () {
   var KEY = 'vagus-kurs:v1';
-  var UNITS = ['01', '02', '03', '04', '05', '06', '07', '08', '09'];
+  // Zwei Kurse: Vagus 01–09 (Seite 9–10 zählt doppelt), Laryngitis L01–L10. Pro Kurs eigener Fortschritt und eigene „zuletzt gelesen“-Stelle.
+  var COURSE_UNITS = { v: ['01', '02', '03', '04', '05', '06', '07', '08', '09'], l: ['L01', 'L02', 'L03', 'L04', 'L05', 'L06', 'L07', 'L08', 'L09', 'L10'] };
+  var UNITS = COURSE_UNITS.v.concat(COURSE_UNITS.l);
+  var REFS = { '00': 'v', L00: 'l' };
+  function courseOf(id) { return /^L/.test(id || '') ? 'l' : 'v'; }
+  var LAST = { v: 'last', l: 'lastL' }; // gespeicherte Schlüssel; „last“ bleibt für den Vagus-Kurs wie bisher
   var root = document.documentElement;
   var page = document.body.dataset.page;
   // Fokusring nur für die Tastatur: Nach einem Tippen öffnen Dialoge sonst mit einem Ring um den ersten Knopf
@@ -13,7 +18,7 @@
   var state = load();
   state.done = state.done || {};
   // Früher landeten Klicks auf beantwortete Prüfungsfragen (eigenes data-done der Seite) hier: aufräumen
-  Object.keys(state.done).forEach(function (k) { if (!/^\d\d$/.test(k)) delete state.done[k]; });
+  Object.keys(state.done).forEach(function (k) { if (!/^L?\d\d$/.test(k)) delete state.done[k]; });
   state.scroll = state.scroll || {};
   var prev = JSON.parse(JSON.stringify(state));
 
@@ -31,7 +36,7 @@
       var a = prev[p[0]] || {}, b = state[p[0]] || {}, t = state[p[1]] = state[p[1]] || {};
       Object.keys(a).concat(Object.keys(b)).forEach(function (k) { if (!same(a[k], b[k])) t[k] = now; });
     });
-    ['theme', 'last', 'scroll', 'view', 'read', 'tour', 'gate', 'ui', 'exam', 'examLog', 'weekSeen', 'newsSeen'].forEach(function (k) { if (!same(prev[k], state[k])) state._mt = now; });
+    ['theme', 'last', 'lastL', 'scroll', 'view', 'read', 'tour', 'gate', 'ui', 'exam', 'examL', 'examLog', 'weekSeen', 'newsSeen'].forEach(function (k) { if (!same(prev[k], state[k])) state._mt = now; });
   }
   function save() {
     stamp();
@@ -45,16 +50,19 @@
   // ---- Fortschritt ----
   function render() {
     // In Abschnitten gezählt wie im Kurs („Abschnitt 1 von 10“): Seite 9–10 sind zwei
-    var n = UNITS.reduce(function (s, id) { return s + (state.done[id] ? (id === '09' ? 2 : 1) : 0); }, 0), ALL = 10;
-    $$('[data-prog]').forEach(function (el) { el.textContent = n + ' / ' + ALL; });
-    $$('.prog i').forEach(function (el) { el.style.setProperty('--p', n / ALL); });
+    var count = function (k) { return COURSE_UNITS[k].reduce(function (s, id) { return s + (state.done[id] ? (id === '09' ? 2 : 1) : 0); }, 0); }, ALL = 10;
+    $$('[data-prog]').forEach(function (el) {
+      var n = count(el.getAttribute('data-course') || 'v'); el.textContent = n + ' / ' + ALL;
+      var bar = el.parentElement.querySelector('i'); if (bar) bar.style.setProperty('--p', n / ALL);
+    });
     $$('[data-prog-long]').forEach(function (el) {
+      var n = count(el.getAttribute('data-course') || 'v');
       el.textContent = n === 0 ? 'Noch nichts erledigt' : n === ALL ? 'Alle 10 Abschnitte erledigt' : n + ' von ' + ALL + ' Abschnitten erledigt';
     });
     $$('[data-unit]').forEach(function (el) {
       var id = el.getAttribute('data-unit');
       el.classList.toggle('is-done', !!state.done[id]);
-      el.classList.toggle('is-last', state.last === id);
+      el.classList.toggle('is-last', state[LAST[courseOf(id)]] === id);
       if (el.classList.contains('ctoc-unit') || el.classList.contains('unit')) {
         el.setAttribute('aria-description', state.done[id] ? 'erledigt' : '');
       }
@@ -71,14 +79,17 @@
       var id = b.getAttribute('data-done'); state.done[id] = !state.done[id]; if (!state.done[id]) delete state.done[id]; save(); render();
       if (state.done[id]) { b.classList.add('just'); setTimeout(function () { b.classList.remove('just'); }, 500); }
     }
-    if (e.target.closest('[data-reset]') && confirm('Alle „erledigt“-Häkchen und den Lesestand zurücksetzen? Lernkarten, Merkheft und Schwachstellen bleiben erhalten.')) {
-      state.done = {}; state.scroll = {}; delete state.last; save(); render(); resume();
+    var rs = e.target.closest('[data-reset]');
+    if (rs && confirm('Alle „erledigt“-Häkchen und den Lesestand dieses Kurses zurücksetzen? Lernkarten, Merkheft und Schwachstellen bleiben erhalten.')) {
+      var k = rs.getAttribute('data-reset') || 'v';
+      COURSE_UNITS[k].forEach(function (id) { delete state.done[id]; delete state.scroll[id]; });
+      delete state[LAST[k]]; save(); render(); resume();
     }
   });
 
   // ---- Zuletzt gelesen ----
-  if (UNITS.indexOf(page) >= 0 || page === '00') {
-    if (page !== '00') { state.last = page; save(); }
+  if (UNITS.indexOf(page) >= 0 || REFS[page]) {
+    if (!REFS[page]) { state[LAST[courseOf(page)]] = page; save(); }
     if (location.hash === '#weiter' && state.scroll[page]) {
       history.replaceState(null, '', location.pathname);
       window.addEventListener('load', function () { window.scrollTo(0, state.scroll[page]); });
@@ -90,13 +101,16 @@
     }, { passive: true });
   }
   function resume() {
-    var box = document.querySelector('[data-resume]');
-    if (!box) return;
-    var link = state.last && document.querySelector('.unit[data-unit="' + state.last + '"]');
-    box.hidden = !link;
-    if (!link) return;
-    box.querySelector('[data-resume-t]').textContent = link.querySelector('.n').textContent + ' · ' + link.querySelector('.t').textContent;
-    box.querySelector('[data-resume-a]').href = link.getAttribute('href') + '#weiter';
+    $$('[data-resume]').forEach(function (box) {
+      var last = state[LAST[box.getAttribute('data-course') || 'v']];
+      var seg = last && box.parentElement.querySelector('[data-unit="' + last + '"]');
+      var link = last && (document.querySelector('.unit[data-unit="' + last + '"]') || seg);
+      box.hidden = !link;
+      if (!link) return;
+      var t = link.querySelector('.t') ? link.querySelector('.n').textContent + ' · ' + link.querySelector('.t').textContent : link.getAttribute('title');
+      box.querySelector('[data-resume-t]').textContent = t;
+      box.querySelector('[data-resume-a]').href = link.getAttribute('href') + '#weiter';
+    });
   }
 
   // ---- Lesefortschritt (Balken unter der Kopfzeile) ----
@@ -105,7 +119,7 @@
     var h = document.documentElement.scrollHeight - window.innerHeight;
     bar.style.setProperty('--read', h > 0 ? Math.min(1, window.scrollY / h) : 0);
   }
-  if (bar && page !== 'home') { window.addEventListener('scroll', readbar, { passive: true }); window.addEventListener('resize', readbar); readbar(); }
+  if (bar && page !== 'home' && !/^kurs-/.test(page)) { window.addEventListener('scroll', readbar, { passive: true }); window.addEventListener('resize', readbar); readbar(); }
 
   // ---- Farbschema: System → Hell → Dunkel ----
   var NAMES = { '': 'System', light: 'Hell', dark: 'Dunkel' };
@@ -178,7 +192,8 @@
   }
   // Früheren Stand zurückholen (tools.js, „Frühere Stände“): alles gilt als eben geändert, damit es beim Abgleich mit dem Konto gewinnt
   function restore(next) { adopt(next); prev = {}; save(); }
-  window.Kurs = { state: state, save: save, adopt: adopt, restore: restore, render: render, page: page, key: KEY, theme: function () { theme(true); } };
+  window.Kurs = { state: state, save: save, adopt: adopt, restore: restore, render: render, page: page, key: KEY, theme: function () { theme(true); },
+    course: document.body.dataset.course || '', courseOf: courseOf, units: COURSE_UNITS, lastKey: LAST };
 
   if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')) {
     navigator.serviceWorker.register('sw.js').catch(function () {});
@@ -206,9 +221,15 @@
 
   // ---- „Neu im Kurs“: einmal nach einem Update, für alle, die schon gelernt haben ----
   // „Verstanden“ merkt sich die Ausgabe (state.newsSeen, mit dem Konto abgeglichen); „Später“ nur für diesen Besuch.
-  var NEWS_ID = '2026-10-30', NEWS_PREV = '2026-10-29';
+  // Ausgaben, neueste zuerst. Wer die vorige gesehen hat, bekommt nur die neue; wer länger nicht da war, auch die älteren darunter.
+  var NEWS_ID = '2026-11-02', NEWS_EDITIONS = ['2026-11-02', '2026-10-30', '2026-10-29'];
+  var NEWS_L = ['Zweiter Kurs', [
+    ['Laryngitis', 'Ein ganzer zweiter Kurs, zehn Abschnitte von der Einordnung bis zur Probeprüfung, dazu ein Handout-Check. Auf der Startseite wählst du den Kurs.', 'laryngitis.html'],
+    ['Alles gemeinsam', 'Lernkarten, Merkheft, Fachbegriffe und die Runde „Heute“ gelten für beide Kurse; oben in Lernkarten und Fachbegriffen kannst du auf einen Kurs filtern. Jeder Kurs hat seinen eigenen Prüfungstermin.', 'lernkarten.html'],
+    ['Verweise', 'Wo der Laryngitis-Kurs auf den Vagus-Kurs zurückgreift („↩ Vagus-Kurs 5“), führt ein Tippen direkt dorthin.', null],
+  ]];
   // Neu in dieser Ausgabe; wer die vorige schon gesehen hat, bekommt nur das, alle anderen auch die vorige darunter
-  var NEWS_NEW = ['Ganz neu', [
+  var NEWS_NEW = ['Auch neu', [
     ['Mitteilung aufs Gerät', 'Im „Aa“-Menü einschalten: höchstens einmal am Tag, wenn Karten fällig sind, sonntags ein kurzer Wochenrückblick, und 7 Tage sowie 1 Tag vor der Prüfung ein Hinweis. Am iPhone über das Symbol auf dem Home-Bildschirm.', null],
     ['Frühere Stände', 'Ebenfalls im „Aa“-Menü: Der Kurs merkt sich jeden Tag deinen Stand, sieben Tage lang. Falls einmal etwas fehlt, holst du es mit zwei Tippern zurück.', null],
   ]];
@@ -243,7 +264,13 @@
     var dlg = document.createElement('dialog'); dlg.className = 'legend news'; dlg.setAttribute('aria-labelledby', 'news-t');
     dlg.innerHTML = '<i class="orn tl" aria-hidden="true">❦</i><i class="orn tr" aria-hidden="true">❦</i><i class="orn bl" aria-hidden="true">❦</i><i class="orn br" aria-hidden="true">❦</i>' +
       '<div class="lg-head"><h2 id="news-t">Neu im Kurs</h2></div><div class="lg-body"><p class="news-lead">Seit deinem letzten Besuch ist einiges dazugekommen. Alles ist freiwillig; der Kurs selbst ist unverändert.</p>' +
-      [NEWS_NEW].concat(state.newsSeen === NEWS_PREV ? [] : NEWS).map(function (grp) {
+      (function () {
+        var seenAt = NEWS_EDITIONS.indexOf(state.newsSeen); // -1: nie gesehen
+        var groups = [NEWS_L];
+        if (seenAt < 0 || seenAt > 1) groups.push(NEWS_NEW);
+        if (seenAt < 0 || seenAt > 2) groups = groups.concat(NEWS);
+        return groups;
+      })().map(function (grp) {
         return '<section class="news-g"><span class="eyebrow">' + esc(grp[0]) + '</span><ul>' + grp[1].map(function (it) {
           return '<li><b>' + esc(it[0]) + '</b><span>' + esc(it[1]) + (it[2] ? ' <a href="' + esc(it[2]) + '" data-news-go>Zeigen →</a>' : '') + '</span></li>';
         }).join('') + '</ul></section>';
