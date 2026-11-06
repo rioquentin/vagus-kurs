@@ -6,15 +6,16 @@
   var state = K.state;
   state.cards = state.cards || {}; state.miss = state.miss || {}; state.quiz = state.quiz || {};
   var page = K.page;
-  // Lernseiten mit Abruffragen (ohne die Prüfungsseiten 9–10 bzw. L10), Vagus vor Laryngitis
-  var UNIT_PAGES = ['01', '02', '03', '04', '05', '06', '07', '08', 'L01', 'L02', 'L03', 'L04', 'L05', 'L06', 'L07', 'L08', 'L09'];
-  var EXAM_PAGES = ['09', 'L10'];
+  // Kurse aus dem Kursregister (app.js). Lernseiten mit Abruffragen: alle Abschnitte ohne die Prüfungsseite, in Kursreihenfolge
+  var COURSES = K.courses, KEYS = COURSES.map(function (c) { return c.key; });
+  var EXAM_PAGES = COURSES.map(function (c) { return c.exam; }).filter(Boolean); // der Schnellkurs hat keine Prüfung
+  var UNIT_PAGES = [].concat.apply([], COURSES.map(function (c) { return c.units.filter(function (u) { return u !== c.exam; }); }));
   // Kurs einer Abschnitts- oder Kartenkennung: „L03“, „L03-F2“ → Laryngitis. Achtung: Lückentext-Karten heißen „L:Begriff“.
-  function courseOf(id) { return /^L\d/.test(id || '') ? 'l' : 'v'; }
-  function unitOfCard(id) { var m = /^(L?\d\d)-F\d+$/.exec(id); return m ? m[1] : null; }
+  var courseOf = K.courseOf;
+  function unitOfCard(id) { var m = /^([A-Z]*\d\d)-[FS]\d+$/.exec(id); return m ? m[1] : null; } // F1 …, im Schnellkurs S1 …
   // Filter „Beide Kurse / Vagus / Laryngitis“ (?kurs=v|l), merkt sich das Gerät
   var CF_KEY = 'vagus-kurs:cf';
-  function getCf() { var p = new URLSearchParams(location.search).get('kurs'); if (p === 'v' || p === 'l') return p; try { return localStorage.getItem(CF_KEY) || ''; } catch (e) { return ''; } }
+  function getCf() { var p = new URLSearchParams(location.search).get('kurs'); if (p && KEYS.indexOf(p) >= 0) return p; try { return localStorage.getItem(CF_KEY) || ''; } catch (e) { return ''; } }
   function setCf(v) { try { if (v) localStorage.setItem(CF_KEY, v); else localStorage.removeItem(CF_KEY); } catch (e) {} }
   function inCf(cf, unitOrCourses) { if (!cf) return true; return Array.isArray(unitOrCourses) ? unitOrCourses.indexOf(cf) >= 0 : courseOf(unitOrCourses) === cf; }
   function cfButtons(cf, onChange) {
@@ -35,10 +36,25 @@
     if (window.KURS) return Promise.resolve(window.KURS);
     if (!dataP) dataP = new Promise(function (ok, fail) {
       var s = document.createElement('script'); s.src = 'assets/data.js?v=' + (window.KURS_BUILD || '');
-      s.onload = function () { ok(window.KURS); }; s.onerror = fail;
+      // Lädt die Datei nicht (Seitenwechsel mitten im Laden, kein Netz): nicht ablehnen (sonst „[object Event]“ als Fehlermeldung,
+      // weil niemand die Ablehnung abfängt), sondern beim nächsten Aufruf neu versuchen. Wer wartet, wartet dann einfach weiter.
+      s.onload = function () { ok(window.KURS); }; s.onerror = function () { dataP = null; s.remove(); };
       document.head.appendChild(s);
     });
     return dataP;
+  }
+  // Suchtext aller Abschnitte: eigene Datei, nur für die Suche (wächst mit jedem Kurs am stärksten)
+  var searchP = null;
+  function searchData() {
+    return data().then(function (d) {
+      if (d.sections) return d;
+      if (!searchP) searchP = new Promise(function (ok, fail) {
+        var s = document.createElement('script'); s.src = 'assets/data-search.js?v=' + (window.KURS_BUILD || '');
+        s.onload = function () { d.sections = window.KURS_SECTIONS || []; ok(d); }; s.onerror = function (e) { searchP = null; fail(e); };
+        document.head.appendChild(s);
+      });
+      return searchP;
+    });
   }
   // Link an eine Stelle im Kurs: Abschnitt anspringen und das Wort danach markieren (?hl=)
   function jump(file, sec, word) { return file + (word ? '?hl=' + encodeURIComponent(word) : '') + (sec ? '#' + sec : ''); }
@@ -64,8 +80,9 @@
   }
   function unitOf(d, id) { return d.units.filter(function (u) { return u.id === id; })[0]; }
   // Abschnittsnummern gibt es in beiden Kursen: „V 3“ (N. vagus) und „L 3“ (Laryngitis)
-  function un(u) { return u ? (u.course === 'l' ? 'L ' : 'V ') + u.n : ''; }
-  var CNAME = { v: 'N. vagus und Stimme', l: 'Laryngitis' };
+  function un(u) { return u ? (K.courseBy[u.course] || {}).abbr + ' ' + u.n : ''; }
+  var CNAME = {}, LABEL = {}; COURSES.forEach(function (c) { CNAME[c.key] = c.name; LABEL[c.key] = c.label; });
+  function LBL(k) { return LABEL[k] || LABEL.v; } // kurze Kursbezeichnung: „N. vagus“, „Laryngitis“
   // Ein Begriff gehört zu allen Abschnitten, in denen er eingeführt wird
   function termIn(t, us) { return us.indexOf(t.unit) >= 0 || (t.more || []).some(function (m) { return us.indexOf(m.unit) >= 0; }); }
 
@@ -75,7 +92,7 @@
   function today() { return Math.floor((Date.now() - 4 * 3600e3 - new Date().getTimezoneOffset() * 60e3) / 864e5); } // Tageswechsel um 4 Uhr
   function info(id) { return state.cards[id] || null; }
   // Prüfungstermin pro Kurs (state.exam für Vagus wie bisher, state.examL für Laryngitis, "JJJJ-MM-TT") als Tageszahl wie today()
-  var EXAM_KEY = { v: 'exam', l: 'examL' };
+  var EXAM_KEY = K.examKey;
   function examDay(course) {
     var v = state[EXAM_KEY[course || 'v']];
     if (!v || !/^\d{4}-\d\d-\d\d$/.test(v)) return null;
@@ -84,7 +101,7 @@
   // Für eine Karte: Termin ihres Kurses; Begriffs- und Lückentextkarten gehören beiden, dann der nächste kommende Termin
   function examDayFor(id) {
     var u = unitOfCard(id); if (u) return examDay(courseOf(u));
-    var t = today(), ds = [examDay('v'), examDay('l')].filter(function (d) { return d != null && d > t; }).sort(function (a, b) { return a - b; });
+    var t = today(), ds = KEYS.map(examDay).filter(function (d) { return d != null && d > t; }).sort(function (a, b) { return a - b; });
     return ds.length ? ds[0] : null;
   }
   // „Nicht prüfungsrelevant“: state.skip[id] = 1. Die Frage bleibt im Kurs, wird aber nirgends mehr abgefragt.
@@ -139,12 +156,13 @@
     var sol = $$('.wrap details').filter(function (d) { var s = d.querySelector('summary'); return s && /^Lösungen/.test(s.textContent.trim()); })[0];
     if (!sol) return;
     var answers = {};
-    $$('p', sol).forEach(function (p) { var b = p.firstElementChild; var m = b && b.tagName === 'B' && /^F(\d+)\.$/.exec(b.textContent.trim()); if (m) answers[m[1]] = p; });
+    var QL = (K.courseBy[K.courseOf(page)] || {}).q || 'F', QRE = new RegExp('^' + QL + '(\\d+)\\.$'); // Kennbuchstabe: F, im Schnellkurs S
+    $$('p', sol).forEach(function (p) { var b = p.firstElementChild; var m = b && b.tagName === 'B' && QRE.exec(b.textContent.trim()); if (m) answers[m[1]] = p; });
     $$('.wrap b').forEach(function (b) {
-      var m = /^F(\d+)\.$/.exec(b.textContent.trim());
+      var m = QRE.exec(b.textContent.trim());
       var host = b.parentElement;
       if (!m || !answers[m[1]] || b.closest('details') || !host || (host.tagName !== 'LI' && host.tagName !== 'P') || host.firstElementChild !== b) return;
-      var id = page + '-F' + m[1];
+      var id = page + '-' + QL + m[1];
       var btn = el('button', 'qa-btn');
       btn.type = 'button'; btn.setAttribute('aria-expanded', 'false');
       host.appendChild(document.createTextNode(' '));
@@ -288,7 +306,7 @@
   function searchSetup() {
     var dlg = $('#search'); if (!dlg) return;
     var q = $('#search-q'), list = $('#search-r'), sel = 0, hits = [];
-    function open() { if (dlg.open) return; dlg.showModal(); q.select(); data().then(run); }
+    function open() { if (dlg.open) return; dlg.showModal(); q.select(); searchData().then(run, run); }
     $$('[data-open-search]').forEach(function (b) { b.addEventListener('click', function () {
       var side = $('#sidebar'); if (side) { side.classList.remove('open'); $('.scrim').classList.remove('open'); }
       open(); }); });
@@ -321,7 +339,7 @@
           var n = norm(t.term + ' ' + (t.lat || ''));
           if (toks.every(function (k) { return n.indexOf(k) >= 0; })) hits.push({ score: 50 + (norm(t.term).indexOf(toks[0]) === 0 ? 20 : 0), kind: 'Begriff', unit: t.unit, sec: t.sec, title: t.term + (t.lat ? ' (' + t.lat + ')' : ''), text: t.ctx, word: t.term });
         });
-        d.sections.forEach(function (s) {
+        (d.sections || []).forEach(function (s) {
           var nt = norm(s.title), nb = norm(s.body);
           if (!toks.every(function (k) { return nt.indexOf(k) >= 0 || nb.indexOf(k) >= 0; })) return;
           var score = 0;
@@ -339,10 +357,10 @@
         : hits.map(function (h, i) {
           var u = unitOf(d, h.unit);
           var href = jump(u.file, h.sec, h.word);
-          return '<li role="option" id="sr' + i + '"' + (i === 0 ? ' aria-selected="true"' : '') + '><a href="' + href + '"><span class="eyebrow">' + (h.kind === 'Abschnitt' ? '' : esc(h.kind) + ' · ') + (u.course === 'l' ? 'Laryngitis · ' : 'N. vagus · ') + (u.n === '·' ? esc(u.t) : 'Abschnitt ' + u.n) + '</span><b>' + esc(h.title) + '</b><span class="s-snip">' + snippet(h.text, toks) + '</span></a></li>';
+          return '<li role="option" id="sr' + i + '"' + (i === 0 ? ' aria-selected="true"' : '') + '><a href="' + href + '"><span class="eyebrow">' + (h.kind === 'Abschnitt' ? '' : esc(h.kind) + ' · ') + LBL(u.course) + ' · ' + (u.n === '·' ? esc(u.t) : 'Abschnitt ' + u.n) + '</span><b>' + esc(h.title) + '</b><span class="s-snip">' + snippet(h.text, toks) + '</span></a></li>';
         }).join('');
     }
-    q.addEventListener('input', function () { data().then(run); });
+    q.addEventListener('input', function () { searchData().then(run, run); });
     q.addEventListener('keydown', function (e) {
       var items = $$('li[role=option]', list);
       if (!items.length) return;
@@ -487,7 +505,7 @@
     function show() {
       var c = queue[i];
       var u = unitOf(d, c.unit);
-      $('[data-fc-where]').innerHTML = (u.course === 'l' ? 'Laryngitis' : 'N. vagus') + ' · Abschnitt ' + u.n + (c.secT ? ' · ' + esc(c.secT) : '') + ' · <a href="' + u.file + (c.sec ? '#' + c.sec : '') + '" target="_blank" rel="noopener">im Kurs ansehen ↗</a>';
+      $('[data-fc-where]').innerHTML = LBL(u.course) + ' · Abschnitt ' + u.n + (c.secT ? ' · ' + esc(c.secT) : '') + ' · <a href="' + u.file + (c.sec ? '#' + c.sec : '') + '" target="_blank" rel="noopener">im Kurs ansehen ↗</a>';
       $('[data-fc-count]').textContent = (i + 1) + ' / ' + queue.length;
       $('[data-fc-bar]').style.width = (i / queue.length * 100) + '%';
       $('[data-fc-card]').innerHTML = cardHtml(c);
@@ -567,7 +585,7 @@
       var keys = Object.keys(groups).sort();
       function link(unit, sec, secT, word) {
         var u = unitOf(d, unit);
-        return '<a href="' + jump(u.file, sec, word) + '">' + (u.course === 'l' ? 'Laryngitis' : 'N. vagus') + ' · Abschnitt ' + u.n + (secT ? ' · ' + esc(secT) : '') + '</a>';
+        return '<a href="' + jump(u.file, sec, word) + '">' + LBL(u.course) + ' · Abschnitt ' + u.n + (secT ? ' · ' + esc(secT) : '') + '</a>';
       }
       list.innerHTML = keys.map(function (k) {
         return '<section class="gl-g" id="gl-' + k + '" data-g><h2>' + k + '</h2><dl>' + groups[k].map(function (t) {
@@ -623,7 +641,7 @@
   // ---------- Merkheft ----------
   // Einträge: { id, unit, sec, secT, quote, note, star, ts }. Nur im Browser gespeichert.
   state.notes = state.notes || [];
-  var COURSE = ['00'].concat(UNIT_PAGES.slice(0, 8), ['09', 'L00'], UNIT_PAGES.slice(8), ['L10']);
+  var COURSE = [].concat.apply([], COURSES.map(function (c) { return (c.ref ? [c.ref] : []).concat(c.units); })); // Seitenfolge: je Kurs Nachschlageseite, dann Abschnitte
   function noteCount() { $$('[data-notes-n]').forEach(function (b) { b.hidden = !state.notes.length; b.textContent = state.notes.length; }); }
   // Alle Seiten beider Kurse (vom Build in jede Seite geschrieben, unabhängig vom Inhaltsverzeichnis)
   function unitInfo(id) { return (window.KURS_PAGES || []).filter(function (u) { return u.id === id; })[0] || null; }
@@ -839,7 +857,7 @@
       var md = '# Merkheft · N. vagus und Stimme\n\nStand: ' + date(Date.now()) + '\n';
       groups().forEach(function (g) {
         var u = g.unit ? unitInfo(g.unit) : null;
-        md += '\n## ' + (u ? (u.course === 'l' ? 'Laryngitis' : 'N. vagus') + ' · Abschnitt ' + u.n + ' · ' + u.t : 'Allgemein') + '\n';
+        md += '\n## ' + (u ? LBL(u.course) + ' · Abschnitt ' + u.n + ' · ' + u.t : 'Allgemein') + '\n';
         g.notes.forEach(function (n) {
           md += '\n' + (n.star ? '★ ' : '') + (n.secT ? '**' + n.secT + '**\n' : '') + (n.quote ? '> ' + n.quote + '\n' : '') + (n.note ? '\n' + n.note + '\n' : '');
         });
@@ -892,7 +910,7 @@
       return '<div class="qz-top"><span class="eyebrow">' + (opts.label || 'Frage') + ' ' + (i + 1) + ' von ' + items.length + '</span>' +
         '<button type="button" class="linkbtn" data-qz-stop>Beenden</button></div><div class="fc-bar" aria-hidden="true"><i style="width:' + (i / items.length * 100) + '%"></i></div>';
     }
-    function where(it) { var u = unitInfo(it.unit); return opts.showUnit && u ? '<p class="qz-where note">' + esc((u.course === 'l' ? 'Laryngitis' : 'N. vagus') + ' · Abschnitt ' + u.n) + ' · ' + esc(u.t) + '</p>' : ''; }
+    function where(it) { var u = unitInfo(it.unit); return opts.showUnit && u ? '<p class="qz-where note">' + esc(LBL(u.course) + ' · Abschnitt ' + u.n) + ' · ' + esc(u.t) + '</p>' : ''; }
     function show() {
       var it = items[i];
       if (it.kind === 'mc') {
@@ -911,7 +929,7 @@
             else if (cf) { cf.ok = (cf.ok || 0) + 1; cf.t = Date.now(); if (cf.ok >= 2) delete state.conf[it.id]; }
             record(it, ok);
             $('.qz-fb', host).innerHTML = '<p class="qz-verdict ' + (ok ? 'ok' : 'bad') + '">' + (ok ? '✓ Richtig.' : '✕ Nicht ganz. Richtig ist <b>' + 'ABCD'.charAt(it.a) + '</b>.') + '</p>' +
-              (it.e ? '<p>' + esc(it.e) + '</p>' : '') + (!ok ? '<p class="note">Gespeichert unter Schwachstellen.</p>' : '') +
+              (it.e || it.link ? '<p>' + esc(it.e || '') + (it.link ? ' <a href="' + esc(it.link) + '">Zur Karte →</a>' : '') + '</p>' : '') + (!ok ? '<p class="note">Gespeichert unter Schwachstellen.</p>' : '') +
               '<div class="qz-next-row"><button class="cta" type="button" data-qz-next>' + (i + 1 < items.length ? 'Weiter' : 'Auswertung') + '</button>' +
               '<button type="button" class="linkbtn" data-qz-skip>Nicht prüfungsrelevant</button></div>';
             $('[data-qz-skip]', host).onclick = function () {
@@ -1025,10 +1043,10 @@
     var worst = Object.keys(misses).sort(function (a, b) { return misses[b] - misses[a]; })[0];
     data().then(function (d) {
       var line1 = active ? 'Letzte Woche: an ' + active + (active === 1 ? ' Tag' : ' Tagen') + ' gelernt, ' + answers + (answers === 1 ? ' Antwort' : ' Antworten') + '.' +
-          (doneNew.length ? ' Neu erledigt: ' + doneNew.map(function (u) { var x = unitOf(d, u); return x ? (x.course === 'l' ? 'Laryngitis ' : 'N. vagus ') + x.n : u; }).join(', ') + '.' : '')
+          (doneNew.length ? ' Neu erledigt: ' + doneNew.map(function (u) { var x = unitOf(d, u); return x ? LBL(x.course) + ' ' + x.n : u; }).join(', ') + '.' : '')
         : 'Letzte Woche war Pause. Kein Problem: heute reichen zehn Minuten, um wieder hineinzukommen.';
       var wu = worst && unitOf(d, worst);
-      var line2 = wu ? 'Am wackligsten gerade: ' + (wu.course === 'l' ? 'Laryngitis' : 'N. vagus') + ', Abschnitt ' + wu.n + ' · ' + misses[worst] + (misses[worst] === 1 ? ' verpasste Frage' : ' verpasste Fragen') + '.' : 'Gerade wackelt nichts. Schön so.';
+      var line2 = wu ? 'Am wackligsten gerade: ' + LBL(wu.course) + ', Abschnitt ' + wu.n + ' · ' + misses[worst] + (misses[worst] === 1 ? ' verpasste Frage' : ' verpasste Fragen') + '.' : 'Gerade wackelt nichts. Schön so.';
       var box = el('section', 'week', '<span class="eyebrow">Wochenrückblick</span><p>' + line1 + '</p><p class="note">' + line2 + '</p><button type="button" class="linkbtn" data-week-ok>Danke, ausblenden</button>');
       today_.insertAdjacentElement('beforebegin', box);
       $('[data-week-ok]', box).onclick = function () { state.weekSeen = wk; K.save(); box.remove(); };
@@ -1104,7 +1122,7 @@
       function side(label, cls, opt) {
         var t = termFor(opt), u = t && unitInfo(t.unit);
         return '<div class="cf-side ' + cls + '"><span class="eyebrow">' + label + '</span><b>' + esc(opt) + '</b>' +
-          (t ? '<p>' + esc(t.ctx) + '</p>' + (u ? '<a class="note" href="' + jump(u.file, t.sec, t.term) + '">' + esc((u.course === 'l' ? 'Laryngitis' : 'N. vagus') + ' · Abschnitt ' + u.n) + ' →</a>' : '') : '') + '</div>';
+          (t ? '<p>' + esc(t.ctx) + '</p>' + (u ? '<a class="note" href="' + jump(u.file, t.sec, t.term) + '">' + esc(LBL(u.course) + ' · Abschnitt ' + u.n) + ' →</a>' : '') : '') + '</div>';
       }
       function render() {
         var conf = state.conf || {}, mcs = {};
@@ -1177,7 +1195,7 @@
   }
   function todayPlan(d) {
     var learned = UNIT_PAGES.filter(function (u) { return state.done && state.done[u]; });
-    [state.last, state.lastL].forEach(function (l) { if (l && UNIT_PAGES.indexOf(l) >= 0 && learned.indexOf(l) < 0) learned.push(l); });
+    COURSES.map(function (c) { return state[c.lastKey]; }).forEach(function (l) { if (l && UNIT_PAGES.indexOf(l) >= 0 && learned.indexOf(l) < 0) learned.push(l); });
     Object.keys(state.cards).forEach(function (k) { var u = unitOfCard(k); if (u && learned.indexOf(u) < 0) learned.push(u); });
     var taken = {}, items = [];
     function take(list, max) { list.slice(0, max).forEach(function (x) { if (!taken[x.id] && items.length < 14) { taken[x.id] = 1; items.push(x); } }); }
@@ -1204,13 +1222,13 @@
       function figLink(fig) {
         var u = unitInfo(fig.unit);
         var seen = (state.figs || {})[fig.key || fig.abb];
-        return '<a class="today-fig" href="' + u.file + '?fig=' + encodeURIComponent(fig.abb) + '&find=1"><span class="eyebrow">Zum Abschluss · Abbildung' + (seen ? ' · wieder fällig' : ' · neu') + '</span><b>' + esc(fig.abb) + ' üben</b><span class="note">Beschriftung ist verdeckt, dann heißt es „Tippe auf …“. Dein Ergebnis bestimmt, wann sie wiederkommt. ' + esc((u.course === 'l' ? 'Laryngitis' : 'N. vagus') + ' · Abschnitt ' + u.n) + ' · ' + esc(u.t) + '</span></a>';
+        return '<a class="today-fig" href="' + u.file + '?fig=' + encodeURIComponent(fig.abb) + '&find=1"><span class="eyebrow">Zum Abschluss · Abbildung' + (seen ? ' · wieder fällig' : ' · neu') + '</span><b>' + esc(fig.abb) + ' üben</b><span class="note">Beschriftung ist verdeckt, dann heißt es „Tippe auf …“. Dein Ergebnis bestimmt, wann sie wiederkommt. ' + esc(LBL(u.course) + ' · Abschnitt ' + u.n) + ' · ' + esc(u.t) + '</span></a>';
       }
       function intro() {
         var p = todayPlan(d), done = state.days[dayKey()];
         var head = '<span class="eyebrow">Heute · etwa 15 Minuten</span><h2 id="today-t">' + (done ? 'Heute geschafft' : 'Deine Runde') + '</h2>';
         if (!p.learned.length) {
-          host.innerHTML = head + '<p>Hier wartet jeden Tag eine kurze, gemischte Runde aus allem, was du schon gelernt hast. Lies zuerst Abschnitt 1 eines Kurses (<a href="01-gelenke-muskeln.html">N. vagus</a> oder <a href="laryngitis-01-einordnung.html">Laryngitis</a>), dann geht es los.</p>';
+          host.innerHTML = head + '<p>Hier wartet jeden Tag eine kurze, gemischte Runde aus allem, was du schon gelernt hast. Lies zuerst Abschnitt 1 eines Kurses (' + COURSES.map(function (c) { var u = unitInfo(c.units[0]); return u ? '<a href="' + u.file + '">' + esc(c.label) + '</a>' : ''; }).filter(Boolean).join(', ').replace(/, ([^,]*)$/, ' oder $1') + '), dann geht es los.</p>';
           examBox(); return;
         }
         var nMiss = p.items.filter(function (x) { return state.miss[x.id]; }).length, nDue = p.items.filter(function (x) { return !state.miss[x.id] && info(x.id); }).length, nNew = p.items.length - nMiss - nDue;
@@ -1225,7 +1243,7 @@
       // Prüfungstermin pro Kurs: Countdown und Lesetempo; einmal eintragen, jederzeit ändern
       function examBox() {
         var wrapBox = el('div', 'exams');
-        ['v', 'l'].forEach(function (k) {
+        KEYS.filter(function (k) { return K.courseBy[k].exam; }).forEach(function (k) { // nur Kurse mit Prüfung
           var key = EXAM_KEY[k], box = el('div', 'exam'), ex = examDay(k), t = today(), name = CNAME[k];
           var open = UNIT_PAGES.filter(function (u) { return courseOf(u) === k && !(state.done && state.done[u]); }).length;
           var draw = function () {
@@ -1327,7 +1345,7 @@
         var t = byNorm[sp.getAttribute('data-term')]; if (!t) return;
         var u = unitInfo(t.unit);
         pop.innerHTML = '<p class="gl-pop-t"><b>' + esc(t.term) + '</b>' + (t.lat ? ' <span class="note">(' + esc(t.lat) + ')</span>' : '') + '</p><p class="gl-pop-c">' + esc(t.ctx) + '</p>' +
-          (u ? '<a href="' + jump(u.file, t.sec, t.term) + '">Eingeführt in ' + (u.course !== courseOf(page) ? (u.course === 'l' ? 'Laryngitis, ' : 'N. vagus, ') : '') + 'Abschnitt ' + esc(u.n) + (t.secT ? ' · ' + esc(t.secT.replace(/^[\d.]+\s*·\s*/, '')) : '') + ' →</a>' : '');
+          (u ? '<a href="' + jump(u.file, t.sec, t.term) + '">Eingeführt in ' + (u.course !== courseOf(page) ? LBL(u.course) + ', ' : '') + 'Abschnitt ' + esc(u.n) + (t.secT ? ' · ' + esc(t.secT.replace(/^[\d.]+\s*·\s*/, '')) : '') + ' →</a>' : '');
         pop.hidden = false; cur = sp; sp.setAttribute('aria-expanded', 'true');
         var r = sp.getBoundingClientRect(), vw = document.documentElement.clientWidth, vh = document.documentElement.clientHeight, m = 10;
         pop.style.left = '0px'; pop.style.top = '0px';
@@ -1350,6 +1368,69 @@
     });
   }
 
+  // ---------- Prüfungs-Check zum Abhaken ----------
+  // Punkte der Liste „Prüfungs-Check · Das musst du können“ (Laryngitis und folgende Kurse). Abgehakt wird nur in diesem Browser
+  // (eigener Schlüssel, nicht im Konto-Abgleich), wie in der Kursanleitung verlangt. Gespeichert: { "L03": [0, 2], … } = Nummer des Punkts auf der Seite.
+  var CHK_KEY = 'vagus-kurs:checks';
+  function getChecks() { try { var v = JSON.parse(localStorage.getItem(CHK_KEY) || '{}'); return v && typeof v === 'object' ? v : {}; } catch (e) { return {}; } }
+  function setCheck(unit, i, on) {
+    var all = getChecks(), l = (all[unit] || []).filter(function (x) { return x !== i; });
+    if (on) l.push(i); l.sort(function (a, b) { return a - b; });
+    if (l.length) all[unit] = l; else delete all[unit];
+    try { localStorage.setItem(CHK_KEY, JSON.stringify(all)); } catch (e) {}
+  }
+  function makeCheckable(li, unit, i, done, onToggle) {
+    li.setAttribute('role', 'checkbox'); li.setAttribute('tabindex', '0'); li.setAttribute('aria-checked', done ? 'true' : 'false'); li.classList.add('pc-li');
+    function flip() { var on = li.getAttribute('aria-checked') !== 'true'; li.setAttribute('aria-checked', on ? 'true' : 'false'); setCheck(unit, i, on); if (onToggle) onToggle(); }
+    li.addEventListener('click', function (e) { if (e.target.closest('a, .gl-ref, button')) return; if (String(getSelection()).length) return; flip(); });
+    li.addEventListener('keydown', function (e) { if (e.target === li && (e.key === ' ' || e.key === 'Enter')) { e.preventDefault(); flip(); } });
+  }
+  function pageChecks() {
+    if (UNIT_PAGES.indexOf(page) < 0) return;
+    var lis = $$('.wrap .box.check-list li'); if (!lis.length) return;
+    var mine = getChecks()[page] || [];
+    var boxes = $$('.wrap .box.check-list');
+    function count() { boxes.forEach(function (b) { var n = $$('li[aria-checked="true"]', b).length, all = $$('li', b).length, s = b.querySelector('.pc-n');
+      if (!s) { s = el('span', 'pc-n note'); b.appendChild(s); } s.textContent = n ? n + ' von ' + all + ' abgehakt · nur in diesem Browser' : 'Zum Abhaken antippen · nur in diesem Browser'; }); }
+    lis.forEach(function (li, i) { makeCheckable(li, page, i, mine.indexOf(i) >= 0, count); });
+    count();
+  }
+  function checksPage() {
+    var host = $('[data-pcheck]'); if (!host) return;
+    data().then(function (d) {
+      var lists = (d.checks || []).filter(function (x) { return unitInfo(x.unit); }); if (!lists.length) return;
+      var all = getChecks(), pcLast = null; // Zwischenüberschrift je Kurs
+      host.hidden = false;
+      host.innerHTML = '<h2 id="pc-t">Prüfungs-Check</h2><p class="note">„Das musst du können“ aus jedem Abschnitt. Abhaken, was sitzt; gespeichert nur in diesem Browser, wie auf der Kursseite.</p>' +
+        COURSE.filter(function (u) { return lists.some(function (x) { return x.unit === u; }); }).map(function (u) {
+          var info = unitInfo(u), l = lists.filter(function (x) { return x.unit === u; })[0], done = (all[u] || []).filter(function (i) { return i < l.items.length; }).length;
+          var cHead = info.course !== pcLast ? '<h3 class="pc-course">' + esc(CNAME[info.course] || '') + '</h3>' : ''; pcLast = info.course;
+          return cHead + '<details class="weak-e pc-g" data-pc-unit="' + u + '"><summary><span><span class="nb-n">' + esc(un(info)) + '</span> ' + esc(info.t) + '</span><span class="weak-n" data-pc-n>' + done + ' / ' + l.items.length + '</span></summary>' +
+            '<div><ul class="pc-list">' + l.items.map(function (h) { return '<li>' + h + '</li>'; }).join('') + '</ul><p><a href="' + info.file + '">Zum Abschnitt →</a></p></div></details>';
+        }).join('');
+      $$('[data-pc-unit]', host).forEach(function (g) {
+        var u = g.getAttribute('data-pc-unit'), mine = all[u] || [], lis = $$('li', g), n = $('[data-pc-n]', g);
+        lis.forEach(function (li, i) { makeCheckable(li, u, i, mine.indexOf(i) >= 0, function () { n.textContent = $$('li[aria-checked="true"]', g).length + ' / ' + lis.length; }); });
+      });
+      if (location.hash === '#pruefungs-check') setTimeout(function () { host.scrollIntoView({ block: 'start' }); }, 50);
+    });
+  }
+
+  // ---------- Schnellkurs: alle Krankheitsbilder filtern (Übersicht schnellkurs.html) ----------
+  function skFind() {
+    var host = $('.sk-find'); if (!host) return;
+    var q = $('[data-sk-q]', host), lis = $$('.sk-list li', host), chips = $$('[data-sk-g]', host), n = $('[data-sk-n]', host), on = '';
+    var nm = function (s) { return s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, ''); };
+    function run() {
+      var toks = nm(q.value.trim()).split(/\s+/).filter(Boolean), shown = 0;
+      lis.forEach(function (li) { var t = li.getAttribute('data-sk-t'), hit = (!on || li.getAttribute('data-sk-u') === on) && toks.every(function (k) { return t.indexOf(k) >= 0; }); li.hidden = !hit; if (hit) shown++; });
+      n.textContent = shown === lis.length ? '' : shown ? shown + ' von ' + lis.length + ' Karten' : 'Keine Karte passt. Anders formulieren oder die Gruppe abwählen.';
+    }
+    q.addEventListener('input', run);
+    chips.forEach(function (b) { b.addEventListener('click', function () { on = on === b.getAttribute('data-sk-g') ? '' : b.getAttribute('data-sk-g'); chips.forEach(function (x) { x.setAttribute('aria-pressed', x.getAttribute('data-sk-g') === on ? 'true' : 'false'); }); run(); }); });
+  }
+
+  skFind(); pageChecks(); checksPage();
   inlineChecks(); highlight(); glossTips(); viewSwitch(); notebookInPage(); notebookPage(); noteCount(); zoomSetup(); searchSetup(); flashcards(); glossary(); badges();
   unitQuiz(); weakPage(); confPage(); mnemPage(); missBadges(); weekBox(); todayCard();
 })();

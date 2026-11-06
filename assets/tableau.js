@@ -1,7 +1,8 @@
 // Tableau de bord (tableau.html): santé du site et progression. Nur für Admin-Konten (supabase/admin.sql).
 // Nutzt die Anmeldung des Kurses im selben Browser (localStorage vagus-kurs:auth). Liest Zahlen, nie Notiz-Inhalte.
 (function () {
-  var CFG = window.KURS_SYNC, UNITS = window.KURS_UNITS || [], REPO = 'rioquentin/vagus-kurs', AUTH = 'vagus-kurs:auth';
+  var CFG = window.KURS_SYNC, UNITS = window.KURS_UNITS || [], COURSES = window.KURS_COURSES || [], BYK = {}, REPO = 'rioquentin/vagus-kurs', AUTH = 'vagus-kurs:auth';
+  COURSES.forEach(function (c) { BYK[c.key] = c; });
   var $ = function (s, r) { return (r || document).querySelector(s); };
   var esc = function (s) { return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); };
   var get = function (k) { try { return JSON.parse(localStorage.getItem(k)); } catch (e) { return null; } };
@@ -93,12 +94,12 @@
     var keys = Object.keys(log).filter(function (k) { return /^\d{4}-\d\d-\d\d$/.test(k) && log[k] > 0; }).sort(), lastAct = keys[keys.length - 1];
     var w7 = 0, d7 = 0; for (var i = 0; i < 7; i++) { var k = dayKey(Date.now() - i * 864e5); if (log[k]) { w7 += log[k]; d7++; } }
     var heat = ''; for (var j = 27; j >= 0; j--) { var kk = dayKey(Date.now() - j * 864e5), v = log[kk] || 0; heat += '<span data-l="' + (v === 0 ? 0 : v < 10 ? 1 : v < 30 ? 2 : 3) + '" title="' + kk + ' : ' + v + ' carte(s)"></span>'; }
-    // Zwei Kurse: Vagus (01–09, 9–10 zählt doppelt) und Laryngitis (L01–L10)
-    var CN = { v: 'N. vagus et voix', l: 'Laryngite' };
+    // Alle Kurse aus dem Kursregister: Vagus (01–09, 9–10 zählt doppelt), Laryngitis (L01–L10), …
+    var CN = {}; COURSES.forEach(function (c) { CN[c.key] = c.fr; });
     var of = function (k) { return UNITS.filter(function (u) { return (u.course || 'v') === k; }); };
-    var doneN = function (k) { return of(k).reduce(function (s, u) { return s + (done.indexOf(u.id) >= 0 ? (u.id === '09' ? 2 : 1) : 0); }, 0); };
+    var doneN = function (k) { return of(k).reduce(function (s, u) { return s + (done.indexOf(u.id) >= 0 ? (BYK[k].double.indexOf(u.id) >= 0 ? 2 : 1) : 0); }, 0); };
     var seg = function (k) { return '<div class="tb-seg" style="grid-template-columns:repeat(' + of(k).length + ',minmax(0,1fr))" role="img" aria-label="' + doneN(k) + ' sections terminées">' + of(k).map(function (u) { return '<span class="' + (done.indexOf(u.id) >= 0 ? 'd' : views.indexOf(u.id) >= 0 ? 'v' : '') + '" title="' + esc(u.n + ' · ' + u.t) + '"></span>'; }).join('') + '</div>'; };
-    var unitOfCard = function (k) { var m = /^(L?\d\d)-F\d+$/.exec(k); return m ? m[1] : null; };
+    var unitOfCard = function (k) { var m = /^([A-Z]*\d\d)-[FS]\d+$/.exec(k); return m ? m[1] : null; };
     // Fehler und Karten pro Abschnitt
     var per = {}; UNITS.forEach(function (u) { per[u.id] = { seen: 0, sit: 0, miss: 0 }; });
     ids.forEach(function (k) { var u = unitOfCard(k); if (per[u]) { per[u].seen++; if ((cards[k] || {}).b >= 3) per[u].sit++; } });
@@ -106,13 +107,14 @@
     var weak = UNITS.filter(function (u) { return per[u.id].miss; }).sort(function (a, b) { return per[b.id].miss - per[a.id].miss; }).slice(0, 3);
     var examTxt = function (d, k) { if (!d) return ''; var n = Math.round((new Date(d + 'T12:00') - new Date(dayKey(Date.now()) + 'T12:00')) / 864e5); return ' · examen ' + CN[k] + ' le ' + date(d + 'T12:00') + (n >= 0 ? ' (J-' + n + ')' : ' (passé)'); };
     var mocks = (l.examLog || []).slice(-6);
+    var exams = l.exams || { exam: l.exam, examL: l.examL }; // ältere SQL-Fassung: nur exam / examL
     return '<div class="tb-card"><h2>' + esc(l.email || 'Compte') + '</h2>' +
-      '<p class="tb-sub">Dernière activité : ' + (lastAct ? (lastAct === dayKey(Date.now()) ? 'aujourd’hui' : date(lastAct + 'T12:00')) : 'aucune carte révisée') + ' · synchronisé ' + ago(l.updated) + examTxt(l.exam, 'v') + examTxt(l.examL, 'l') + '</p>' +
-      ['v', 'l'].map(function (k) { return '<h3>' + CN[k] + ' · ' + doneN(k) + ' sur 10 terminées</h3>' + seg(k); }).join('') + '<p class="tb-sub">Plein : terminée · pâle : ouverte · vide : pas encore ouverte</p>' +
+      '<p class="tb-sub">Dernière activité : ' + (lastAct ? (lastAct === dayKey(Date.now()) ? 'aujourd’hui' : date(lastAct + 'T12:00')) : 'aucune carte révisée') + ' · synchronisé ' + ago(l.updated) + COURSES.map(function (c) { return examTxt(exams[c.examKey], c.key); }).join('') + '</p>' +
+      COURSES.map(function (c) { return '<h3>' + CN[c.key] + ' · ' + doneN(c.key) + ' sur ' + c.total + ' terminées</h3>' + seg(c.key); }).join('') + '<p class="tb-sub">Plein : terminée · pâle : ouverte · vide : pas encore ouverte</p>' +
       '<div class="tb-facts" style="margin-top:14px"><div><b>' + ids.length + '</b><span>cartes vues</span></div><div><b>' + sit + '</b><span>bien sues</span></div><div><b>' + due + '</b><span>à revoir aujourd’hui</span></div><div><b>' + w7 + '</b><span>cartes cette semaine, sur ' + d7 + ' jour' + (d7 > 1 ? 's' : '') + '</span></div><div><b>' + l.notes + '</b><span>note' + (l.notes > 1 ? 's' : '') + ' · ' + l.mnem + ' moyen' + (l.mnem > 1 ? 's' : '') + ' mnémo</span></div></div>' +
       '<h3>4 dernières semaines</h3><p class="tb-sub">Une case par jour, la plus récente en bas à droite.</p><div class="tb-heat" role="img" aria-label="Activité des 28 derniers jours">' + heat + '</div>' +
       '<h3>Points fragiles</h3>' + (weak.length ? '<p class="tb-sub">' + weak.map(function (u) { return '<b>' + CN[u.course || 'v'] + ' ' + esc(u.n) + ' · ' + esc(u.t) + '</b> : ' + per[u.id].miss + ' erreur(s)'; }).join('<br>') + '</p>' : '<p class="tb-sub">Aucune erreur enregistrée aux quiz.</p>') +
-      (mocks.length ? '<h3>Probeprüfungen</h3><p class="tb-sub">' + mocks.map(function (m) { return (m.c === 'l' ? 'Laryngite, ' : 'Vagus, ') + date(m.t) + ' : ' + m.pct + ' %' + (m.min ? ' en ' + m.min + ' min' : ''); }).join(' · ') + '</p>' : '') +
+      (mocks.length ? '<h3>Probeprüfungen</h3><p class="tb-sub">' + mocks.map(function (m) { return (BYK[m.c || 'v'] || BYK.v).frShort + ', ' + date(m.t) + ' : ' + m.pct + ' %' + (m.min ? ' en ' + m.min + ' min' : ''); }).join(' · ') + '</p>' : '') +
       '<h3>Par section</h3><table class="tb-units">' + UNITS.map(function (u, i) { var x = per[u.id]; return (i === 0 || (UNITS[i - 1].course || 'v') !== (u.course || 'v') ? '<tr><td colspan="4" class="tb-k" style="padding-top:12px">' + CN[u.course || 'v'] + '</td></tr>' : '') + '<tr><td>' + esc(u.n) + '</td><td>' + esc(u.t) + '</td><td style="width:28%"><div class="tb-bar" title="' + x.sit + ' sur ' + x.seen + ' bien sues"><i style="width:' + (x.seen ? Math.round(x.sit / x.seen * 100) : 0) + '%"></i></div></td><td class="num">' + x.sit + '/' + x.seen + '</td></tr>'; }).join('') + '</table>' +
       '</div>';
   }
@@ -123,8 +125,10 @@
   }
 
   // ── En ligne maintenant ──
-  var PAGES = { 'index.html': 'Accueil (choix du cours)', 'vagus.html': 'Vagus · vue d’ensemble', 'laryngitis.html': 'Laryngite · vue d’ensemble', 'lernkarten.html': 'Lernkarten', 'merkheft.html': 'Merkheft', 'begriffe.html': 'Begriffe', '00-styleguide.html': 'Vagus · Styleguide', 'laryngitis-00-handout-check.html': 'Laryngite · Handout-Check', 'tableau.html': 'Tableau de bord' };
-  function pageName(p) { if (PAGES[p]) return PAGES[p]; var u = UNITS.filter(function (x) { return x.file === p; })[0]; return u ? (u.course === 'l' ? 'Laryngite ' : 'Vagus ') + u.n + ' · ' + u.t : (p || '?'); }
+  var PAGES = { 'index.html': 'Accueil (choix du cours)', 'lernkarten.html': 'Lernkarten', 'merkheft.html': 'Merkheft', 'begriffe.html': 'Begriffe', 'tableau.html': 'Tableau de bord' };
+  COURSES.forEach(function (c) { PAGES[c.overview] = c.frShort + ' · vue d’ensemble'; });
+  (window.KURS_REFS || []).forEach(function (r) { PAGES[r.file] = (BYK[r.course] || {}).frShort + ' · ' + r.t; });
+  function pageName(p) { if (PAGES[p]) return PAGES[p]; var u = UNITS.filter(function (x) { return x.file === p; })[0]; return u ? ((BYK[u.course] || BYK.v || {}).frShort || '') + ' ' + u.n + ' · ' + u.t : (p || '?'); }
   function dur(a, b) { var m = Math.round((new Date(b) - new Date(a)) / 60000); return m < 1 ? 'moins d’une minute' : m < 60 ? m + ' min' : Math.floor(m / 60) + ' h ' + String(m % 60).padStart(2, '0'); }
   function presence(ov) {
     var el = $('[data-presence]'); if (!el) return;

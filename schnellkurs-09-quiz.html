@@ -1,0 +1,431 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>9 · Erkennungsquiz · Schnellkurs</title>
+<script>window.__kErr=[];addEventListener('error',function(e){__kErr.push(e)},true);addEventListener('unhandledrejection',function(e){__kErr.push(e)})</script>
+<script>try{var s=JSON.parse(localStorage.getItem('vagus-kurs:v1')||'{}'),d=document.documentElement,r=s.read||{};if(s.theme)d.dataset.theme=s.theme;if(s.ui==='en'){d.dataset.ui='en';document.write('<script src="assets/i18n-en.js?v=mw5lkj8g" defer><\/script>');setTimeout(function(){d.classList.add('ui-ready')},1500)}d.dataset.size=r.size||'m';if(r.font==='sans')d.dataset.font='sans';}catch(e){}</script>
+<script>try{var s=JSON.parse(localStorage.getItem('vagus-kurs:v1')||'{}'),q=location.search+location.hash;if(!sessionStorage.getItem('vagus-kurs:intro')&&(s.gate||s.tour)&&!/[?&](fig|hl|note|quiz)=|access_token|type=recovery|#(note|heute|schwachstellen|verwechslungen)/.test(q)&&!(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches)){document.documentElement.classList.add('intro-on');sessionStorage.setItem('vagus-kurs:intro','1')}}catch(e){}</script>
+<link rel="preload" href="assets/fonts/CormorantGaramond-500-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/UnifrakturMaguntia-400-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="assets/fonts/fonts.css?v=mw5lkj8g">
+<link rel="stylesheet" href="assets/course.css?v=mw5lkj8g">
+<script>window.KURS_BUILD='mw5lkj8g';window.KURS_PAGES=[{"id":"01","n":"1","t":"Gelenke und innere Kehlkopfmuskeln","file":"01-gelenke-muskeln.html","course":"v"},{"id":"02","n":"2","t":"N. laryngeus superior","file":"02-n-laryngeus-superior.html","course":"v"},{"id":"03","n":"3","t":"N. laryngeus recurrens","file":"03-n-laryngeus-recurrens.html","course":"v"},{"id":"04","n":"4","t":"Die Gesamtkarte","file":"04-gesamtkarte.html","course":"v"},{"id":"05","n":"5","t":"Stimmentstehung","file":"05-stimmentstehung.html","course":"v"},{"id":"06","n":"6","t":"Schutzfunktionen","file":"06-schutzfunktionen.html","course":"v"},{"id":"07","n":"7","t":"Kehlkopflähmungen im Überblick","file":"07-laehmungen.html","course":"v"},{"id":"08","n":"8","t":"Abgrenzung und Warnzeichen","file":"08-abgrenzung.html","course":"v"},{"id":"09","n":"9–10","t":"Wiederholung und Probeprüfung","file":"09-10-wiederholung-pruefung.html","course":"v"},{"id":"00","n":"·","t":"Visueller Styleguide","file":"00-styleguide.html","course":"v"},{"id":"L01","n":"1","t":"Einordnung","file":"laryngitis-01-einordnung.html","course":"l"},{"id":"L02","n":"2","t":"Pathophysiologie","file":"laryngitis-02-pathophysiologie.html","course":"l"},{"id":"L03","n":"3","t":"Laryngitis acuta","file":"laryngitis-03-laryngitis-acuta.html","course":"l"},{"id":"L04","n":"4","t":"Nicht-infektiöse Laryngitis","file":"laryngitis-04-nicht-infektioes.html","course":"l"},{"id":"L05","n":"5","t":"Laryngitis chronica, Leukoplakie und Reinke-Ödem","file":"laryngitis-05-chronische-laryngitis.html","course":"l"},{"id":"L06","n":"6","t":"Laryngopharyngealer Reflux, Laryngitis posterior und Kontaktgranulom","file":"laryngitis-06-reflux-granulom.html","course":"l"},{"id":"L07","n":"7","t":"Pseudokrupp","file":"laryngitis-07-pseudokrupp.html","course":"l"},{"id":"L08","n":"8","t":"Epiglottitis, bakterielle Tracheitis, Fremdkörper","file":"laryngitis-08-kindliche-notfaelle.html","course":"l"},{"id":"L09","n":"9","t":"Logopädie bei Laryngitis","file":"laryngitis-09-logopaedie.html","course":"l"},{"id":"L10","n":"10","t":"Wiederholung und Probeprüfung","file":"laryngitis-10-pruefung.html","course":"l"},{"id":"L00","n":"·","t":"Handout-Check","file":"laryngitis-00-handout-check.html","course":"l"},{"id":"FS01","n":"1","t":"Einordnung","file":"funktionell-01-einordnung-fst.html","course":"f"},{"id":"FS02","n":"2","t":"Hyperfunktionelle Dysphonie, Berufsdysphonie und Taschenfaltenphonation","file":"funktionell-02-hyperfunktionell.html","course":"f"},{"id":"FS03","n":"3","t":"Hypofunktionelle Dysphonie","file":"funktionell-03-hypofunktionell.html","course":"f"},{"id":"FS04","n":"4","t":"Kindliche und juvenile Dysphonie","file":"funktionell-04-kindlich-juvenil.html","course":"f"},{"id":"FS05","n":"5","t":"Psychogene Dysphonie und Aphonie","file":"funktionell-05-psychogen.html","course":"f"},{"id":"FS06","n":"6","t":"Vocal Cord Dysfunction (VCD) und induzierbare laryngeale Obstruktion (ILO)","file":"funktionell-06-vcd-ilo.html","course":"f"},{"id":"FS07","n":"7","t":"Spasmodische Dysphonie (laryngeale Dystonie)","file":"funktionell-07-spasmodisch.html","course":"f"},{"id":"FS08","n":"8","t":"Wiederholung und Probeprüfung","file":"funktionell-08-pruefung.html","course":"f"},{"id":"FS00","n":"·","t":"Handout-Check","file":"funktionell-00-handout-check.html","course":"f"},{"id":"GV01","n":"1","t":"Stimmlippenknötchen (Noduli vocales)","file":"gutartig-01-knoetchen.html","course":"g"},{"id":"GV02","n":"2","t":"Stimmlippenpolyp","file":"gutartig-02-polyp.html","course":"g"},{"id":"GV03","n":"3","t":"Stimmlippenzyste","file":"gutartig-03-zyste.html","course":"g"},{"id":"GV04","n":"4","t":"Sulcus glottidis und Vocalisatrophie","file":"gutartig-04-sulcus.html","course":"g"},{"id":"GV05","n":"5","t":"Stimmlippenblutung (Stimmlippenhämatom)","file":"gutartig-05-blutung.html","course":"g"},{"id":"GV06","n":"6","t":"Stimmlippenvarizen und Gefäßektasien","file":"gutartig-06-varizen.html","course":"g"},{"id":"GV07","n":"7","t":"Synechie und Diaphragma (Segel) der Stimmlippen","file":"gutartig-07-synechie.html","course":"g"},{"id":"GV08","n":"8","t":"Kehlkopfasymmetrien (dysplastische Dysphonie)","file":"gutartig-08-asymmetrien.html","course":"g"},{"id":"GV09","n":"9","t":"Larynxpapillomatose (rezidivierende respiratorische Papillomatose)","file":"gutartig-09-papillomatose.html","course":"g"},{"id":"GV10","n":"10","t":"Wiederholung und Probeprüfung","file":"gutartig-10-pruefung.html","course":"g"},{"id":"GV00","n":"·","t":"Handout-Check","file":"gutartig-00-handout-check.html","course":"g"},{"id":"VH01","n":"1","t":"Intubationstraumata des Kehlkopfs","file":"trauma-hormone-01-intubation.html","course":"t"},{"id":"VH02","n":"2","t":"Aryknorpelluxation","file":"trauma-hormone-02-aryluxation.html","course":"t"},{"id":"VH03","n":"3","t":"Krikoarytänoidankylose (Versteifung des Stellknorpelgelenks)","file":"trauma-hormone-03-ankylose.html","course":"t"},{"id":"VH04","n":"4","t":"Hormonell bedingte Stimmstörungen der Frau","file":"trauma-hormone-04-hormone-frau.html","course":"t"},{"id":"VH05","n":"5","t":"Altersstimme","file":"trauma-hormone-05-presbyphonie.html","course":"t"},{"id":"VH06","n":"6","t":"Mutationsfistelstimme (Puberphonie)","file":"trauma-hormone-06-mutationsfistelstimme.html","course":"t"},{"id":"VH07","n":"7","t":"Normale Mutation und Mutationsstörungen","file":"trauma-hormone-07-mutationsstoerungen.html","course":"t"},{"id":"VH08","n":"8","t":"Wiederholung und Probeprüfung","file":"trauma-hormone-08-pruefung.html","course":"t"},{"id":"VH00","n":"·","t":"Handout-Check","file":"trauma-hormone-00-handout-check.html","course":"t"},{"id":"SK01","n":"1","t":"Gruppe A · Entzündung und Reizung der Schleimhaut","file":"schnellkurs-01-entzuendung.html","course":"s"},{"id":"SK02","n":"2","t":"Gruppe B · Funktionell","file":"schnellkurs-02-funktionell.html","course":"s"},{"id":"SK03","n":"3","t":"Gruppe C · Steuerung gestört","file":"schnellkurs-03-steuerung.html","course":"s"},{"id":"SK04","n":"4","t":"Gruppe D · Raumforderungen auf der Stimmlippe","file":"schnellkurs-04-raumforderungen.html","course":"s"},{"id":"SK05","n":"5","t":"Gruppe E · Gefäße, Narben und Bau der Stimmlippe","file":"schnellkurs-05-gefaesse-narben-bau.html","course":"s"},{"id":"SK06","n":"6","t":"Gruppe F · Verletzung und Gelenk","file":"schnellkurs-06-verletzung-gelenk.html","course":"s"},{"id":"SK07","n":"7","t":"Gruppe G · Hormone und Lebensalter","file":"schnellkurs-07-hormone-alter.html","course":"s"},{"id":"SK08","n":"8","t":"Vom Symptom zur Diagnose","file":"schnellkurs-08-erkennen.html","course":"s"},{"id":"SK09","n":"9","t":"Erkennungsquiz","file":"schnellkurs-09-quiz.html","course":"s"},{"id":"SK00","n":"·","t":"Übersicht","file":"schnellkurs-00-start.html","course":"s"}];window.KURS_COURSES=[{"key":"v","prefix":"","name":"N. vagus und Stimme","short":"Vagus-Kurs","label":"N. vagus","chip":"N. vagus","abbr":"V","fr":"N. vagus et voix","frShort":"Vagus","overview":"vagus.html","exam":"09","double":["09"],"total":10,"units":["01","02","03","04","05","06","07","08","09"],"ref":"00","lastKey":"last","examKey":"exam","q":"F","kind":"course"},{"key":"l","prefix":"L","name":"Laryngitis","short":"Laryngitis","label":"Laryngitis","chip":"Laryngitis","abbr":"L","fr":"Laryngite","frShort":"Laryngite","overview":"laryngitis.html","exam":"L10","double":[],"total":10,"units":["L01","L02","L03","L04","L05","L06","L07","L08","L09","L10"],"ref":"L00","lastKey":"lastL","examKey":"examL","q":"F","kind":"course"},{"key":"f","prefix":"FS","name":"Funktionelle, psychogene und neurogene Stimmstörungen","short":"Funktionelle Stimmstörungen","label":"Funktionelle Stimmstörungen","chip":"Funktionell","abbr":"FS","fr":"Troubles fonctionnels, psychogènes et neurogènes","frShort":"Fonctionnel","overview":"funktionell.html","exam":"FS08","double":[],"total":8,"units":["FS01","FS02","FS03","FS04","FS05","FS06","FS07","FS08"],"ref":"FS00","lastKey":"lastFS","examKey":"examFS","q":"F","kind":"course"},{"key":"g","prefix":"GV","name":"Gutartige Stimmlippenveränderungen","short":"Gutartige Veränderungen","label":"Gutartige Veränderungen","chip":"Gutartig","abbr":"GV","fr":"Lésions bénignes des cordes vocales","frShort":"Bénin","overview":"gutartig.html","exam":"GV10","double":[],"total":10,"units":["GV01","GV02","GV03","GV04","GV05","GV06","GV07","GV08","GV09","GV10"],"ref":"GV00","lastKey":"lastGV","examKey":"examGV","q":"F","kind":"course"},{"key":"t","prefix":"VH","name":"Verletzungen, Gelenk, Hormone und Mutation","short":"Verletzungen, Hormone, Mutation","label":"Verletzungen, Hormone, Mutation","chip":"Verletzung, Hormone","abbr":"VH","fr":"Lésions, articulation, hormones et mue","frShort":"Trauma/hormones","overview":"trauma-hormone.html","exam":"VH08","double":[],"total":8,"units":["VH01","VH02","VH03","VH04","VH05","VH06","VH07","VH08"],"ref":"VH00","lastKey":"lastVH","examKey":"examVH","q":"F","kind":"course"},{"key":"s","prefix":"SK","name":"Schnellkurs: alle Stimmstörungen auf einen Blick","short":"Schnellkurs","label":"Schnellkurs","chip":"Schnellkurs","abbr":"SK","fr":"Cours express","frShort":"Express","overview":"schnellkurs.html","exam":null,"double":[],"total":9,"units":["SK01","SK02","SK03","SK04","SK05","SK06","SK07","SK08","SK09"],"ref":"SK00","lastKey":"lastSK","examKey":"examSK","q":"S","kind":"quick"}]</script>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#f8f0f0" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#2e2321" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="assets/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="assets/icon-180.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Logopädie-Kurse">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="format-detection" content="telephone=no">
+<meta name="description" content="Lernkurse Logopädie: der N. vagus und die Stimme, Laryngitis. Abschnitte mit Abbildungen, Lernkarten, Quiz und Merkheft.">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="de_DE">
+<meta property="og:title" content="9 · Erkennungsquiz · Schnellkurs">
+<meta property="og:description" content="Zwei Kurse: N. vagus und Stimme, Laryngitis. Mit Abbildungen, Lernkarten, Quiz und Merkheft.">
+<meta property="og:image" content="https://rioquentin.github.io/vagus-kurs/assets/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<script src="assets/peony.js?v=mw5lkj8g" defer></script>
+<script src="assets/app.js?v=mw5lkj8g" defer></script>
+<script src="assets/sync-config.js?v=mw5lkj8g" defer></script>
+<script src="assets/report.js?v=mw5lkj8g" defer></script>
+<script src="assets/sync.js?v=mw5lkj8g" defer></script>
+<script src="assets/study.js?v=mw5lkj8g" defer></script>
+<script src="assets/tools.js?v=mw5lkj8g" defer></script>
+<script src="assets/tour.js?v=mw5lkj8g" defer></script>
+<script src="assets/i18n.js?v=mw5lkj8g" defer></script>
+</head>
+<body data-page="SK09" data-course="s">
+<div class="intro" role="dialog" aria-label="Logopädie-Kurse"><div class="intro-in">
+<svg class="gold" viewBox="-6 -6 173.8 112" role="presentation">
+<defs><filter id="chalk" x="-5%" y="-5%" width="110%" height="110%"><feTurbulence type="fractalNoise" baseFrequency="1.4" numOctaves="2" seed="7"/><feColorMatrix values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 2.2 -0.3"/><feComposite in="SourceGraphic" operator="in" result="grain"/><feTurbulence type="fractalNoise" baseFrequency=".08" numOctaves="1" seed="3" result="warp"/><feDisplacementMap in="grain" in2="warp" scale="1.2"/></filter></defs>
+<g filter="url(#chalk)">
+<path class="g-frame" d="M0 0H161.8V100H0Z" pathLength="1"/>
+<path class="g-cut" style="--i:0" d="M100 0L100 100" pathLength="1"/>
+<path class="g-cut" style="--i:1" d="M100 61.8L161.8 61.8" pathLength="1"/>
+<path class="g-cut" style="--i:2" d="M123.61 61.8L123.61 100" pathLength="1"/>
+<path class="g-cut" style="--i:3" d="M100 76.39L123.61 76.39" pathLength="1"/>
+<path class="g-cut" style="--i:4" d="M114.59 61.8L114.59 76.39" pathLength="1"/>
+<path class="g-cut" style="--i:5" d="M114.59 70.82L123.61 70.82" pathLength="1"/>
+<path class="g-cut" style="--i:6" d="M118.03 70.82L118.03 76.39" pathLength="1"/>
+<path class="g-cut" style="--i:7" d="M114.59 72.95L118.03 72.95" pathLength="1"/>
+<path class="g-cut" style="--i:8" d="M116.72 70.82L116.72 72.95" pathLength="1"/>
+<path class="g-cut" style="--i:9" d="M116.72 72.14L118.03 72.14" pathLength="1"/>
+<path class="g-spiral" d="M0 100 A100 100 0 0 1 100 0 A61.8 61.8 0 0 1 161.8 61.8 A38.2 38.2 0 0 1 123.61 100 A23.61 23.61 0 0 1 100 76.39 A14.59 14.59 0 0 1 114.59 61.8 A9.02 9.02 0 0 1 123.61 70.82 A5.57 5.57 0 0 1 118.03 76.39 A3.44 3.44 0 0 1 114.59 72.95 A2.13 2.13 0 0 1 116.72 70.82 A1.32 1.32 0 0 1 118.03 72.14" pathLength="1"/>
+</g></svg>
+<span class="intro-phi" aria-hidden="true">φ ≈ 1,618</span><b class="intro-t">Logopädie-Kurse</b>
+<button type="button" class="intro-go" data-intro-go>Zum Kurs <span aria-hidden="true">→</span></button></div></div>
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="topbar">
+  <button class="tbtn menu-btn" type="button" data-open-nav aria-controls="sidebar" aria-expanded="false" aria-label="Inhaltsverzeichnis öffnen"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+  <a class="brand" href="schnellkurs.html"><b><i class="b-long">Schnellkurs: alle Stimmstörungen auf einen Blick</i><i class="b-short">Schnellkurs</i></b><span>Logopädie-Kurse</span></a>
+  <a class="tbtn prog" href="schnellkurs.html#fortschritt" title="Erledigte Abschnitte"><i></i><span data-prog data-course="s">0 / 9</span></a>
+  <button class="tbtn" type="button" data-open-search aria-keyshortcuts="/" aria-label="Kurs durchsuchen"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg><span class="lbl">Suchen</span></button>
+  <button class="tbtn" type="button" data-open-legend aria-label="Farb- und Formcode"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="6" height="6" rx="1"/><rect x="4" y="14" width="6" height="6" rx="3"/><path d="M14 7h6M14 17h6"/></svg><span class="lbl">Legende</span></button>
+  <button class="tbtn acc-btn" type="button" data-open-account hidden><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8.5" r="3.5"/><path d="M5 20c.8-3.6 3.6-5.5 7-5.5s6.2 1.9 7 5.5"/></svg><span class="lbl">Anmelden</span><i class="acc-dot" data-acc-dot aria-hidden="true"></i></button>
+  <button class="tbtn lang-btn" type="button" data-ui-toggle aria-label="Sprache der Oberfläche: English"><span class="aa" aria-hidden="true">EN</span></button>
+  <button class="tbtn" type="button" data-open-reading aria-label="Lesemodus: Schrift und Größe"><span class="aa" aria-hidden="true">Aa</span><span class="lbl">Lesen</span></button>
+  <button class="tbtn" type="button" data-theme-toggle aria-label="Farbschema: System"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="M12 4a8 8 0 0 0 0 16z" fill="currentColor"/></svg><span class="lbl" data-theme-label>System</span></button>
+  <span class="readbar" aria-hidden="true"></span>
+</header>
+<div class="shell">
+<nav class="sidebar" id="sidebar" aria-label="Kursinhalt">
+  <div class="side-head"><a class="eyebrow side-course" href="schnellkurs.html">Schnellkurs: alle Stimmstörungen auf einen Blick · 9 Abschnitte</a><button class="tbtn side-close" type="button" data-close-nav aria-label="Schließen"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+  <ol class="ctoc">
+    <li><a class="ctoc-unit" href="schnellkurs-01-entzuendung.html" data-unit="SK01"><span class="ctoc-n">1</span><span class="ctoc-t">Gruppe A · Entzündung und Reizung der Schleimhaut</span><span class="mark"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 6.3l2.3 2.3 4.7-5"/></svg></span></a></li>
+    <li><a class="ctoc-unit" href="schnellkurs-02-funktionell.html" data-unit="SK02"><span class="ctoc-n">2</span><span class="ctoc-t">Gruppe B · Funktionell</span><span class="mark"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 6.3l2.3 2.3 4.7-5"/></svg></span></a></li>
+    <li><a class="ctoc-unit" href="schnellkurs-03-steuerung.html" data-unit="SK03"><span class="ctoc-n">3</span><span class="ctoc-t">Gruppe C · Steuerung gestört</span><span class="mark"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 6.3l2.3 2.3 4.7-5"/></svg></span></a></li>
+    <li><a class="ctoc-unit" href="schnellkurs-04-raumforderungen.html" data-unit="SK04"><span class="ctoc-n">4</span><span class="ctoc-t">Gruppe D · Raumforderungen auf der Stimmlippe</span><span class="mark"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 6.3l2.3 2.3 4.7-5"/></svg></span></a></li>
+    <li><a class="ctoc-unit" href="schnellkurs-05-gefaesse-narben-bau.html" data-unit="SK05"><span class="ctoc-n">5</span><span class="ctoc-t">Gruppe E · Gefäße, Narben und Bau der Stimmlippe</span><span class="mark"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 6.3l2.3 2.3 4.7-5"/></svg></span></a></li>
+    <li><a class="ctoc-unit" href="schnellkurs-06-verletzung-gelenk.html" data-unit="SK06"><span class="ctoc-n">6</span><span class="ctoc-t">Gruppe F · Verletzung und Gelenk</span><span class="mark"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 6.3l2.3 2.3 4.7-5"/></svg></span></a></li>
+    <li><a class="ctoc-unit" href="schnellkurs-07-hormone-alter.html" data-unit="SK07"><span class="ctoc-n">7</span><span class="ctoc-t">Gruppe G · Hormone und Lebensalter</span><span class="mark"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 6.3l2.3 2.3 4.7-5"/></svg></span></a></li>
+    <li><a class="ctoc-unit" href="schnellkurs-08-erkennen.html" data-unit="SK08"><span class="ctoc-n">8</span><span class="ctoc-t">Vom Symptom zur Diagnose</span><span class="mark"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 6.3l2.3 2.3 4.7-5"/></svg></span></a></li>
+    <li><a class="ctoc-unit" href="schnellkurs-09-quiz.html" data-unit="SK09" aria-current="page"><span class="ctoc-n">9</span><span class="ctoc-t">Erkennungsquiz</span><span class="mark"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 6.3l2.3 2.3 4.7-5"/></svg></span></a>
+      <ol class="ctoc-sub"><li><a href="#h-24-faelle">24 Fälle</a></li><li><a href="#h-nach-dem-quiz">Nach dem Quiz</a></li></ol></li>
+  </ol>
+  <a class="ctoc-ref" href="schnellkurs-00-start.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h10a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3z"/><path d="M5 17a3 3 0 0 1 3-3h10"/></svg>Übersicht</a>
+  <div class="side-sep eyebrow">Andere Kurse</div>
+  <a class="ctoc-ref ctoc-other" href="vagus.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 11l8-7 8 7M6 9.5V20h12V9.5"/></svg>N. vagus und Stimme</a>
+  <a class="ctoc-ref ctoc-other" href="laryngitis.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 11l8-7 8 7M6 9.5V20h12V9.5"/></svg>Laryngitis</a>
+  <a class="ctoc-ref ctoc-other" href="funktionell.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 11l8-7 8 7M6 9.5V20h12V9.5"/></svg>Funktionelle, psychogene und neurogene Stimmstörungen</a>
+  <a class="ctoc-ref ctoc-other" href="gutartig.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 11l8-7 8 7M6 9.5V20h12V9.5"/></svg>Gutartige Stimmlippenveränderungen</a>
+  <a class="ctoc-ref ctoc-other" href="trauma-hormone.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 11l8-7 8 7M6 9.5V20h12V9.5"/></svg>Verletzungen, Gelenk, Hormone und Mutation</a>
+  <div class="side-sep eyebrow">Üben und Nachschlagen</div>
+  <a class="ctoc-ref" href="index.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 11l8-7 8 7M6 9.5V20h12V9.5"/></svg>Alle Kurse · Startseite</a>
+  <a class="ctoc-ref" href="schnellkurs.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 11l8-7 8 7M6 9.5V20h12V9.5"/></svg>Kursübersicht</a>
+  <a class="ctoc-ref" href="lernkarten.html"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="6" width="14" height="13" rx="2"/><path d="M7 3h12a2 2 0 0 1 2 2v11"/></svg>Lernkarten<span class="due-pill" data-due hidden></span></a>
+  <a class="ctoc-ref" href="merkheft.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h10a1 1 0 0 1 1 1v17l-6-4-6 4V4a1 1 0 0 1 1-1z"/></svg>Merkheft<span class="due-pill soft" data-notes-n hidden></span></a>
+  <a class="ctoc-ref" href="merkheft.html#schwachstellen"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3.5"/></svg>Schwachstellen<span class="due-pill" data-miss-n hidden></span></a>
+  <a class="ctoc-ref" href="begriffe.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h9M4 10h16M4 15h9M4 20h16"/></svg>Fachbegriffe</a>
+  <button class="ctoc-ref" type="button" data-open-search><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg>Im Kurs suchen</button>
+  <button class="ctoc-ref" type="button" data-open-legend><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="6" height="6" rx="1"/><rect x="4" y="14" width="6" height="6" rx="3"/><path d="M14 7h6M14 17h6"/></svg>Farb- und Formcode</button>
+  <button class="ctoc-ref" type="button" data-open-tour><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h10a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3z"/><path d="M5 17a3 3 0 0 1 3-3h10"/></svg>Anleitung: so lernst du hier</button>
+  <a class="ctoc-ref" href="00-styleguide.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h10a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3z"/><path d="M5 17a3 3 0 0 1 3-3h10"/></svg>Visueller Styleguide (EN)</a>
+</nav>
+<div class="scrim" data-close-nav></div>
+<main id="main" lang="de">
+<div class="wrap"><svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <pattern id="hatch" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="7" height="7" fill="#C2185B" fill-opacity=".16"/><line x1="0" y1="0" x2="0" y2="7" stroke="#C2185B" stroke-width="2"/></pattern>
+    <marker id="aI" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="#4A5862"/></marker>
+    <marker id="aS" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="#13827E"/></marker>
+    <marker id="aR" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="#6A4C9C"/></marker>
+    <marker id="aL" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="#C2185B"/></marker>
+  </defs>
+</svg>
+<header>
+  <span class="eyebrow">Schnellkurs · Erkennungsquiz</span>
+  <h1>Erkennungsquiz: Welche Krankheit ist es?</h1>
+  <div class="meta"><span>≈ 15 Minuten</span><span>24 kurze Fälle</span><span><a href="schnellkurs-00-start.html">Zur Übersicht</a></span></div>
+  <div class="box hook">
+    <span class="eyebrow">So geht’s</span>
+    <p>Lies den Fall, entscheide dich, und lies die Rückmeldung. Bei jeder Frage steht, aus welcher Gruppe sie stammt. Liegst du falsch, öffne die verlinkte Karte und lies nur das Feld „Erkennst du an“.</p>
+  </div>
+</header>
+
+<section>
+  <h2 id="h-24-faelle">24 Fälle</h2>
+  <div class="row"><span class="score" id="rScore">0 von 24 richtig · 0 beantwortet</span></div>
+  <div id="review" style="display:grid;gap:14px"></div>
+</section>
+
+<section>
+  <h2 id="h-nach-dem-quiz">Nach dem Quiz</h2>
+  <div class="box">
+    <ul>
+      <li><b>20 oder mehr richtig</b>: Gut. Wiederhole in einer Woche, dann gemischt mit den Probeprüfungen der großen Kurse.</li>
+      <li><b>Weniger</b>: Lies morgen die Seite <a href="schnellkurs-08-erkennen.html">Vom Symptom zur Diagnose</a> und die Tabellen „Auf einen Blick“ der Gruppen, in denen du Fehler hattest. Dann das Quiz noch einmal.</li>
+    </ul>
+  </div>
+</section>
+
+<script>
+window.QUIZ={
+R:[
+ {s:'Gruppe A',q:'Kind, 2 Jahre, wacht nachts auf: bellender Husten, Ziehen beim Einatmen, heiser. Am Tag vorher Schnupfen.',o:['Pseudokrupp','Epiglottitis','Fremdkörper','Asthma'],a:0,e:'Die Trias bellender Husten, inspiratorischer Stridor, Heiserkeit; nachts, plötzlich. <a href="schnellkurs-01-entzuendung.html#d-pseudokrupp">Karte</a>'},
+ {s:'Gruppe A',q:'Kind, 4 Jahre, hohes Fieber, sehr krank, sabbert, sitzt vorgebeugt, Stimme kloßig, hustet kaum.',o:['Epiglottitis','Pseudokrupp','Laryngitis acuta','Kontaktgranulom'],a:0,e:'Nicht in den Hals schauen, nicht hinlegen, Ruhe, 112. <a href="schnellkurs-01-entzuendung.html#d-epiglottitis">Karte</a>'},
+ {s:'Gruppe A',q:'Raucherin, 58, wird am Telefon für einen Mann gehalten. Beide Stimmlippen sackartig geschwollen.',o:['Reinke-Ödem','Polyp','Knötchen','Presbyphonie'],a:0,e:'Flüssigkeit im Reinke-Raum beidseits, tiefe raue Stimme. <a href="schnellkurs-01-entzuendung.html#d-reinke">Karte</a>'},
+ {s:'Gruppe A',q:'Mann, 45, räuspert ständig, Kloßgefühl; Verdickung am Processus vocalis, er spricht mit hartem Einsatz.',o:['Kontaktgranulom','Leukoplakie','Zyste','Papillom'],a:0,e:'Harter Zusammenschlag hinten, oft mit Reflux. <a href="schnellkurs-01-entzuendung.html#d-kontaktgranulom">Karte</a>'},
+ {s:'Gruppe A',q:'Raucher, 62, weißer Fleck auf der Stimmlippe. Was ist das richtige Wort für den Befund?',o:['Leukoplakie','Karzinom','Pilzinfektion','Knötchen'],a:0,e:'Leukoplakie ist ein Befund, keine Diagnose; erst die Histologie zeigt die Art. <a href="schnellkurs-01-entzuendung.html#d-leukoplakie">Karte</a>'},
+ {s:'Gruppe B',q:'Lehrerin, 38: freitags heiser, montags fast nicht; Kloßgefühl, Räusperzwang; Stimmlippen ohne Befund.',o:['Hyperfunktionelle Dysphonie (Berufsdysphonie)','Spasmodische Dysphonie','Zyste','Psychogene Aphonie'],a:0,e:'Belastungsabhängig, gepresst, ohne organischen Befund. <a href="schnellkurs-02-funktionell.html#d-berufsdysphonie">Karte</a>'},
+ {s:'Gruppe B',q:'Pflegerin, 45: Stimme leise und verhaucht, sie drückt, damit man sie hört. Ovaler Spalt, beide Seiten beweglich, Taschenfalten nähern sich an.',o:['Hypofunktion mit sekundärer Hyperfunktion','Reine Hyperfunktion','Parese','Sulcus Typ III'],a:0,e:'Verhaucht plus Pressen oberhalb: Mischform; keine Stoßübungen am Anfang. <a href="schnellkurs-02-funktionell.html#d-hypo-sek-hyper">Karte</a>'},
+ {s:'Gruppe B',q:'Patientin nach Teilentfernung einer Stimmlippe: Stimme entsteht über die Taschenfalten, rau, aber verständlich.',o:['Erwünschte Taschenfaltenphonation','Unerwünschte Taschenfaltenphonation','Hyperfunktion','Synechie'],a:0,e:'Die Stimmlippen können nicht mehr schwingen: Ersatzstimme optimieren. <a href="schnellkurs-02-funktionell.html#d-taschenfalten">Karte</a>'},
+ {s:'Gruppe C',q:'Frau, 39: nach einem Streit seit 10 Tagen nur Flüstern. Beim Räuspern klingt es deutlich. Beide Stimmlippen beweglich.',o:['Psychogene Aphonie','Stimmlippenparese','Spasmodische Dysphonie','Laryngitis acuta'],a:0,e:'Husten/Räuspern mit Klang bei Flüstern: Leitzeichen. <a href="schnellkurs-03-steuerung.html#d-psychogen">Karte</a>'},
+ {s:'Gruppe C',q:'Ruderin, 16: am Rennende plötzlich keine Luft, Pfeifen beim Einatmen, nach 2 Minuten vorbei; Asthmaspray hilft nicht.',o:['EILO / VCD','Asthma','Pseudokrupp','Papillomatose'],a:0,e:'Einatmen schwer, am Leistungshöhepunkt, schnell vorbei; Diagnostik mit CLE-Test. <a href="schnellkurs-03-steuerung.html#d-vcd">Karte</a>'},
+ {s:'Gruppe C',q:'Callcenter-Mitarbeiterin, 41: gepresst, bricht mitten im Wort ab; Entspannungstherapie half nicht; Flüstern und Lachen normal.',o:['Spasmodische Dysphonie','Hyperfunktion','Psychogene Dysphonie','Knötchen'],a:0,e:'Fokale Dystonie, aufgabenspezifisch; Standard Botulinumtoxin. <a href="schnellkurs-03-steuerung.html#d-spasmodisch">Karte</a>'},
+ {s:'Gruppe C',q:'Nach Schilddrüsen-OP: Stimme behaucht, eine Stimmlippe steht, Aryknorpel normal gelegen.',o:['Stimmlippenparese','Aryknorpelluxation','Ankylose','Sulcus'],a:0,e:'Nerv (N. recurrens), nicht Gelenk. <a href="schnellkurs-03-steuerung.html#d-parese">Karte</a>'},
+ {s:'Gruppe D',q:'Erzieherin, 30: hohe leise Töne gelingen nicht. Beidseits symmetrische Verdickungen, Sanduhrspalt.',o:['Knötchen','Zyste','Polyp','Papillome'],a:0,e:'Beidseits am Übergang vorderes/mittleres Drittel. <a href="schnellkurs-04-raumforderungen.html#d-knoetchen">Karte</a>'},
+ {s:'Gruppe D',q:'Trainer, 48, Raucher: nach Turnier plötzlich heiser, „zwei Töne gleichzeitig“, einseitige gestielte Veränderung.',o:['Polyp','Knötchen','Reinke-Ödem','Sulcus'],a:0,e:'Einseitig, nach Stimmtrauma, Diplophonie; meist OP mit Histologie. <a href="schnellkurs-04-raumforderungen.html#d-polyp">Karte</a>'},
+ {s:'Gruppe D',q:'Sängerin: „Knötchen“ seit einem Jahr, 20 Stunden Therapie ohne Besserung; links rund, Welle stark vermindert.',o:['Zyste','Weiche Knötchen','Hyperfunktion','Varix'],a:0,e:'Eine Zyste hat eine Wand und bildet sich nicht zurück. <a href="schnellkurs-04-raumforderungen.html#d-zyste">Karte</a>'},
+ {s:'Gruppe D',q:'Kind, 3: Heiserkeit nimmt seit Monaten zu, jetzt Pfeifen beim Toben; traubige Wucherungen.',o:['Larynxpapillomatose','Schreiknötchen','Pseudokrupp','Diaphragma'],a:0,e:'HPV 6 und 11; dringend laryngoskopieren. <a href="schnellkurs-04-raumforderungen.html#d-papillomatose">Karte</a>'},
+ {s:'Gruppe E',q:'Sängerin, 26: mitten in der Probe ein „Knack“, seitdem rau; sie nimmt Ibuprofen.',o:['Stimmlippenblutung','Knötchen','Psychogene Dysphonie','Sulcus'],a:0,e:'Stimmnotfall; strikte Stimmruhe nach Befund. <a href="schnellkurs-05-gefaesse-narben-bau.html#d-blutung">Karte</a>'},
+ {s:'Gruppe E',q:'Lehrer, 35: „schon immer“ leise und verhaucht, Therapien halfen wenig; spindelförmiger Spalt, Welle an der Kante stark vermindert.',o:['Sulcus glottidis','Vocalisatrophie','Hypofunktion','Presbyphonie'],a:0,e:'Defekt der Hülle; Atrophie hätte eine erhaltene Welle. <a href="schnellkurs-05-gefaesse-narben-bau.html#d-sulcus">Karte</a>'},
+ {s:'Gruppe E',q:'Kind, 2: heiser seit Geburt, schwacher Schrei, Herz-OP als Säugling; Gewebeplatte vorn zwischen den Stimmlippen.',o:['Diaphragma (Segel)','Papillomatose','Knötchen','Zyste'],a:0,e:'An 22q11.2-Deletion denken. <a href="schnellkurs-05-gefaesse-narben-bau.html#d-synechie">Karte</a>'},
+ {s:'Gruppe F',q:'Frau, 45: seit dem Aufwachen nach Narkose behaucht, Schluckschmerz; Aryknorpel verlagert, Stimmlippen auf unterschiedlicher Höhe.',o:['Aryknorpelluxation','Parese','Ankylose','Kontaktgranulom'],a:0,e:'Zeitkritisch: frühe Reposition. <a href="schnellkurs-06-verletzung-gelenk.html#d-aryluxation">Karte</a>'},
+ {s:'Gruppe F',q:'Rheumapatientin, 62: Ziehen beim Einatmen auf der Treppe; beide Stimmlippen nahe der Mitte, EMG normal.',o:['Krikoarytänoidankylose','Beidseitige Parese','VCD','Reinke-Ödem'],a:0,e:'Gelenk steif, Nerv gesund; Hauptproblem Atmung. <a href="schnellkurs-06-verletzung-gelenk.html#d-ankylose">Karte</a>'},
+ {s:'Gruppe G',q:'Junger Mann, 17: Stimme hoch und dünn, Kehlkopf normal groß, beim Räuspern klingt er tief.',o:['Mutationsfistelstimme','Kallmann-Syndrom','Psychogene Aphonie','Presbyphonie'],a:0,e:'Meist funktionell; Gutzmann-Druckversuch. <a href="schnellkurs-07-hormone-alter.html#d-mutationsfistelstimme">Karte</a>'},
+ {s:'Gruppe G',q:'Bodybuilderin, 34: Stimme seit zwei Monaten tiefer und kippt; sie nimmt ein „Leistungspräparat“.',o:['Virilisierung durch Androgene','Prämenstruelles Stimmsyndrom','Reinke-Ödem','Mutatio perversa'],a:0,e:'Oft irreversibel: sofort ärztlich. <a href="schnellkurs-07-hormone-alter.html#d-hormone-frau">Karte</a>'},
+ {s:'Gruppe G',q:'Mann, 81: Stimme dünn und höher, Enkel verstehen ihn am Telefon schlecht; Stimmlippen gebogen, Welle erhalten.',o:['Presbyphonie','Sulcus','Mutationsfistelstimme','Spasmodische Dysphonie'],a:0,e:'Hörtest nicht vergessen; Stimmtherapie wirkt. <a href="schnellkurs-07-hormone-alter.html#d-presbyphonie">Karte</a>'}
+]
+};
+</script>
+<script>
+(function(){
+  var D=window.QUIZ||{};
+  var R=D.R||[],LABELS=D.LABELS||[],LOPTS=D.LOPTS||[],HO=D.HO||[],CASES=D.CASES||[],E=D.E||[],CMP=D.CMP||[],SHORT=D.SHORT||[],ORAL=D.ORAL||[];
+  function el(t,a,h){var e=document.createElement(t);if(a)for(var k in a)e.setAttribute(k,a[k]);if(h!=null)e.innerHTML=h;return e;}
+  var K='ABCD';
+  // deterministic shuffle of answer options so the correct letter varies (same order on every load)
+  function shuf(list,salt){list.forEach(function(it,i){
+    var a0=(i+1)*374761393+salt*668265263;function rnd(){a0|=0;a0=a0+0x6D2B79F5|0;var t=Math.imul(a0^a0>>>15,1|a0);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;}
+    var idx=it.o.map(function(_,k){return k;});
+    for(var k=idx.length-1;k>0;k--){var j=Math.floor(rnd()*(k+1));var t=idx[k];idx[k]=idx[j];idx[j]=t;}
+    it.o=idx.map(function(k){return it.o[k];});it.a=idx.indexOf(it.a);
+  });}
+  var cs=0;(R[0]?R[0].q:'').split('').forEach(function(ch){cs=(cs*31+ch.charCodeAt(0))%100003;});
+  if(D.shuffle!==false){shuf(R,7+cs);shuf(E,13+cs);}
+
+  var rC=0,rA=0,rS=document.getElementById('rScore');
+  R.forEach(function(it,i){
+    var c=el('div',{class:'q'});
+    var h=el('div',{class:'qhead'});h.appendChild(el('span',{class:'stem'},(i+1)+'. '+it.q));h.appendChild(el('span',{class:'src'},it.s));c.appendChild(h);
+    var os=el('div',{class:'opts'});var fb=el('p',{class:'fb',hidden:''});
+    it.o.forEach(function(t,j){
+      var b=el('button',{type:'button',class:'opt',id:'r'+i+'o'+j},'<span class="k">'+K[j]+'</span><span>'+t+'</span>');
+      b.addEventListener('click',function(){
+        if(c.dataset.done)return;c.dataset.done='1';rA++;
+        var ok=j===it.a;if(ok)rC++;
+        os.querySelectorAll('button').forEach(function(x,k){x.disabled=true;if(k===it.a)x.classList.add('ok');});
+        if(!ok)b.classList.add('bad');
+        fb.hidden=false;fb.className='fb '+(ok?'ok':'bad');
+        fb.innerHTML='<b>'+(ok?'Richtig.':'Nicht ganz. Richtig ist '+K[it.a]+'.')+'</b> '+it.e;
+        rS.textContent=rC+' von '+R.length+' richtig · '+rA+' beantwortet';
+      });
+      os.appendChild(b);
+    });
+    c.appendChild(os);c.appendChild(fb);document.getElementById('review').appendChild(c);
+  });
+
+  var lg=document.getElementById('labels');if(lg){
+  LABELS.forEach(function(l){
+    var r=el('div',{class:'lab'});r.appendChild(el('span',{class:'n'},String(l.n)));
+    var s=el('select',{id:'lab'+l.n,'aria-label':'Struktur '+l.n});s.appendChild(el('option',{value:''},'– wählen –'));
+    LOPTS.forEach(function(o){s.appendChild(el('option',{value:o},o));});
+    r.appendChild(s);lg.appendChild(r);
+  });
+  document.getElementById('labCheck').addEventListener('click',function(){
+    var n=0;LABELS.forEach(function(l){var s=document.getElementById('lab'+l.n);var ok=s.value===l.a;if(ok)n++;s.className=ok?'ok':'bad';});
+    document.getElementById('labScore').textContent=n+' von '+LABELS.length+' richtig'+(n<LABELS.length?' · '+(D.labelHint||''):'');
+  });}
+
+  var hw=document.getElementById('handout');if(hw)
+  HO.forEach(function(h,i){
+    var d=el('div',{style:'display:grid;gap:6px'});d.appendChild(el('p',null,'<b>'+(i+1)+'.</b> '+h.t));
+    var row=el('div',{class:'self',role:'group','aria-label':'Bewertung Aussage '+(i+1)});var fb=el('p',{class:'fb',hidden:''});
+    ['richtig','ungenau','falsch'].forEach(function(v){
+      var b=el('button',{type:'button','aria-pressed':'false',id:'ho'+i+v},v);
+      b.addEventListener('click',function(){
+        if(d.dataset.done)return;d.dataset.done='1';b.setAttribute('aria-pressed','true');
+        var ok=v===h.a;fb.hidden=false;fb.className='fb '+(ok?'ok':'bad');
+        fb.innerHTML='<b>'+(ok?'Richtig erkannt.':'Gemeint ist: '+h.a+'.')+'</b> '+h.e;
+      });
+      row.appendChild(b);
+    });
+    d.appendChild(row);d.appendChild(fb);hw.appendChild(d);
+  });
+
+  CASES.forEach(function(c,i){
+    var d=el('div',{class:'q'});d.appendChild(el('span',{class:'eyebrow'},c.t));d.appendChild(el('p',{class:'stem'},c.q));
+    var m=el('div',{class:'model',hidden:''},c.m);
+    var b=el('button',{type:'button',class:'btn ghost',id:'case'+i},'Musterlösung aufdecken');
+    b.addEventListener('click',function(){m.hidden=!m.hidden;b.textContent=m.hidden?'Musterlösung aufdecken':'Musterlösung verbergen';});
+    d.appendChild(b);d.appendChild(m);document.getElementById('cases').appendChild(d);
+  });
+
+  var ans={};
+  E.forEach(function(it,i){
+    var c=el('div',{class:'q'});
+    var h=el('div',{class:'qhead'});h.appendChild(el('span',{class:'stem'},(i+1)+'. '+it.q));c.appendChild(h);
+    var os=el('div',{class:'opts'});
+    it.o.forEach(function(t,j){
+      var b=el('button',{type:'button',class:'opt','aria-pressed':'false',id:'e'+i+'o'+j},'<span class="k">'+K[j]+'</span><span>'+t+'</span>');
+      b.addEventListener('click',function(){if(c.dataset.graded)return;ans[i]=j;os.querySelectorAll('button').forEach(function(x){x.setAttribute('aria-pressed','false');});b.setAttribute('aria-pressed','true');});
+      os.appendChild(b);
+    });
+    c.appendChild(os);c.dataset.i=i;document.getElementById('exam').appendChild(c);
+  });
+
+  var tb=document.getElementById('cmpRows');
+  CMP.forEach(function(r,i){
+    var tr=el('tr');tr.appendChild(el('td',null,'<b>'+r.m+'</b>'));
+    var s=el('select',{id:'cmp'+i,'aria-label':'Zuordnung '+r.m});[''].concat(D.cmpOpts||[]).forEach(function(o){s.appendChild(el('option',{value:o},o||'– wählen –'));});
+    var td=el('td');td.appendChild(s);tr.appendChild(td);tb.appendChild(tr);
+  });
+
+  var self={};
+  SHORT.forEach(function(it,i){
+    var c=el('div',{class:'q'});
+    var h=el('div',{class:'qhead'});h.appendChild(el('span',{class:'stem'},'K'+(i+1)+'. '+it.q));h.appendChild(el('span',{class:'src'},it.s));c.appendChild(h);
+    var m=el('div',{class:'model',hidden:''},it.m);
+    var b=el('button',{type:'button',class:'btn ghost',id:'sh'+i},'Musterantwort aufdecken');
+    var sf=el('div',{class:'self',hidden:'',role:'group','aria-label':'Selbstbewertung K'+(i+1)});
+    [0,1,2].forEach(function(p){var x=el('button',{type:'button','aria-pressed':'false',id:'sh'+i+'p'+p},p+' Punkt'+(p===1?'':'e'));x.addEventListener('click',function(){self[i]=p;sf.querySelectorAll('button').forEach(function(y){y.setAttribute('aria-pressed','false');});x.setAttribute('aria-pressed','true');});sf.appendChild(x);});
+    b.addEventListener('click',function(){m.hidden=false;sf.hidden=false;b.hidden=true;});
+    c.appendChild(b);c.appendChild(m);c.appendChild(sf);document.getElementById('shorts').appendChild(c);
+  });
+
+  ORAL.forEach(function(t,i){
+    var l=el('label',{class:'check'});var cb=el('input',{type:'checkbox',id:'or'+i});l.appendChild(cb);l.appendChild(el('span',null,t));document.getElementById('oral').appendChild(l);
+  });
+
+  var gb=document.getElementById('grade');if(gb)gb.addEventListener('click',function(){
+    var a=0,weak={};
+    document.querySelectorAll('#exam .q').forEach(function(c){
+      var i=+c.dataset.i,it=E[i];c.dataset.graded='1';
+      var bs=c.querySelectorAll('button');bs.forEach(function(x,k){x.disabled=true;if(k===it.a)x.classList.add('ok');});
+      if(ans[i]===it.a)a++;else{if(ans[i]!=null)bs[ans[i]].classList.add('bad');weak[it.s]=1;}
+    });
+    var b=0;CMP.forEach(function(r,i){var s=document.getElementById('cmp'+i);var ok=s.value===r.a;s.className=ok?'ok':'bad';if(ok)b++;else weak[D.cmpSection||'Vergleich']=1;});
+    var c=0,missing=0;SHORT.forEach(function(it,i){if(self[i]==null)missing++;else{c+=self[i];if(self[i]<2)weak[it.s]=1;}});
+    var oral=document.querySelectorAll('#oral input:checked').length;
+    var tot=a+b+c,max=E.length+CMP.length+SHORT.length*2;
+    var pct=Math.round(100*tot/max);
+    var verdict=pct>=85?'Sehr gut vorbereitet. Halte das Wissen mit dem Wiederholungsplan frisch.':pct>=65?'Solide Grundlage. Arbeite die unten genannten Abschnitte noch einmal mit Abruffragen durch.':'Noch Lücken. Wiederhole die genannten Abschnitte morgen und mach die Probeprüfung in einer Woche erneut.';
+    var ws=Object.keys(weak).sort(function(x,y){return parseInt(x.replace(/\D/g,''),10)-parseInt(y.replace(/\D/g,''),10);});
+    var r=document.getElementById('result');r.hidden=false;r.className='result';
+    r.innerHTML='<span class="eyebrow">Auswertung</span><div class="big">'+tot+' / '+max+' Punkte · '+pct+' %</div>'+
+      '<p>Auswahlfragen '+a+'/'+E.length+' · Vergleich '+b+'/'+CMP.length+' · Kurzantworten '+c+'/'+(SHORT.length*2)+(missing?' ('+missing+' nicht selbst bewertet)':'')+' · Mündlich '+oral+'/'+ORAL.length+' Punkte angesprochen</p>'+
+      '<p><b>'+verdict+'</b></p>'+
+      (ws.length?'<p>Wiederhole gezielt: <b>'+ws.join(', ')+'</b>.</p>':'<p>Keine Schwachstellen in den bewerteten Teilen.</p>')+
+      '<p class="small">Richtige Antworten sind jetzt grün markiert, deine falschen rot. Die Prozentgrenzen sind eine Orientierung, keine offizielle Bewertung.</p>';
+    r.scrollIntoView({behavior:'smooth',block:'start'});
+  });
+})();
+
+</script>
+</div>
+<nav class="pager" aria-label="Abschnitte" lang="de" style="max-width:880px"><div class="done-row" lang="de"><p>Fertig mit diesem Abschnitt? Markiere ihn, dann siehst du in der Kursübersicht, wo du stehst.</p><button class="done-btn" type="button" data-done="SK09" aria-pressed="false"><span class="mark"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 6.3l2.3 2.3 4.7-5"/></svg></span><span>Als erledigt markieren</span></button></div><div class="nav2"><a class="prev" href="schnellkurs-08-erkennen.html" rel="prev"><span class="eyebrow">← Zurück · 8</span><b>Vom Symptom zur Diagnose</b></a><a class="next" href="schnellkurs.html"><span class="eyebrow">Geschafft →</span><b>Zur Kursübersicht</b></a></div></nav>
+</main>
+</div>
+<dialog class="legend" id="legend" aria-labelledby="lg-t"><i class="orn tl" aria-hidden="true">❦</i><i class="orn tr" aria-hidden="true">❦</i><i class="orn bl" aria-hidden="true">❦</i><i class="orn br" aria-hidden="true">❦</i>
+  <div class="lg-head"><h2 id="lg-t">Farb- und Formcode</h2><button class="tbtn" type="button" data-close-legend aria-label="Schließen"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+  <div class="lg-body">
+    <p>In jeder Abbildung gleich. Farbe ist nie das einzige Signal: Achte auch auf Schild, Beschriftung und Muster.</p>
+    <table><tbody>
+      <tr><td><span class="sw" style="background:var(--c-nerve)"></span></td><td><b>Nerv</b> allgemein, N. vagus</td><td>Beschriftung <code>N.</code> / <code>R.</code>, Linie mit Pfeil</td></tr>
+      <tr><td><span class="sw" style="background:var(--c-sln)"></span></td><td><b>N. laryngeus superior</b></td><td>Schild <code>SLN</code></td></tr>
+      <tr><td><span class="sw" style="background:var(--c-rln)"></span></td><td><b>N. laryngeus recurrens</b></td><td>Schild <code>RLN</code></td></tr>
+      <tr><td><span class="sw" style="background:var(--c-artery)"></span></td><td><b>Arterie</b> (nur als Landmarke)</td><td>Beschriftung <code>A.</code></td></tr>
+      <tr><td><svg width="46" height="26" aria-hidden="true"><rect x=".5" y=".5" width="45" height="25" rx="3" fill="var(--c-muscle)"/><path d="M6 23 L20 3 M16 23 L30 3 M26 23 L40 3" stroke="#fff" stroke-opacity=".45"/></svg></td><td><b>Muskel</b></td><td>Beschriftung <code>M.</code>, Faserlinien</td></tr>
+      <tr><td><span class="sw" style="background:var(--c-cart);border:2px solid var(--c-cart-line)"></span></td><td><b>Knorpel</b></td><td>fester blaugrauer Rand</td></tr>
+      <tr><td><svg width="46" height="26" aria-hidden="true"><rect x=".5" y=".5" width="45" height="25" rx="3" fill="var(--c-bone)"/><g fill="#8A7650"><circle cx="9" cy="8" r="1.3"/><circle cx="22" cy="13" r="1.3"/><circle cx="35" cy="7" r="1.3"/><circle cx="14" cy="20" r="1.3"/><circle cx="31" cy="20" r="1.3"/></g></svg></td><td><b>Knochen</b> (Zungenbein, Schädelbasis)</td><td>getüpfelt</td></tr>
+      <tr><td><svg width="46" height="26" aria-hidden="true"><defs><pattern id="lg-hl" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="6" height="6" fill="var(--c-lesion)" fill-opacity=".18"/><line x1="0" y1="0" x2="0" y2="6" stroke="var(--c-lesion)" stroke-width="2"/></pattern></defs><rect x=".5" y=".5" width="45" height="25" rx="3" fill="url(#lg-hl)" stroke="var(--c-lesion)"/><path d="M17 7 L29 19 M29 7 L17 19" stroke="var(--c-lesion)" stroke-width="3"/></svg></td><td><b>Läsion</b>, krankhafter Befund, Entzündung</td><td>magenta, Schraffur bzw. magenta umrandet; ✕ und „Läsion“</td></tr>
+      <tr><td><span class="sw" style="background:var(--muted-fill);border-color:var(--muted)"></span></td><td><b>Kontext</b>, gerade nicht Thema</td><td>grau, kein Schild</td></tr>
+    </tbody></table>
+    <table><tbody>
+      <tr><td><svg width="46" height="26" aria-hidden="true"><rect x="1" y="3" width="44" height="20" fill="var(--muted-fill)" stroke="var(--ink-2)" stroke-width="1.5"/></svg></td><td><b>Rechteck</b></td><td>Struktur: Nerv, Muskel, Knorpel</td></tr>
+      <tr><td><svg width="46" height="26" aria-hidden="true"><rect x="1" y="3" width="44" height="20" rx="10" fill="var(--action-fill)" stroke="var(--ink-2)" stroke-width="1.5"/></svg></td><td><b>Abgerundet</b></td><td>Funktion oder Wirkung</td></tr>
+      <tr><td><svg width="46" height="26" aria-hidden="true"><path d="M23 2 L44 13 L23 24 L2 13 Z" fill="var(--action-fill)" stroke="var(--ink-2)" stroke-width="1.5"/></svg></td><td><b>Raute</b></td><td>Entscheidung, diagnostische Frage</td></tr>
+      <tr><td><svg width="46" height="26" aria-hidden="true"><rect x="1" y="3" width="44" height="20" rx="3" fill="var(--flag-fill)" stroke="var(--c-artery)" stroke-width="2.5"/><text x="23" y="18" text-anchor="middle" font-weight="700" font-size="14" fill="var(--c-artery)">!</text></svg></td><td><b>Warnzeichen</b></td><td>an HNO / Phoniatrie überweisen</td></tr>
+      <tr><td><svg width="46" height="26" aria-hidden="true"><path d="M3 13 H38" stroke="var(--ink-2)" stroke-width="2"/><path d="M36 8 L44 13 L36 18 Z" fill="var(--ink-2)"/></svg></td><td><b>Pfeil</b></td><td>Nervenverlauf, direkte Ursache. Zum Muskel = motorisch, zum Nerv = sensibel</td></tr>
+      <tr><td><svg width="46" height="26" aria-hidden="true"><path d="M3 13 H38" stroke="var(--ink-2)" stroke-width="2" stroke-dasharray="5 4"/><path d="M36 8 L44 13 L36 18 Z" fill="var(--ink-2)"/></svg></td><td><b>Gestrichelt</b></td><td>indirekt, gering oder umstritten</td></tr>
+      <tr><td><svg width="46" height="26" aria-hidden="true"><rect x="2" y="3" width="42" height="20" fill="var(--plate)" stroke="var(--ink)" stroke-width="3.5"/></svg></td><td><b>Dicker Rand</b></td><td>Fokus: das, was die Abbildung lehrt</td></tr>
+    </tbody></table>
+    <p>Ansichten: anatomisch von vorn (rechts der Patientin = links im Bild) oder von oben auf die Glottis, vorne oben. Endoskopische Bilder tragen die R/L-Marken der Quelle. <a href="00-styleguide.html">Ausführlich im Styleguide</a>.</p>
+  </div>
+</dialog>
+<dialog class="account" id="account" aria-labelledby="acc-t"><i class="orn tl" aria-hidden="true">❦</i><i class="orn tr" aria-hidden="true">❦</i><i class="orn bl" aria-hidden="true">❦</i><i class="orn br" aria-hidden="true">❦</i>
+  <div class="lg-head"><h2 id="acc-t">Konto</h2><button class="tbtn" type="button" data-close-account aria-label="Schließen"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+  <div class="acc-body">
+    <p class="acc-status" data-acc-status aria-live="polite"></p>
+    <form data-acc-view="login" data-acc-form="login">
+      <p>Mit einem Konto werden Fortschritt, Lernkarten, Merkheft und Einstellungen gesichert und sind auf jedem Gerät gleich.</p>
+      <label>E-Mail<input name="email" type="email" autocomplete="username" required></label>
+      <label>Passwort<input name="password" type="password" autocomplete="current-password" required></label>
+      <p class="acc-err" role="alert"></p>
+      <button class="cta" type="submit">Anmelden</button>
+      <p class="acc-alt"><button type="button" class="linkbtn" data-acc-go="signup">Neues Konto anlegen</button> · <button type="button" class="linkbtn" data-acc-go="forgot">Passwort vergessen?</button></p>
+    </form>
+    <form data-acc-view="signup" data-acc-form="signup" hidden>
+      <p>Konto anlegen. Was du auf diesem Gerät schon gelernt hast, wird übernommen.</p>
+      <label>E-Mail<input name="email" type="email" autocomplete="username" required></label>
+      <label>Passwort <span class="note">(mindestens 8 Zeichen)</span><input name="password" type="password" autocomplete="new-password" minlength="8" required></label>
+      <label>Passwort wiederholen<input name="password2" type="password" autocomplete="new-password" minlength="8" required></label>
+      <p class="acc-err" role="alert"></p>
+      <button class="cta" type="submit">Konto anlegen</button>
+      <p class="acc-alt"><button type="button" class="linkbtn" data-acc-go="login">Ich habe schon ein Konto</button></p>
+    </form>
+    <form data-acc-view="forgot" data-acc-form="forgot" hidden>
+      <p>Du bekommst eine E-Mail mit einem Link, über den du ein neues Passwort festlegst.</p>
+      <label>E-Mail<input name="email" type="email" autocomplete="username" required></label>
+      <p class="acc-err" role="alert"></p>
+      <button class="cta" type="submit">Link senden</button>
+      <p class="acc-alt"><button type="button" class="linkbtn" data-acc-go="login">Zurück zur Anmeldung</button></p>
+    </form>
+    <form data-acc-view="newpw" data-acc-form="newpw" hidden>
+      <p>Neues Passwort festlegen.</p>
+      <label>Neues Passwort<input name="password" type="password" autocomplete="new-password" minlength="8" required></label>
+      <p class="acc-err" role="alert"></p>
+      <button class="cta" type="submit">Speichern</button>
+    </form>
+    <div data-acc-view="check" hidden>
+      <p><b>Fast geschafft.</b> Wir haben eine E-Mail an <b data-acc-sent></b> geschickt. Öffne den Link darin auf diesem oder einem anderen Gerät.</p>
+      <p class="note">Nichts angekommen? Schau im Spam-Ordner nach.</p>
+      <p class="acc-alt"><button type="button" class="linkbtn" data-acc-go="login">Zur Anmeldung</button></p>
+    </div>
+    <div data-acc-view="in" hidden>
+      <p>Angemeldet als <b data-acc-email></b></p>
+      <p class="note">Zuletzt synchronisiert: <span data-acc-last></span>. Änderungen werden automatisch gesichert, auch offline Gelerntes, sobald du wieder online bist.</p>
+      <div class="acc-row"><button class="cta" type="button" data-acc-sync>Jetzt synchronisieren</button><button class="cta ghost" type="button" data-acc-logout>Abmelden</button></div>
+      <p class="acc-alt"><button type="button" class="linkbtn" data-acc-wipe>Meine Daten auf dem Server löschen</button></p>
+    </div>
+  </div>
+</dialog>
+<dialog class="legend reading" id="reading" aria-labelledby="rd-t"><i class="orn tl" aria-hidden="true">❦</i><i class="orn tr" aria-hidden="true">❦</i><i class="orn bl" aria-hidden="true">❦</i><i class="orn br" aria-hidden="true">❦</i>
+  <div class="lg-head"><h2 id="rd-t">Lesemodus</h2><button class="tbtn" type="button" data-close-reading aria-label="Schließen"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+  <div class="lg-body">
+    <div class="rd-row"><span class="eyebrow">Sprache der Oberfläche</span><div class="rd-opts"><button type="button" class="chip" data-ui-set="de">Deutsch</button><button type="button" class="chip" data-ui-set="en">English</button></div><p class="note">Menüs, Knöpfe und Hinweise. Der Kurstext bleibt auf Deutsch.</p></div>
+    <div class="rd-row"><span class="eyebrow">Farbschema</span><div class="rd-opts"><button type="button" class="chip" data-theme-set="">System</button><button type="button" class="chip" data-theme-set="light">Hell</button><button type="button" class="chip" data-theme-set="dark">Dunkel</button></div></div>
+    <div class="rd-row"><span class="eyebrow">Schrift</span><div class="rd-opts"><button type="button" class="chip" data-read-font="serif">Gentle (Cormorant)</button><button type="button" class="chip rd-sans" data-read-font="sans">Ruhig (Atkinson, serifenlos)</button></div><p class="note">Für lange Lernsitzungen, am Handy oder abends ist die serifenlose Schrift oft angenehmer.</p></div>
+    <div class="rd-row"><span class="eyebrow">Textgröße</span><div class="rd-opts"><button type="button" class="chip" data-read-size="s">klein</button><button type="button" class="chip" data-read-size="m">normal</button><button type="button" class="chip" data-read-size="l">groß</button><button type="button" class="chip" data-read-size="xl">sehr groß</button></div><p class="note">Abbildungen behalten ihre Größe; zum Vergrößern auf die Abbildung tippen.</p></div>
+    <div class="rd-row"><span class="eyebrow">Vorlesen · Tempo</span><div class="rd-opts"><button type="button" class="chip" data-read-rate="0.85">ruhig</button><button type="button" class="chip" data-read-rate="1">normal</button><button type="button" class="chip" data-read-rate="1.2">zügig</button></div><p class="note">Zum Vorlesen unter jeder Abschnittsüberschrift auf „Vorlesen“ tippen. Die Stimme kommt vom Gerät.</p></div>
+    <div class="rd-row"><span class="eyebrow">Tägliche Erinnerung</span><div class="rd-opts"><label class="rd-time">um <input type="time" value="19:00" data-ics-time></label><button type="button" class="chip" data-ics>In den Kalender eintragen</button></div><p class="note">Legt einen täglichen Termin von 15 Minuten in deinem Kalender an, mit Hinweis und Link zur Tagesrunde. Löschen kannst du ihn dort jederzeit.</p></div>
+    <div class="rd-row" data-push-row hidden><span class="eyebrow">Mitteilung aufs Gerät</span><div class="rd-opts"><label class="rd-time">um <select data-push-hour aria-label="Uhrzeit der Mitteilung"><option value="6">6 Uhr</option><option value="7">7 Uhr</option><option value="8">8 Uhr</option><option value="9">9 Uhr</option><option value="10">10 Uhr</option><option value="11">11 Uhr</option><option value="12">12 Uhr</option><option value="13">13 Uhr</option><option value="14">14 Uhr</option><option value="15">15 Uhr</option><option value="16">16 Uhr</option><option value="17">17 Uhr</option><option value="18">18 Uhr</option><option value="19" selected>19 Uhr</option><option value="20">20 Uhr</option><option value="21">21 Uhr</option><option value="22">22 Uhr</option><option value="23">23 Uhr</option></select></label><button type="button" class="chip" data-push>Erinnern, wenn etwas fällig ist</button><button type="button" class="chip" data-push-off hidden>Ausschalten</button></div><p class="note" data-push-note></p></div>
+    <div class="rd-row"><span class="eyebrow">Lernstand sichern</span><div class="rd-opts"><button type="button" class="chip" data-backup>Als Datei sichern</button><button type="button" class="chip" data-restore>Aus Datei laden</button><input type="file" accept=".json,application/json" data-restore-file hidden></div><p class="note">Karten, Merkheft, Schwachstellen und Einstellungen in einer Datei. Beim Laden wird zusammengeführt: Neueres bleibt erhalten.</p><p class="note rd-msg" data-backup-msg aria-live="polite"></p></div>
+    <div class="rd-row" data-snap-row hidden><span class="eyebrow">Frühere Stände</span><div class="rd-opts"><select data-snap aria-label="Früheren Stand wählen"></select><button type="button" class="chip" data-snap-go>Wiederherstellen</button></div><p class="note" data-snap-note>Der Kurs merkt sich auf diesem Gerät jeden Tag deinen Stand, sieben Tage lang. Vor dem Wiederherstellen wird auch der jetzige Stand gemerkt, du kannst also zurück.</p></div>
+    <p class="note"><button class="linkbtn" type="button" data-open-tour>Anleitung noch einmal ansehen</button></p>
+  </div>
+</dialog>
+<dialog class="draw" id="draw" aria-labelledby="dr-t">
+  <div class="z-bar"><b id="dr-t">Aus dem Gedächtnis zeichnen</b><span class="z-tools"><button class="tbtn" type="button" data-dr="undo">↶<span class="lbl">Rückgängig</span></button><button class="tbtn" type="button" data-dr="clear">Neu</button><button class="tbtn" type="button" data-dr="close" aria-label="Schließen"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></span></div>
+  <div class="dr-tools"><div class="dr-pens" role="group" aria-label="Stiftfarbe"></div><label class="dr-size">Stärke<input type="range" min="1" max="10" value="3" data-dr="size"></label><button type="button" class="chip" data-dr="erase" aria-pressed="false">Radierer</button></div>
+  <div class="dr-main"><div class="dr-stage"><canvas aria-label="Zeichenfläche"></canvas><div class="dr-over wrap" aria-hidden="true"></div></div>
+    <aside class="dr-side"><details open><summary>Schritte</summary><div class="dr-steps"></div></details><div class="dr-cmp"><div class="dr-refs"></div><label class="dr-size">Abbildung darüberlegen<input type="range" min="0" max="90" value="0" data-dr="opacity" disabled></label><p class="note">Erst fertig zeichnen, dann vergleichen. Was fehlt, kommt auf eine Lernkarte.</p><p class="note dr-msg" aria-live="polite"></p></div></aside></div>
+</dialog>
+<dialog class="search" id="search" aria-label="Kurs durchsuchen">
+  <div class="s-head"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg><input type="search" id="search-q" placeholder="Begriff, Muskel, Symptom …" autocomplete="off" spellcheck="false" aria-controls="search-r"><button class="tbtn" type="button" data-close-search aria-label="Schließen"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+  <ol class="s-results" id="search-r" role="listbox" aria-label="Treffer"></ol>
+  <p class="s-foot"><kbd>↑</kbd><kbd>↓</kbd> auswählen · <kbd>Enter</kbd> öffnen · <kbd>/</kbd> Suche von überall</p>
+</dialog>
+<dialog class="zoom" id="zoom" aria-labelledby="zoom-t">
+  <div class="z-bar">
+    <b id="zoom-t">Abbildung</b>
+    <span class="z-tools">
+      <button class="tbtn" type="button" data-z="out" aria-label="Verkleinern"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14"/></svg></button>
+      <span class="z-pct" aria-live="polite">100 %</span>
+      <button class="tbtn" type="button" data-z="in" aria-label="Vergrößern"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></button>
+      <button class="tbtn" type="button" data-z="fit"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="6" width="16" height="12" rx="1.5"/><path d="M9 12h6"/></svg><span class="lbl">Einpassen</span></button>
+      <button class="tbtn" type="button" data-z="close" aria-label="Schließen"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    </span>
+  </div>
+  <div class="z-stage"><div class="wrap z-canvas"></div></div>
+  <p class="z-cap"></p>
+</dialog>
+</body>
+</html>

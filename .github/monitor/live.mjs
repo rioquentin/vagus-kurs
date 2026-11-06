@@ -5,12 +5,16 @@
 import { chromium, webkit } from 'playwright';
 import fs from 'fs';
 const B = process.env.SITE || 'https://rioquentin.github.io/vagus-kurs/';
-const PAGES = ['index', '01-gelenke-muskeln', '02-n-laryngeus-superior', '03-n-laryngeus-recurrens', '04-gesamtkarte', '05-stimmentstehung', '06-schutzfunktionen',
+const FALLBACK = ['index', '01-gelenke-muskeln', '02-n-laryngeus-superior', '03-n-laryngeus-recurrens', '04-gesamtkarte', '05-stimmentstehung', '06-schutzfunktionen',
   '07-laehmungen', '08-abgrenzung', '09-10-wiederholung-pruefung', 'begriffe', 'lernkarten', 'merkheft',
   // zweiter Kurs (seit November 2026) und die beiden Kursübersichten
   'vagus', 'laryngitis', 'laryngitis-00-handout-check', 'laryngitis-01-einordnung', 'laryngitis-02-pathophysiologie', 'laryngitis-03-laryngitis-acuta',
   'laryngitis-04-nicht-infektioes', 'laryngitis-05-chronische-laryngitis', 'laryngitis-06-reflux-granulom', 'laryngitis-07-pseudokrupp',
   'laryngitis-08-kindliche-notfaelle', 'laryngitis-09-logopaedie', 'laryngitis-10-pruefung'];
+// Alle Kurse aus der Kursliste der Seite (assets/courses.json): Übersicht, Nachschlageseite, Abschnitte. Der englische Styleguide (00) bleibt außen vor.
+const COURSES = await fetch(B + 'assets/courses.json?nc=' + Date.now()).then((r) => (r.ok ? r.json() : null)).catch(() => null);
+const PAGES = COURSES ? ['index', 'begriffe', 'lernkarten', 'merkheft'].concat(...COURSES.map((k) => [k.files.overview, k.key !== 'v' && k.files.ref, ...k.files.units].filter(Boolean).map((f) => f.replace(/\.html$/, ''))))
+  : FALLBACK;
 const STATE = { tour: 1, gate: 1, last: '03', done: { '01': true } };
 const bad = [], info = [];
 const within = (pr, ms, what) => Promise.race([pr, new Promise((_, no) => setTimeout(() => no(new Error(`${what}: keine Antwort nach ${ms / 1000} s`)), ms))]);
@@ -105,7 +109,7 @@ function finish(extra = []) {
 const groups = new Map();
 for (const x of bad.concat(extra)) { const i = x.indexOf(': '); const k = i > 0 ? x.slice(i + 2) : x, w = i > 0 ? x.slice(0, i) : ''; if (!groups.has(k)) groups.set(k, []); if (w && !groups.get(k).includes(w)) groups.get(k).push(w); }
 const uniq = [...groups].map(([k, w]) => w.length > 3 ? `${k} (${w.length}×: ${w.slice(0, 3).join(', ')} …)` : w.length ? `${w.join(', ')}: ${k}` : k);
-const text = (uniq.length ? `## ✗ ${uniq.length} Problem(e)\n\n` + uniq.map((x) => '- ' + x).join('\n') : '## ✓ Alles in Ordnung\n\n' + PAGES.length + ' Seiten (N. vagus + Laryngitis) · Chromium + Safari · Handy + Rechner') + (info.length ? '\n\n' + info.map((x) => '- ' + x).join('\n') : '') + '\n';
+const text = (uniq.length ? `## ✗ ${uniq.length} Problem(e)\n\n` + uniq.map((x) => '- ' + x).join('\n') : '## ✓ Alles in Ordnung\n\n' + PAGES.length + ' Seiten (' + (COURSES ? COURSES.map((k) => k.label).join(' + ') : 'N. vagus + Laryngitis') + ') · Chromium + Safari · Handy + Rechner') + (info.length ? '\n\n' + info.map((x) => '- ' + x).join('\n') : '') + '\n';
 console.log(text);
 if (process.env.GITHUB_STEP_SUMMARY) fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, text);
 process.exit(uniq.length ? 1 : 0);

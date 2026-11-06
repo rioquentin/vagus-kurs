@@ -16,20 +16,31 @@ const r = await rpc('push_batch', { p_token: token });
 if (r.status === 404) { console.log('push_batch fehlt in Supabase (supabase/monitor-push.sql) – nichts zu tun.'); process.exit(0); }
 if (!r.ok) { console.error('push_batch:', r.status, await r.text()); process.exit(1); }
 const rows = await r.json();
+// Kursliste der Seite (assets/courses.json, aus courses.mjs). Fehlt sie, gelten die beiden ersten Kurse wie bisher.
+const COURSES = await fetch(SITE + 'assets/courses.json?nc=' + Date.now()).then((x) => (x.ok ? x.json() : null)).catch(() => null) || [
+  { key: 'v', prefix: '', short: 'Vagus', label: 'N. vagus', total: 10, double: ['09'], examKey: 'exam', files: { exam: '09-10-wiederholung-pruefung.html' } },
+  { key: 'l', prefix: 'L', short: 'Laryngitis', label: 'Laryngitis', total: 10, double: [], examKey: 'examL', files: { exam: 'laryngitis-10-pruefung.html' } },
+];
+const ofKey = (id) => { const c = COURSES.filter((k) => id.startsWith(k.prefix) && /^\d\d$/.test(id.slice(k.prefix.length))).sort((a, b) => b.prefix.length - a.prefix.length)[0]; return c && c.key; };
+// Je Kurs: Tage bis zur Prüfung und erledigte Abschnitte. Neue Spalten (exams, done_keys); ältere SQL-Fassung: exam_in/done (Vagus), exam_in_l/done_l (Laryngitis)
+function perCourse(x) {
+  return COURSES.filter((c) => c.files.exam !== null).map((c) => { // Schnellkurs: ohne Prüfung
+    const exam = x.exams ? (x.exams[c.examKey] ?? null) : c.key === 'v' ? x.exam_in : c.key === 'l' ? x.exam_in_l : null;
+    const done = x.done_keys ? x.done_keys.filter((id) => ofKey(id) === c.key).reduce((s, id) => s + ((c.double || []).includes(id) ? 2 : 1), 0)
+      : (c.key === 'v' ? x.done : c.key === 'l' ? x.done_l : 0) || 0;
+    return { name: c.key === 'v' ? 'Vagus' : c.label || c.short, exam, done, total: c.total || 10, page: c.files.exam };
+  });
+}
 // Höchstens eine Mitteilung am Tag. Vorrang: Prüfung in 7 Tagen / morgen (je Kurs) › Sonntag Wochenrückblick › fällige Karten.
-// Zwei Kurse: exam_in / done gehören zum Vagus-Kurs, exam_in_l / done_l zur Laryngitis.
 function message(x) {
   const en = x.ui === 'en', due = x.due || 0, figs = x.figs || 0, pl = (n, one, many) => `${n} ${n === 1 ? one : many}`;
   const dueTxt = [due ? (en ? pl(due, 'card', 'cards') + ' due' : pl(due, 'Karte', 'Karten') + ' fällig') : '', figs ? (en ? pl(figs, 'figure', 'figures') : pl(figs, 'Abbildung', 'Abbildungen')) : ''].filter(Boolean).join(' · ');
   const T = (de, e) => (en ? 'Logopedics · ' + e : 'Logopädie-Kurse · ' + de);
-  const C = [
-    { name: en ? 'Vagus' : 'Vagus', exam: x.exam_in, done: x.done || 0, page: '09-10-wiederholung-pruefung.html' },
-    { name: 'Laryngitis', exam: x.exam_in_l, done: x.done_l || 0, page: 'laryngitis-10-pruefung.html' },
-  ];
-  const progress = C.filter((c) => c.done).map((c) => `${c.name} ${c.done}/10`).join(', ');
+  const C = perCourse(x);
+  const progress = C.filter((c) => c.done).map((c) => `${c.name} ${c.done}/${c.total}`).join(', ');
   const seven = C.find((c) => c.exam === 7), one = C.find((c) => c.exam === 1);
   if (one) return { title: T(`morgen ist Prüfung · ${one.name}`, `exam tomorrow · ${one.name}`), url: 'index.html#heute',
-    body: en ? `Go over the shaky points briefly, then rest. ${one.done} of 10 sections done.` : `Kurz die wackligen Punkte durchgehen, dann ausruhen. ${one.done} von 10 Abschnitten erledigt.` };
+    body: en ? `Go over the shaky points briefly, then rest. ${one.done} of ${one.total} sections done.` : `Kurz die wackligen Punkte durchgehen, dann ausruhen. ${one.done} von ${one.total} Abschnitten erledigt.` };
   if (seven) return { title: T(`noch 7 Tage bis zur Prüfung · ${seven.name}`, `exam in 7 days · ${seven.name}`), url: seven.page,
     body: (en ? 'A good moment for the mock exam: 40 minutes, then you know where you stand.' : 'Guter Moment für die Probeprüfung: 40 Minuten, danach weißt du, wo du stehst.') + (dueTxt ? ' · ' + dueTxt : '') };
   if (x.dow === 0) return { title: T('deine Woche', 'your week'), url: 'index.html#heute',

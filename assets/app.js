@@ -2,12 +2,18 @@
 // Gespeichert wird im Browser (localStorage); mit Konto gleicht sync.js den Stand zwischen Geräten ab.
 (function () {
   var KEY = 'vagus-kurs:v1';
-  // Zwei Kurse: Vagus 01–09 (Seite 9–10 zählt doppelt), Laryngitis L01–L10. Pro Kurs eigener Fortschritt und eigene „zuletzt gelesen“-Stelle.
-  var COURSE_UNITS = { v: ['01', '02', '03', '04', '05', '06', '07', '08', '09'], l: ['L01', 'L02', 'L03', 'L04', 'L05', 'L06', 'L07', 'L08', 'L09', 'L10'] };
-  var UNITS = COURSE_UNITS.v.concat(COURSE_UNITS.l);
-  var REFS = { '00': 'v', L00: 'l' };
-  function courseOf(id) { return /^L/.test(id || '') ? 'l' : 'v'; }
-  var LAST = { v: 'last', l: 'lastL' }; // gespeicherte Schlüssel; „last“ bleibt für den Vagus-Kurs wie bisher
+  // Kurse aus dem Kursregister (courses.mjs, beim Build in jede Seite geschrieben). Vagus 01–09 (Seite 9–10 zählt doppelt), Laryngitis L01–L10, …
+  // Pro Kurs eigener Fortschritt und eigene „zuletzt gelesen“-Stelle: „last“ + Präfix (last, lastL), Prüfungstermin „exam“ + Präfix (exam, examL).
+  var REG = window.KURS_COURSES || [];
+  var BY = {}; REG.forEach(function (c) { BY[c.key] = c; });
+  var COURSE_UNITS = {}, LAST = {}, EXAMK = {}, REFS = {}, UNITS = [];
+  REG.forEach(function (c) { COURSE_UNITS[c.key] = c.units; LAST[c.key] = c.lastKey; EXAMK[c.key] = c.examKey; if (c.ref) REFS[c.ref] = c.key; UNITS = UNITS.concat(c.units); });
+  var PREFIXES = REG.slice().sort(function (a, b) { return b.prefix.length - a.prefix.length; });
+  // Kurs einer Abschnitts- oder Kartenkennung („L03“, „L03-F2“ → l; „03“ → v). Nach dem Präfix muss eine Ziffer folgen („L:Begriff“ ist kein Abschnitt).
+  function courseOf(id) { id = String(id || ''); for (var i = 0; i < PREFIXES.length; i++) { var p = PREFIXES[i].prefix; if (id.indexOf(p) === 0 && /^\d/.test(id.slice(p.length))) return PREFIXES[i].key; } return 'v'; }
+  function weight(id) { var c = BY[courseOf(id)]; return c && c.double.indexOf(id) >= 0 ? 2 : 1; } // Seite 9–10 zählt als zwei Abschnitte
+  var PAGE_RE = new RegExp('^(' + REG.map(function (c) { return c.prefix; }).filter(Boolean).join('|') + ')?\\d\\d$'); // Kurs- und Nachschlageseiten: 00–09, L00–L10, …
+  var SCALARS = []; REG.forEach(function (c) { SCALARS.push(c.lastKey, c.examKey); });
   var root = document.documentElement;
   var page = document.body.dataset.page;
   // Fokusring nur für die Tastatur: Nach einem Tippen öffnen Dialoge sonst mit einem Ring um den ersten Knopf
@@ -18,7 +24,7 @@
   var state = load();
   state.done = state.done || {};
   // Früher landeten Klicks auf beantwortete Prüfungsfragen (eigenes data-done der Seite) hier: aufräumen
-  Object.keys(state.done).forEach(function (k) { if (!/^L?\d\d$/.test(k)) delete state.done[k]; });
+  if (REG.length) Object.keys(state.done).forEach(function (k) { if (!PAGE_RE.test(k)) delete state.done[k]; }); // ohne Register (sollte nie vorkommen) nichts löschen
   state.scroll = state.scroll || {};
   var prev = JSON.parse(JSON.stringify(state));
 
@@ -36,7 +42,7 @@
       var a = prev[p[0]] || {}, b = state[p[0]] || {}, t = state[p[1]] = state[p[1]] || {};
       Object.keys(a).concat(Object.keys(b)).forEach(function (k) { if (!same(a[k], b[k])) t[k] = now; });
     });
-    ['theme', 'last', 'lastL', 'scroll', 'view', 'read', 'tour', 'gate', 'ui', 'exam', 'examL', 'examLog', 'weekSeen', 'newsSeen'].forEach(function (k) { if (!same(prev[k], state[k])) state._mt = now; });
+    ['theme', 'scroll', 'view', 'read', 'tour', 'gate', 'ui', 'examLog', 'weekSeen', 'newsSeen'].concat(SCALARS).forEach(function (k) { if (!same(prev[k], state[k])) state._mt = now; });
   }
   function save() {
     stamp();
@@ -50,14 +56,15 @@
   // ---- Fortschritt ----
   function render() {
     // In Abschnitten gezählt wie im Kurs („Abschnitt 1 von 10“): Seite 9–10 sind zwei
-    var count = function (k) { return COURSE_UNITS[k].reduce(function (s, id) { return s + (state.done[id] ? (id === '09' ? 2 : 1) : 0); }, 0); }, ALL = 10;
+    var count = function (k) { return (COURSE_UNITS[k] || []).reduce(function (s, id) { return s + (state.done[id] ? weight(id) : 0); }, 0); };
+    var total = function (k) { return BY[k] ? BY[k].total : 10; };
     $$('[data-prog]').forEach(function (el) {
-      var n = count(el.getAttribute('data-course') || 'v'); el.textContent = n + ' / ' + ALL;
+      var k = el.getAttribute('data-course') || 'v', n = count(k), ALL = total(k); el.textContent = n + ' / ' + ALL;
       var bar = el.parentElement.querySelector('i'); if (bar) bar.style.setProperty('--p', n / ALL);
     });
     $$('[data-prog-long]').forEach(function (el) {
-      var n = count(el.getAttribute('data-course') || 'v');
-      el.textContent = n === 0 ? 'Noch nichts erledigt' : n === ALL ? 'Alle 10 Abschnitte erledigt' : n + ' von ' + ALL + ' Abschnitten erledigt';
+      var k = el.getAttribute('data-course') || 'v', n = count(k), ALL = total(k);
+      el.textContent = n === 0 ? 'Noch nichts erledigt' : n === ALL ? 'Alle ' + ALL + ' Abschnitte erledigt' : n + ' von ' + ALL + ' Abschnitten erledigt';
     });
     $$('[data-unit]').forEach(function (el) {
       var id = el.getAttribute('data-unit');
@@ -82,7 +89,7 @@
     var rs = e.target.closest('[data-reset]');
     if (rs && confirm('Alle „erledigt“-Häkchen und den Lesestand dieses Kurses zurücksetzen? Lernkarten, Merkheft und Schwachstellen bleiben erhalten.')) {
       var k = rs.getAttribute('data-reset') || 'v';
-      COURSE_UNITS[k].forEach(function (id) { delete state.done[id]; delete state.scroll[id]; });
+      (COURSE_UNITS[k] || []).forEach(function (id) { delete state.done[id]; delete state.scroll[id]; });
       delete state[LAST[k]]; save(); render(); resume();
     }
   });
@@ -193,7 +200,8 @@
   // Früheren Stand zurückholen (tools.js, „Frühere Stände“): alles gilt als eben geändert, damit es beim Abgleich mit dem Konto gewinnt
   function restore(next) { adopt(next); prev = {}; save(); }
   window.Kurs = { state: state, save: save, adopt: adopt, restore: restore, render: render, page: page, key: KEY, theme: function () { theme(true); },
-    course: document.body.dataset.course || '', courseOf: courseOf, units: COURSE_UNITS, lastKey: LAST };
+    course: document.body.dataset.course || '', courseOf: courseOf, units: COURSE_UNITS, lastKey: LAST, examKey: EXAMK,
+    courses: REG, courseBy: BY, weight: weight, isCoursePage: function (id) { return PAGE_RE.test(id || ''); } };
 
   if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')) {
     navigator.serviceWorker.register('sw.js').catch(function () {});
@@ -222,7 +230,24 @@
   // ---- „Neu im Kurs“: einmal nach einem Update, für alle, die schon gelernt haben ----
   // „Verstanden“ merkt sich die Ausgabe (state.newsSeen, mit dem Konto abgeglichen); „Später“ nur für diesen Besuch.
   // Ausgaben, neueste zuerst. Wer die vorige gesehen hat, bekommt nur die neue; wer länger nicht da war, auch die älteren darunter.
-  var NEWS_ID = '2026-11-02', NEWS_EDITIONS = ['2026-11-02', '2026-10-30', '2026-10-29'];
+  var NEWS_ID = '2026-11-06', NEWS_EDITIONS = ['2026-11-06', '2026-11-02', '2026-10-30', '2026-10-29'];
+  // Ausgabe 2026-11-06: drei neue Kurse und neue Fassung des Laryngitis-Kurses (Lieferung vom 4. November)
+  var NEWS_3 = ['Drei neue Kurse und ein Schnellkurs', [
+    ['Funktionelle, psychogene und neurogene Stimmstörungen', 'Acht Abschnitte, von der Einordnung bis zur spasmodischen Dysphonie, mit Probeprüfung.', 'funktionell.html'],
+    ['Gutartige Stimmlippenveränderungen', 'Zehn Abschnitte, von Knötchen, Polyp und Zyste bis zur Larynxpapillomatose, mit Probeprüfung.', 'gutartig.html'],
+    ['Verletzungen, Gelenk, Hormone und Mutation', 'Acht Abschnitte, von Intubationstraumata bis zu Mutationsstörungen, mit Probeprüfung.', 'trauma-hormone.html'],
+    ['Schnellkurs', 'Alle 38 Krankheitsbilder als kurze Karten in sieben Gruppen, mit Suche über alle Karten, „Vom Symptom zur Diagnose“ und Erkennungsquiz. In den großen Kursen führt „Im Schnellkurs“ zur passenden Karte.', 'schnellkurs.html'],
+    ['Alles verbunden', 'Lernkarten, Merkheft, Fachbegriffe und „Heute“ umfassen jetzt alle fünf Kurse; oben filterst du auf einen Kurs. Verweise wie „↩ Vagus-Kurs 5“ oder „Kurs 5 Abschnitt 2“ führen per Tippen dorthin.', 'lernkarten.html'],
+    ['Deine Runde ganz oben', 'Auf der Startseite steht „Heute“ jetzt direkt unter dem Titel, die Kurse folgen darunter.', 'index.html#heute'],
+    ['Teste dich', 'Die Antworten im Quiz stehen jetzt gemischt; die richtige ist nicht mehr fast immer B.', null],
+  ]];
+  var NEWS_LV2 = ['Laryngitis überarbeitet', [
+    ['Neue Fassung', 'Klarere Sätze und genauere Lösungen in allen Abschnitten. Deine Karten, Notizen und dein Fortschritt bleiben erhalten.', 'laryngitis.html'],
+    ['R und L korrigiert', 'In Abb. 3.1 und 6.1 stehen R und L der Patientin jetzt richtig herum, so wie in Abb. 1.1 des Vagus-Kurses.', 'laryngitis-06-reflux-granulom.html?fig=' + encodeURIComponent('Abb. 6.1')],
+    ['Kurz gesagt', 'Am Anfang der Unterabschnitte steht die Kernaussage in ein, zwei Sätzen.', null],
+    ['Prüfungs-Check', 'Am Ende jedes Abschnitts: was du können musst. Antippen zum Abhaken; im Merkheft stehen alle Listen beisammen. Gespeichert nur in diesem Browser.', 'merkheft.html#pruefungs-check'],
+    ['Für Neugierige', 'Eingeklappte Kästen mit den Studien dahinter: Zusatzwissen zum Aufklappen, keine Lösungen.', null],
+  ]];
   var NEWS_L = ['Zweiter Kurs', [
     ['Laryngitis', 'Ein ganzer zweiter Kurs, zehn Abschnitte von der Einordnung bis zur Probeprüfung, dazu ein Handout-Check. Auf der Startseite wählst du den Kurs.', 'laryngitis.html'],
     ['Alles gemeinsam', 'Lernkarten, Merkheft, Fachbegriffe und die Runde „Heute“ gelten für beide Kurse; oben in Lernkarten und Fachbegriffen kannst du auf einen Kurs filtern. Jeder Kurs hat seinen eigenen Prüfungstermin.', 'lernkarten.html'],
@@ -263,13 +288,12 @@
     var esc = function (s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); };
     var dlg = document.createElement('dialog'); dlg.className = 'legend news'; dlg.setAttribute('aria-labelledby', 'news-t');
     dlg.innerHTML = '<i class="orn tl" aria-hidden="true">❦</i><i class="orn tr" aria-hidden="true">❦</i><i class="orn bl" aria-hidden="true">❦</i><i class="orn br" aria-hidden="true">❦</i>' +
-      '<div class="lg-head"><h2 id="news-t">Neu im Kurs</h2></div><div class="lg-body"><p class="news-lead">Seit deinem letzten Besuch ist einiges dazugekommen. Alles ist freiwillig; der Kurs selbst ist unverändert.</p>' +
+      '<div class="lg-head"><h2 id="news-t">Neu im Kurs</h2></div><div class="lg-body"><p class="news-lead">Seit deinem letzten Besuch ist einiges dazugekommen. Die neuen Werkzeuge sind freiwillig.</p>' +
       (function () {
+        // Ausgaben, die nach der zuletzt gesehenen kamen (nie gesehen: alle), neueste zuerst
         var seenAt = NEWS_EDITIONS.indexOf(state.newsSeen); // -1: nie gesehen
-        var groups = [NEWS_L];
-        if (seenAt < 0 || seenAt > 1) groups.push(NEWS_NEW);
-        if (seenAt < 0 || seenAt > 2) groups = groups.concat(NEWS);
-        return groups;
+        var BY_EDITION = [[NEWS_3, NEWS_LV2], [NEWS_L], [NEWS_NEW], NEWS];
+        return [].concat.apply([], BY_EDITION.filter(function (g, i) { return seenAt < 0 || i < seenAt; }));
       })().map(function (grp) {
         return '<section class="news-g"><span class="eyebrow">' + esc(grp[0]) + '</span><ul>' + grp[1].map(function (it) {
           return '<li><b>' + esc(it[0]) + '</b><span>' + esc(it[1]) + (it[2] ? ' <a href="' + esc(it[2]) + '" data-news-go>Zeigen →</a>' : '') + '</span></li>';

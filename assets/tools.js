@@ -105,7 +105,7 @@
   function dayNow() { return Math.floor((Date.now() - 4 * 3600e3 - new Date().getTimezoneOffset() * 60e3) / 864e5); }
   function figSchedule(host, ratio) {
     var cap = $('.figcap b', host); if (!cap) return '';
-    var abb = (K.course === 'l' ? 'L:' : '') + cap.textContent.trim(); state.figs = state.figs || {};
+    var pre = (K.courseBy[K.course] || {}).prefix, abb = (pre ? pre + ':' : '') + cap.textContent.trim(); state.figs = state.figs || {};
     var f = state.figs[abb] || { b: 0 }, first = !state.figs[abb], b = ratio >= 0.9 ? Math.min(first ? 2 : (f.b || 0) + 1, FIG_DAYS.length) : ratio >= 0.6 ? Math.max(1, f.b || 0) : 0;
     var days = b ? FIG_DAYS[b - 1] : 1;
     state.figs[abb] = { b: b, d: dayNow() + days, s: Math.round(ratio * 100) / 100 }; K.save();
@@ -370,7 +370,7 @@
   function play(h2) { resetParts(); synth.cancel(); curSec = h2; queue = blocks(h2); qi = 0; playing = true; speakNext(); speakUI(); }
   function stop() { playing = false; resetParts(); synth.cancel(); curSec = null; mark(null); speakUI(); }
   function ttsSetup() {
-    if (!synth || !window.SpeechSynthesisUtterance || !/^L?\d\d$/.test(K.page)) return; // nur auf Kursseiten beider Kurse
+    if (!synth || !window.SpeechSynthesisUtterance || !K.isCoursePage(K.page)) return; // nur auf Kurs- und Nachschlageseiten
     pickVoice(); if (synth.onvoiceschanged !== undefined) synth.onvoiceschanged = pickVoice;
     var heads = $$('.wrap section > h2[id]');
     if (!heads.length) return;
@@ -617,13 +617,13 @@
   }
 
   // ---------- Probeprüfung (Vagus Seite 9–10, Laryngitis Seite 10): mit Uhr und Verlauf, je Kurs getrennt ----------
-  var EXAM_PAGE = { '09': 'v', L10: 'l' };
+  var EXAM_PAGE = {}; K.courses.forEach(function (c) { if (c.exam) EXAM_PAGE[c.exam] = c.key; });
   // Der Kurs schlägt „etwa 40 Minuten“ vor. Die Uhr läuft unten mit; „Prüfung auswerten“ (Kursskript) wird mitgeschrieben.
   function examSetup() {
     var exam = $('#exam'), grade = $('#grade'), result = $('#result');
     if (!EXAM_PAGE[K.page] || !exam || !grade || !result) return;
     var CK = EXAM_PAGE[K.page], mine = function (x) { return (x.c || 'v') === CK; }; // Einträge ohne Kurs stammen aus dem Vagus-Kurs
-    var LIMIT = 40 * 60, KEY_T = 'vagus-kurs:examclock' + (CK === 'l' ? ':l' : ''), clock = null, tick = null;
+    var LIMIT = 40 * 60, KEY_T = 'vagus-kurs:examclock' + (CK === 'v' ? '' : ':' + CK), clock = null, tick = null;
     var bar = el('div', 'exam-timer', '<button type="button" class="cta" data-clock-start>Mit Uhr starten · 40 Minuten</button><span class="note">Die Zeit läuft unten mit. Ohne Uhr geht es wie gewohnt.</span>');
     exam.insertAdjacentElement('beforebegin', bar);
     var hist = el('div', 'exam-hist'); grade.insertAdjacentElement('beforebegin', hist);
@@ -664,7 +664,7 @@
       var m = /(\d+)\s*\/\s*(\d+)[^\d]+(\d+)\s*%/.exec(big.textContent); if (!m) return;
       var log = state.examLog || [], recent = log.filter(function (x) { return mine(x) && Date.now() - x.t <= 60e3; })[0], c = load();
       var entry = { t: Date.now(), tot: +m[1], max: +m[2], pct: +m[3], min: c ? Math.max(1, Math.round(used(c) / 60)) : recent ? recent.min : 0 };
-      if (CK === 'l') entry.c = 'l';
+      if (CK !== 'v') entry.c = CK; // Einträge ohne Kurs = Vagus (wie bisher)
       if (recent && recent.tot === entry.tot && recent.min === entry.min) return; // gleiche Auswertung, schon notiert
       state.examLog = log.filter(function (x) { return x !== recent; }).concat([entry]).slice(-30); // erneutes Auswerten ersetzt
       K.save(); store(null); render(); showHist();
@@ -823,7 +823,7 @@
       opened.forEach(function (d) { d.open = false; }); opened = [];
       $$('.lbl-cover').forEach(function (r) { r.style.display = ''; });
     });
-    var row = $('.done-row'); if (!row || !/^L?\d\d$/.test(K.page)) return;
+    var row = $('.done-row'); if (!row || !K.isCoursePage(K.page)) return;
     var b = el('div', 'print-row', '<button type="button" class="linkbtn">Als Lernblatt drucken oder als PDF sichern</button><span class="note">mit Lösungen, ohne Knöpfe</span>');
     row.insertAdjacentElement('afterend', b);
     b.querySelector('button').addEventListener('click', function () { window.print(); });

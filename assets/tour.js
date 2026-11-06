@@ -8,7 +8,7 @@
   var hasSync = !!(window.KURS_SYNC && window.KURS_SYNC.url);
 
   var STEPS = [
-    { t: 'Willkommen', lead: 'Zwei Kurse, je zehn Abschnitte zu etwa zwanzig Minuten: der N. vagus und die Stimme, und Laryngitis.',
+    { t: 'Willkommen', lead: 'Fünf Kurse mit je acht bis zehn Abschnitten zu etwa zwanzig Minuten: vom N. vagus über die Laryngitis bis zu funktionellen, gutartigen, verletzungs- und hormonbedingten Stimmstörungen. Dazu ein Schnellkurs mit allen Krankheitsbildern auf einen Blick.',
       body: 'Lies die Abschnitte der Reihe nach. Was du geschafft hast, wird gespeichert, und die Seite merkt sich, wo du aufgehört hast.',
       art: '<div class="tv-path">' + [1, 2, 3, 4, 5, 6, 7, 8, '9–10'].map(function (n, i) { return '<span style="--i:' + i + '">' + n + '</span>'; }).join('') + '</div><p class="tv-cap">❦</p>' },
     { t: 'Erst denken, dann prüfen', lead: 'Neben jeder Frage im Text liegt die Lösung bereit.',
@@ -105,7 +105,7 @@
       '<div class="poster gate-poster" aria-hidden="true"><span>vagus</span><span>vagus</span><span>vagus</span>' +
       '<svg viewBox="0 0 89 55"><rect x="0" y="0" width="89" height="55"/><line x1="55" y1="0" x2="55" y2="55"/><line x1="55" y1="34" x2="89" y2="34"/><line x1="68" y1="34" x2="68" y2="55"/><line x1="55" y1="42" x2="68" y2="42"/><line x1="63" y1="34" x2="63" y2="42"/><line x1="63" y1="39" x2="68" y2="39"/><path stroke-width=".6" d="M0,55 A55,55 0 0 1 55,0 A34,34 0 0 1 89,34 A21,21 0 0 1 68,55 A13,13 0 0 1 55,42 A8,8 0 0 1 63,34 A5,5 0 0 1 68,39"/></svg></div>' +
       '<div class="gate-body">' +
-        '<span class="eyebrow">Logopädie-Kurse · N. vagus und Stimme · Laryngitis</span><h1 id="gate-t">Willkommen</h1>' +
+        '<span class="eyebrow">Logopädie-Kurse · 2. Ausbildungsjahr</span><h1 id="gate-t">Willkommen</h1>' +
         '<p class="gate-lead">Bevor es losgeht: Mit einem Konto ist dein Lernstand sicher und auf jedem Gerät gleich, vom Handy bis zum Laptop.</p>' +
         '<div class="gate-tabs" role="tablist"><button type="button" role="tab" data-gate-tab="signup" aria-selected="true">Konto anlegen</button><button type="button" role="tab" data-gate-tab="login" aria-selected="false">Ich habe schon ein Konto</button></div>' +
         '<form class="gate-form" data-gate-form novalidate>' +
