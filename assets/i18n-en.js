@@ -2,6 +2,31 @@
 // Nur Bedienoberfläche. Kurstext, Fragen, Lösungen und Fachbegriffe bleiben Deutsch.
 window.KURS_EN = {
   "Echte Bilder": "Real images", "Echte Bilder.": "Real images.", "Bilder urheberrechtlich geschützt, deshalb nur verlinkt.": "Images are copyrighted, so they are linked only.",
+  "Startseite: alle Kurse": "Home: all courses", "Start": "Home",
+  // Neu im Kurs, 7. November 2026
+  "Kleine Verbesserungen": "Small improvements", "Echte Bilder in den neuen Kursen": "Real images in the new courses",
+  "Bei vielen Abbildungen in Gutartig, Funktionell und Verletzungen/Hormone zeigt „Echte Bilder“ jetzt Endoskopien und Zeichnungen, zum Beispiel von Knötchen, Polyp und Papillomen.": "For many figures in Benign, Functional and Injuries/Hormones, “Echte Bilder” now shows endoscopies and drawings, for example of nodules, polyps and papillomas.",
+  "Etwas stimmt nicht?": "Something wrong?", "Am Ende jedes Abschnitts kannst du mit einem Tippen melden, wenn etwas unklar oder falsch ist. Ein Wort reicht.": "At the end of each section you can report with one tap if something is unclear or wrong. One word is enough.",
+  "Zurück zur Startseite": "Back to home", "Das Haus oben links führt von überall zur Kursauswahl.": "The house at the top left takes you back to the course choice from anywhere.",
+  "Das Zahnrad oben rechts sammelt alles: Schrift, Farbschema, Sprache, Vorlesen, Erinnerungen und Sicherung.": "The gear at the top right gathers everything: font, colour scheme, language, read aloud, reminders and backup.",
+  "Bessere Stimme zum Vorlesen": "A better read-aloud voice", "In den Einstellungen wählst du die Stimme. Auf iPad und iPhone klingt eine geladene „verbesserte“ Stimme viel natürlicher; dort steht, wie es geht.": "Choose the voice in the settings. On iPad and iPhone a downloaded “enhanced” voice sounds much more natural; the settings explain how.",
+  "Lernkarten schneller starten": "Start flashcards faster", "„Lernen starten“ steht jetzt oben; die Auswahl der Abschnitte ist eingeklappt.": "“Lernen starten” is now at the top; choosing sections is folded away.",
+  // Rückmeldung (November 2026)
+  "Etwas stimmt nicht oder ist unklar?": "Something wrong or unclear?", "Kurz melden": "Let us know", "Art der Meldung": "Kind of report",
+  "Tippfehler": "Typo", "Unklar": "Unclear", "Abbildung": "Figure", "Frage oder Lösung": "Question or answer", "Technisch": "Technical",
+  "Was ist dir aufgefallen? (freiwillig)": "What did you notice? (optional)", "Senden": "Send",
+  "Mitgeschickt werden nur deine Meldung und die Seite, nichts aus deinem Lernstand.": "Only your note and the page are sent, nothing from your progress.",
+  "Wähle eine Art oder schreib ein paar Worte.": "Pick a kind or write a few words.", "Danke! Ist angekommen.": "Thanks! It arrived.",
+  "Gerade kein Netz: wird automatisch nachgeschickt.": "No connection right now: it will be sent automatically.", "Senden ist hier nicht möglich.": "Sending is not possible here.",
+  // UX-Pass (November 2026)
+  "Einstellungen": "Settings", "Einstellungen: Lesen, Vorlesen, Erinnerungen, Lernstand": "Settings: reading, read aloud, reminders, progress", "Erinnerungen": "Reminders", "Lesen": "Reading", "Lernstand": "Progress", "optional": "optional",
+  "Abschnitte auswählen": "Choose sections", "# Abschnitt gewählt": "# section chosen", "# Abschnitte gewählt": "# sections chosen",
+  "Prüfungstermine eintragen (#)": "Add exam dates (#)", "Prüfungstermin für weitere Kurse eintragen (#)": "Add an exam date for other courses (#)",
+  // Vorlesen: Stimme (November 2026)
+  "Vorlesen · Stimme": "Read aloud · Voice", "Probe hören": "Play a sample", "Stimme zum Vorlesen": "Voice for reading aloud",
+  "Die Stimmen kommen vom Gerät; oben stehen die natürlichsten.": "The voices come from your device; the most natural ones are at the top.",
+  "Bessere Stimmen gibt es kostenlos: Einstellungen › Bedienungshilfen › Gesprochene Inhalte › Stimmen › Deutsch. Dort eine Stimme (z. B. Anna) in der Version „Verbessert“ oder „Premium“ laden, dann die Seite neu öffnen.": "Better voices are free: Settings › Accessibility › Spoken Content › Voices › German. Download a voice there (e.g. Anna) in the “Enhanced” or “Premium” version, then reopen the page.",
+  "Die Stimmen kommen vom Gerät. In Microsoft Edge gibt es kostenlos sehr natürliche deutsche Stimmen („Online (Natural)“).": "The voices come from your device. Microsoft Edge has very natural German voices for free (“Online (Natural)”).",
   // Schnellkurs (November 2026)
   "z. B. Stridor, Kind, plötzlich, Reinke": "e.g. Stridor, Kind, plötzlich, Reinke (German words)", "Gruppe": "Group", "Karte": "Card",
   "Funktionelle, psychogene und neurogene Stimmstörungen · # Abschnitte": "Funktionelle, psychogene und neurogene Stimmstörungen · # sections",

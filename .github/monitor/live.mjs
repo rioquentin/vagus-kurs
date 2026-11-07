@@ -101,6 +101,8 @@ try {
   const r = await fetch(url + '/rest/v1/rpc/error_count', { method: 'POST', headers: { apikey: key, 'Content-Type': 'application/json' }, body: JSON.stringify({ p_since: since }) });
   if (r.status === 404) info.push('Fehlerprotokoll noch nicht eingerichtet (supabase/monitor-push.sql).');
   else { const n = await r.json(); if (n > 0) bad.push(`Besucher: ${n} Fehlermeldung(en) in den letzten 8 Tagen → Supabase › Table Editor › client_errors`); else info.push('Besucher: keine Fehlermeldungen in den letzten 8 Tagen.'); }
+  const f = await fetch(url + '/rest/v1/rpc/feedback_count', { method: 'POST', headers: { apikey: key, 'Content-Type': 'application/json' }, body: JSON.stringify({ p_since: since }) });
+  if (f.ok) { const n = await f.json(); if (n > 0) bad.push(`Rückmeldung: ${n} neue Meldung(en) aus dem Kurs („Etwas stimmt nicht?“) → tableau.html › Santé`); }
 } catch (e) { info.push('Fehlerprotokoll nicht abrufbar: ' + e.message); }
 
 finish();

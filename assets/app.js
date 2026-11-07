@@ -230,8 +230,16 @@
   // ---- „Neu im Kurs“: einmal nach einem Update, für alle, die schon gelernt haben ----
   // „Verstanden“ merkt sich die Ausgabe (state.newsSeen, mit dem Konto abgeglichen); „Später“ nur für diesen Besuch.
   // Ausgaben, neueste zuerst. Wer die vorige gesehen hat, bekommt nur die neue; wer länger nicht da war, auch die älteren darunter.
-  var NEWS_ID = '2026-11-06', NEWS_EDITIONS = ['2026-11-06', '2026-11-02', '2026-10-30', '2026-10-29'];
+  var NEWS_ID = '2026-11-07', NEWS_EDITIONS = ['2026-11-07', '2026-11-06', '2026-11-02', '2026-10-30', '2026-10-29'];
   // Ausgabe 2026-11-06: drei neue Kurse und neue Fassung des Laryngitis-Kurses (Lieferung vom 4. November)
+  var NEWS_7 = ['Kleine Verbesserungen', [
+    ['Echte Bilder in den neuen Kursen', 'Bei vielen Abbildungen in Gutartig, Funktionell und Verletzungen/Hormone zeigt „Echte Bilder“ jetzt Endoskopien und Zeichnungen, zum Beispiel von Knötchen, Polyp und Papillomen.', 'gutartig-02-polyp.html'],
+    ['Etwas stimmt nicht?', 'Am Ende jedes Abschnitts kannst du mit einem Tippen melden, wenn etwas unklar oder falsch ist. Ein Wort reicht.', null],
+    ['Zurück zur Startseite', 'Das Haus oben links führt von überall zur Kursauswahl.', null],
+    ['Einstellungen', 'Das Zahnrad oben rechts sammelt alles: Schrift, Farbschema, Sprache, Vorlesen, Erinnerungen und Sicherung.', null],
+    ['Bessere Stimme zum Vorlesen', 'In den Einstellungen wählst du die Stimme. Auf iPad und iPhone klingt eine geladene „verbesserte“ Stimme viel natürlicher; dort steht, wie es geht.', null],
+    ['Lernkarten schneller starten', '„Lernen starten“ steht jetzt oben; die Auswahl der Abschnitte ist eingeklappt.', 'lernkarten.html'],
+  ]];
   var NEWS_3 = ['Drei neue Kurse und ein Schnellkurs', [
     ['Funktionelle, psychogene und neurogene Stimmstörungen', 'Acht Abschnitte, von der Einordnung bis zur spasmodischen Dysphonie, mit Probeprüfung.', 'funktionell.html'],
     ['Gutartige Stimmlippenveränderungen', 'Zehn Abschnitte, von Knötchen, Polyp und Zyste bis zur Larynxpapillomatose, mit Probeprüfung.', 'gutartig.html'],
@@ -292,7 +300,7 @@
       (function () {
         // Ausgaben, die nach der zuletzt gesehenen kamen (nie gesehen: alle), neueste zuerst
         var seenAt = NEWS_EDITIONS.indexOf(state.newsSeen); // -1: nie gesehen
-        var BY_EDITION = [[NEWS_3, NEWS_LV2], [NEWS_L], [NEWS_NEW], NEWS];
+        var BY_EDITION = [[NEWS_7], [NEWS_3, NEWS_LV2], [NEWS_L], [NEWS_NEW], NEWS];
         return [].concat.apply([], BY_EDITION.filter(function (g, i) { return seenAt < 0 || i < seenAt; }));
       })().map(function (grp) {
         return '<section class="news-g"><span class="eyebrow">' + esc(grp[0]) + '</span><ul>' + grp[1].map(function (it) {

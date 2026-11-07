@@ -11,6 +11,16 @@
     var t = get('vagus-kurs:report-test');
     cfg = typeof t === 'string' && /^http:\/\/localhost:\d+$/.test(t) ? { url: t, key: 'mock-anon-key' } : null;
   }
+  // Rückmeldung von Hand („Etwas stimmt nicht?“): sofort senden, bei Ausfall in die Warteschlange; nichts aus dem Lernstand
+  window.KursFeedback = function (msg, sec) {
+    if (!cfg || !cfg.url) return Promise.reject(new Error('offline'));
+    var s = get('vagus-kurs:v1') || {};
+    var r = { build: window.KURS_BUILD || null, page: String(location.pathname.replace(/^.*\//, '') + (sec ? '#' + sec : '')).slice(0, 200), kind: 'feedback',
+      msg: String(msg).slice(0, 500), src: null, stack: null, ua: String(navigator.userAgent).slice(0, 300), extra: { ui: s.ui || 'de', w: innerWidth, h: innerHeight } };
+    return fetch(cfg.url + '/rest/v1/client_errors', { method: 'POST', keepalive: true, headers: { apikey: cfg.key, 'Content-Type': 'application/json', Prefer: 'return=minimal' }, body: JSON.stringify([r]) })
+      .then(function (x) { if (!x.ok) throw new Error('http ' + x.status); return 'sent'; })
+      .catch(function () { put(QKEY, (get(QKEY) || []).concat([r]).slice(-20)); return 'queued'; });
+  };
   var off = !cfg || !cfg.url || get('vagus-kurs:noreport');
   if (off) { window.__kErr = { push: function () {} }; return; }
 

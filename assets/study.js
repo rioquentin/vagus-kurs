@@ -383,6 +383,7 @@
     var chosen = {}; (params.get('unit') || '').split(',').filter(Boolean).forEach(function (u) { chosen[u] = true; });
     // Aus einem Abschnitt heraus (?unit=L03): dieser Abschnitt, unabhängig vom gemerkten Kursfilter
     var cf = Object.keys(chosen).length && !params.get('kurs') ? '' : getCf();
+    if (Object.keys(chosen).length && $('[data-fc-pick]')) $('[data-fc-pick]').open = true; // aus einem Abschnitt heraus: Auswahl zeigen
     var NEW_LIMIT = 12;
     var d, queue = [], i = 0, tally = { 0: 0, 1: 0, 2: 0, 3: 0 }, repeats = {};
 
@@ -418,6 +419,8 @@
     function setup() {
       $$('[data-deck]').forEach(function (b) { b.setAttribute('aria-checked', b.getAttribute('data-deck') === deck); });
       $$('[data-unit-chip]').forEach(function (b) { b.setAttribute('aria-pressed', !!chosen[b.getAttribute('data-unit-chip')]); });
+      var nCh = Object.keys(chosen).filter(function (u) { return chosen[u]; }).length, picked = $('[data-fc-picked]');
+      if (picked) picked.textContent = nCh ? nCh + (nCh === 1 ? ' Abschnitt gewählt' : ' Abschnitte gewählt') : 'optional';
       $$('[data-cf-group]').forEach(function (g) { g.hidden = !!cf && g.getAttribute('data-cf-group') !== cf; });
       var pl = plan();
       $('[data-fc-plan]').textContent = pl.due.length + ' fällig · ' + pl.fresh.length + ' neu' + (pl.freshAll > pl.fresh.length ? ' (von ' + pl.freshAll + ')' : '') + ' · ' + pl.total + ' im Stapel';
@@ -621,7 +624,9 @@
     state.views = state.views || {};
     pairs.forEach(function (p) {
       var cap = p.fig.querySelector('.figcap b');
-      p.key = cap ? cap.textContent.trim() : null;
+      // Vagus behält den alten Schlüssel „Abb. 1.1“; die anderen Kurse bekommen die Seite davor („GV01 Abb. 1.2“), sonst gilt die Wahl in allen Kursen mit derselben Nummer
+      var pre = (K.courseBy[K.courseOf(page)] || {}).prefix;
+      p.key = cap ? (pre ? page + ' ' : '') + cap.textContent.trim() : null;
       p.sw = el('div', 'view-sw', '<button type="button" data-view="schema">Schema</button><button type="button" data-view="atlas">' + esc(p.atlas.getAttribute('data-label') || 'Anatomie') + '</button>'); // Laryngitis: „Echte Bilder“
       p.sw.setAttribute('role', 'group'); p.sw.setAttribute('aria-label', 'Darstellung der Abbildung');
       p.fig.parentNode.insertBefore(p.sw, p.fig);
@@ -1242,7 +1247,7 @@
       }
       // Prüfungstermin pro Kurs: Countdown und Lesetempo; einmal eintragen, jederzeit ändern
       function examBox() {
-        var wrapBox = el('div', 'exams');
+        var wrapBox = el('div', 'exams'), more = el('details', 'exam-more'), nMore = 0;
         KEYS.filter(function (k) { return K.courseBy[k].exam; }).forEach(function (k) { // nur Kurse mit Prüfung
           var key = EXAM_KEY[k], box = el('div', 'exam'), ex = examDay(k), t = today(), name = CNAME[k];
           var open = UNIT_PAGES.filter(function (u) { return courseOf(u) === k && !(state.done && state.done[u]); }).length;
@@ -1273,8 +1278,14 @@
             };
           };
           draw();
-          wrapBox.appendChild(box);
+          // Kurse ohne kommenden Termin: eingeklappt unter einer Zeile, damit „Heute“ kurz bleibt
+          if (ex != null && ex >= t) wrapBox.appendChild(box); else { more.appendChild(box); nMore++; }
         });
+        if (nMore) {
+          var sum = document.createElement('summary'), all = KEYS.filter(function (k) { return K.courseBy[k].exam; }).length;
+          sum.textContent = (nMore === all ? 'Prüfungstermine eintragen' : 'Prüfungstermin für weitere Kurse eintragen') + ' (' + nMore + ')';
+          more.insertBefore(sum, more.firstChild); wrapBox.appendChild(more);
+        }
         host.appendChild(wrapBox);
       }
       function run(p) {

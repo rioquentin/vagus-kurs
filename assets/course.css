@@ -3299,3 +3299,43 @@ a.xref-l{white-space:normal} /* lange Kursnamen („Kurs „Gutartige Veränderu
 .course-filter .seg{min-width:0;overflow-wrap:anywhere;hyphens:auto}
 .exam,.exam p,.exam .eyebrow,.exam .linkbtn{min-width:0;max-width:100%;overflow-wrap:anywhere;hyphens:auto} .exam .linkbtn{white-space:normal;text-align:left}
 .home-h{margin:0 0 14px}
+
+/* Vorlesen: Stimme wählen */
+#reading [data-voice]{flex:1 1 100%;min-width:0;max-width:100%;text-overflow:ellipsis}
+
+/* Zur Startseite: Knopf in der Kopfzeile, ganz oben im Menü, am Seitenende */
+.topbar .home-btn{flex:none}
+.sidebar .side-home{margin-bottom:10px}
+.pager-home{margin:14px 0 0;text-align:center}
+.pager-home a{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 14px;color:var(--ink-2);font-size:16px}
+.pager-home svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+
+/* UX-Pass (7. Nov. 2026) */
+@media (max-width:999px){.topbar .wide-only{display:none}} /* Sprache und Farbschema: in den Einstellungen */
+#reading .rd-h{font:600 12px/1.3 var(--f-body);letter-spacing:.12em;text-transform:uppercase;color:var(--rose-deep);margin:22px 0 4px;padding-top:14px;border-top:1px solid var(--rule)}
+#reading .rd-h:first-child{margin-top:0;padding-top:0;border-top:0}
+.fc-pick{border:1.5px solid var(--rule);border-radius:14px;padding:0 14px}
+.fc-pick>summary{cursor:pointer;min-height:48px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:17px}
+.fc-pick[open]>summary{border-bottom:1px solid var(--rule);margin-bottom:12px}
+.fc-pick>.note{margin-bottom:12px}
+.exam-more>summary{cursor:pointer;min-height:44px;display:flex;align-items:center;color:var(--ink-2);font-size:16px}
+.exam-more>summary::after,.fc-pick>summary::after{content:"";margin-left:auto;flex:none;width:9px;height:9px;border-right:2px solid var(--rose-deep);border-bottom:2px solid var(--rose-deep);transform:translateY(-2px) rotate(45deg);transition:transform .2s}
+.exam-more[open]>summary::after,.fc-pick[open]>summary::after{transform:translateY(2px) rotate(-135deg)}
+.exam-more>summary{gap:12px}
+
+/* Rückmeldung am Abschnittsende */
+.fb-box{margin:18px 0 0;border:1.5px dashed var(--rule);border-radius:14px;padding:0 16px}
+.fb-box>summary{cursor:pointer;min-height:48px;display:flex;flex-wrap:wrap;align-items:center;gap:6px;font-size:16px;color:var(--ink-2)}
+.fb-box>summary span{color:var(--rose-deep);text-decoration:underline;text-underline-offset:3px}
+.fb-in{display:grid;gap:12px;padding:4px 0 16px}
+.fb-in .chips{display:flex;flex-wrap:wrap;gap:6px}
+.fb-l{display:grid;gap:4px}
+.fb-l textarea{font:16px/1.45 var(--f-body);padding:10px 12px;border:1.5px solid var(--rule);border-radius:12px;background:var(--plate);color:var(--ink);resize:vertical;min-height:84px;width:100%;box-sizing:border-box}
+
+/* Lesbarkeit (7. Nov. 2026): ab Tablet etwas größere Schrift (Cormorant hat kleine Kleinbuchstaben) und dadurch kürzere Zeilen;
+   Fraktur nur noch für kurze Titel und das Logo, lange Kursnamen in Cormorant halbfett */
+@media screen and (min-width:768px){:root:not([data-size]),:root[data-size="m"]{--fsa:.53}}
+.course-home .home-hero h1{font-family:var(--f-display);font-weight:600;line-height:1.08}
+.course-body h2{font-family:var(--f-display);font-weight:600;line-height:1.12;font-size:clamp(26px,3.6vw,30px);hyphens:auto;font-size-adjust:none!important}
+body[data-course] .brand .b-long{font-family:var(--f-display);font-weight:600}
+@media screen and (min-width:768px){main .wrap section>p,main .wrap section>ul>li,main .wrap section>ol>li{max-width:41rem}}

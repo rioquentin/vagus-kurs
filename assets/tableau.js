@@ -45,7 +45,7 @@
 
   // ── Santé du site ──
   function health(ov, gh) {
-    var errs = ov.errors || [], mon = gh[0].workflow_runs, push = gh[1].workflow_runs, keep = gh[2].workflow_runs;
+    var all = ov.errors || [], fb = all.filter(function (e) { return e.kind === 'feedback'; }), errs = all.filter(function (e) { return e.kind !== 'feedback'; }), mon = gh[0].workflow_runs, push = gh[1].workflow_runs, keep = gh[2].workflow_runs;
     var lastMon = mon.find(function (r) { return r.status === 'completed'; });
     var groups = {};
     errs.forEach(function (e) {
@@ -68,6 +68,9 @@
       '<div class="tb-card"><span class="tb-k">Erreurs remontées</span><p class="tb-big ' + (week ? 'tb-bad' : 'tb-ok') + '">' + week + '<small>sur 7 jours</small></p><p class="tb-sub">' + (errs.length ? errs.length + ' sur 30 jours, ' + list.length + ' différente' + (list.length > 1 ? 's' : '') + '.' : 'Aucune erreur sur 30 jours.') + '</p></div>' +
       '<div class="tb-card"><span class="tb-k">Rappels</span><p class="tb-big">' + devs.length + '<small>appareil' + (devs.length > 1 ? 's' : '') + '</small></p><p class="tb-sub">' + (devs.length ? 'Dernier envoi : ' + (lastSent ? date(lastSent) : 'pas encore') + '.' : 'Personne ne les a encore activés.') + '</p></div>' +
       '</div>';
+    html += '<div class="tb-sec"><h2>Signalements de l’élève (30 jours)</h2>' + (fb.length ? '<ul class="tb-list">' + fb.map(function (e) {
+      return '<li class="tb-card" style="padding:10px 14px"><p style="margin:0">' + esc(e.msg) + '</p><p class="tb-sub">' + date(e.at) + ' · ' + esc(e.page || '?') + ' · ' + esc(browser(e.ua)) + '</p></li>';
+    }).join('') + '</ul><p style="margin-top:14px"><button class="tb-btn" type="button" data-clear-fb>Tout marquer comme lu</button> <span class="tb-sub" data-clear-fb-msg>Supprime ces signalements.</span></p>' : '<p class="tb-sub">Aucun signalement. Elle peut en envoyer depuis la fin de chaque section (« Etwas stimmt nicht? »).</p>') + '</div>';
     html += '<div class="tb-sec"><h2>Erreurs (30 jours)</h2>' + (list.length ? '<ul class="tb-list">' + list.map(function (g) {
       var e = g.e, x = e.extra || {};
       return '<li><details class="tb-err"><summary><span class="m">' + esc(e.msg) + '</span><span class="n">' + g.n + '×</span><span class="w">' + esc(e.kind === 'resource' ? 'fichier manquant : ' + e.src : e.kind === 'reject' ? 'promesse rejetée' : (e.src || '')) + ' · dernière fois ' + ago(g.last) + ' · ' + esc(Object.keys(g.pages).join(', ')) + ' · ' + esc(Object.keys(g.br).join(', ')) + '</span></summary>' +
@@ -80,6 +83,10 @@
     if (devs.length) html += '<div class="tb-sec"><h2>Appareils avec rappels</h2><div class="tb-card" style="padding:6px 14px"><table class="tb-runs"><thead><tr><th>Compte</th><th>Heure</th><th class="hide-s">Service</th><th>Dernier envoi</th></tr></thead><tbody>' +
       devs.map(function (d) { return '<tr><td>' + esc(d.user || '?') + '</td><td>' + d.hour + ' h<br><span class="tb-sub">' + esc(d.tz) + '</span></td><td class="hide-s">' + esc(/apple/.test(d.service) ? 'Apple' : /google|fcm/.test(d.service) ? 'Google' : /mozilla/.test(d.service) ? 'Mozilla' : d.service) + '</td><td>' + (d.last_sent ? date(d.last_sent) : '–') + '</td></tr>'; }).join('') + '</tbody></table></div></div>';
     var p = $('[data-panel="sante"]'); p.innerHTML = html;
+    var cfb = $('[data-clear-fb]', p); if (cfb) cfb.addEventListener('click', function () {
+      if (cfb.dataset.armed !== '1') { cfb.dataset.armed = '1'; cfb.textContent = 'Sûr ? Cliquer encore'; return; }
+      cfb.disabled = true; rpc('admin_clear_feedback', { p_until: ov.now }).then(function (n) { $('[data-clear-fb-msg]', p).textContent = n + ' signalement(s) supprimé(s).'; setTimeout(load, 700); }, function () { cfb.disabled = false; $('[data-clear-fb-msg]', p).textContent = 'Échec (relancer supabase/admin.sql ?).'; });
+    });
     var clr = $('[data-clear]', p); if (clr) clr.addEventListener('click', function () {
       if (clr.dataset.armed !== '1') { clr.dataset.armed = '1'; clr.textContent = 'Sûr ? Cliquer encore'; return; }
       clr.disabled = true; rpc('admin_clear_errors', { p_until: ov.now }).then(function (n) { $('[data-clear-msg]', p).textContent = n + ' erreur(s) supprimée(s).'; setTimeout(load, 700); }, function () { clr.disabled = false; $('[data-clear-msg]', p).textContent = 'Échec, réessaie plus tard.'; });

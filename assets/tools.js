@@ -291,6 +291,25 @@
   }
   function themeChips() { $$('[data-theme-set]').forEach(function (b) { b.setAttribute('aria-pressed', (state.theme || '') === b.getAttribute('data-theme-set')); }); }
 
+  // ---------- Rückmeldung am Abschnittsende ----------
+  function fbSetup() {
+    var box = $('[data-fb]'); if (!box) return;
+    var kind = '', t = $('[data-fb-t]', box), send = $('[data-fb-send]', box), msg = $('[data-fb-msg]', box);
+    $$('[data-fb-k]', box).forEach(function (b) { b.addEventListener('click', function () {
+      kind = kind === b.getAttribute('data-fb-k') ? '' : b.getAttribute('data-fb-k');
+      $$('[data-fb-k]', box).forEach(function (x) { x.setAttribute('aria-pressed', x.getAttribute('data-fb-k') === kind); });
+    }); });
+    send.addEventListener('click', function () {
+      var text = t.value.trim();
+      if (!kind && !text) { msg.textContent = 'Wähle eine Art oder schreib ein paar Worte.'; return; }
+      // Abschnitt, der gerade oben auf dem Bildschirm war, bevor man ans Ende gescrollt hat: nicht bekannt → nur die Seite
+      send.disabled = true;
+      var done = function (how) { msg.textContent = how === 'sent' ? 'Danke! Ist angekommen.' : 'Gerade kein Netz: wird automatisch nachgeschickt.'; t.value = ''; kind = ''; $$('[data-fb-k]', box).forEach(function (x) { x.setAttribute('aria-pressed', 'false'); }); send.disabled = false; };
+      if (!window.KursFeedback) { msg.textContent = 'Senden ist hier nicht möglich.'; send.disabled = false; return; }
+      window.KursFeedback((kind ? '[' + kind + '] ' : '') + text).then(done, function () { msg.textContent = 'Senden ist hier nicht möglich.'; send.disabled = false; });
+    });
+  }
+
   // ---------- 4 · Vorlesen ----------
   var synth = window.speechSynthesis, voice = null, queue = [], qi = 0, playing = false, curSec = null;
   // Abkürzungen so, wie man sie spricht
@@ -299,10 +318,51 @@
     [/\bCart\.\s/g, 'Cartilago '], [/\bz\.\s?B\./g, 'zum Beispiel'], [/\bd\.\s?h\./g, 'das heißt'], [/\bu\.\s?a\./g, 'unter anderem'], [/\bca\./g, 'circa'], [/\bAbb\.\s/g, 'Abbildung '],
     [/\bF(\d+)\./g, 'Frage $1.'], [/\s*→\s*/g, ', führt zu, '], [/≈\s?/g, 'etwa '], [/[↑]/g, ' steigt'], [/[↓]/g, ' sinkt'], [/·/g, ', ']];
   function say(t) { t = t.replace(/ /g, ' '); SAY.forEach(function (r) { t = t.replace(r[0], r[1]); }); return t.replace(/\s+/g, ' ').trim(); }
+  // Stimmen nach Klang ordnen: Premium/Natural/Neural > Verbessert (Apple „enhanced“) > Standard > Google; Spaßstimmen (Eloquence, „Grandma“ …) ans Ende.
+  // Die Wahl gilt nur für dieses Gerät (jedes Gerät hat andere Stimmen) → localStorage, nicht im synchronisierten Lernstand.
+  var VKEY = 'vagus-kurs:voice';
+  function esc(t) { return String(t).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+  function vId(v) { return (v.voiceURI || '') + ' ' + v.name; }
+  function vRank(v) {
+    var s = vId(v).toLowerCase(), r = 10;
+    if (/premium|natural|neural/.test(s)) r = 40; else if (/enhanced|verbessert/.test(s)) r = 30; else if (/google/.test(s)) r = 5;
+    if (/eloquence|speech\.synthesis\.voice|novelty|grandma|grandpa|oma|opa|bells|bubbles|bad news|good news|jester|organ|superstar|trinoids|whisper|zarvox|wobble|cellos|boing|albert|bahh|fred|junior|ralph|kathy|eddy|flo|reed|rocko|sandy|shelley/.test(s)) r = 0;
+    if (/^de-de/i.test(v.lang.replace('_', '-'))) r += 1;
+    return r;
+  }
+  function vQual(r) { return r >= 40 ? 'sehr natürlich' : r >= 30 ? 'verbessert' : r >= 10 ? 'Standard' : 'einfach'; }
+  function deVoices() {
+    return synth.getVoices().filter(function (v) { return /^de(-|_|$)/i.test(v.lang); })
+      .sort(function (a, b) { return vRank(b) - vRank(a) || a.name.localeCompare(b.name); });
+  }
+  function savedVoice() { try { return localStorage.getItem(VKEY); } catch (e) { return null; } }
   function pickVoice() {
-    var vs = synth.getVoices();
-    voice = vs.filter(function (v) { return /^de(-|_|$)/i.test(v.lang) && /natural|google|neural|premium|enhanced/i.test(v.name); })[0] ||
-      vs.filter(function (v) { return /^de(-|_|$)/i.test(v.lang); })[0] || null;
+    var vs = deVoices(), want = savedVoice();
+    voice = (want && vs.filter(function (v) { return vId(v) === want; })[0]) || vs[0] || null;
+    voiceRow();
+  }
+  var IOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  function voiceRow() {
+    var row = $('[data-voice-row]'); if (!row) return;
+    var vs = deVoices(), sel = $('[data-voice]', row), note = $('[data-voice-note]', row);
+    row.hidden = !vs.length; if (!vs.length) return;
+    sel.innerHTML = vs.map(function (v) { return '<option value="' + esc(vId(v)) + '">' + esc(v.name.replace(/\s*\(.*\)$/, '') + ' · ' + vQual(vRank(v)) + (v.lang ? ' · ' + v.lang : '')) + '</option>'; }).join('');
+    if (voice) sel.value = vId(voice);
+    var best = vRank(vs[0]);
+    note.textContent = best >= 30 ? 'Die Stimmen kommen vom Gerät; oben stehen die natürlichsten.'
+      : IOS ? 'Bessere Stimmen gibt es kostenlos: Einstellungen › Bedienungshilfen › Gesprochene Inhalte › Stimmen › Deutsch. Dort eine Stimme (z. B. Anna) in der Version „Verbessert“ oder „Premium“ laden, dann die Seite neu öffnen.'
+      : 'Die Stimmen kommen vom Gerät. In Microsoft Edge gibt es kostenlos sehr natürliche deutsche Stimmen („Online (Natural)“).';
+  }
+  function voiceSetup() {
+    if (!synth || !window.SpeechSynthesisUtterance) return;
+    pickVoice(); if (synth.addEventListener) synth.addEventListener('voiceschanged', pickVoice); else synth.onvoiceschanged = pickVoice;
+    var row = $('[data-voice-row]'); if (!row) return;
+    $('[data-voice]', row).addEventListener('change', function (e) { try { localStorage.setItem(VKEY, e.target.value); } catch (x) { /* privat */ } pickVoice(); });
+    $('[data-voice-test]', row).addEventListener('click', function () {
+      synth.cancel(); var u = new SpeechSynthesisUtterance('So klingt diese Stimme beim Vorlesen: Der Nervus vagus versorgt den Kehlkopf.');
+      u.lang = 'de-DE'; if (voice) u.voice = voice; u.rate = (state.read && state.read.rate) || 1; synth.speak(u);
+    });
+    var dlg = $('#reading'); if (dlg) dlg.addEventListener('close', function () { if (!playing) synth.cancel(); });
   }
   function blocks(h2) {
     // Absätze vom Abschnittstitel bis zum nächsten <h2>; Abbildungen, Lösungen und Knöpfe nicht vorlesen
@@ -371,7 +431,6 @@
   function stop() { playing = false; resetParts(); synth.cancel(); curSec = null; mark(null); speakUI(); }
   function ttsSetup() {
     if (!synth || !window.SpeechSynthesisUtterance || !K.isCoursePage(K.page)) return; // nur auf Kurs- und Nachschlageseiten
-    pickVoice(); if (synth.onvoiceschanged !== undefined) synth.onvoiceschanged = pickVoice;
     var heads = $$('.wrap section > h2[id]');
     if (!heads.length) return;
     heads.forEach(function (h) {
@@ -829,6 +888,6 @@
     b.querySelector('button').addEventListener('click', function () { window.print(); });
   }
 
-  readSetup(); labelSetup(); drawSetup(); ttsSetup(); phoneFigures(); printSetup(); keepSetup(); snapSetup(); pushSetup(); examSetup(); oralSetup(); pitchSetup();
+  fbSetup(); readSetup(); voiceSetup(); labelSetup(); drawSetup(); ttsSetup(); phoneFigures(); printSetup(); keepSetup(); snapSetup(); pushSetup(); examSetup(); oralSetup(); pitchSetup();
   window.KursTools = { cover: cover, uncover: uncover };
 })();
