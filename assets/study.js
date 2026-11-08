@@ -223,10 +223,36 @@
       var row = host.querySelector(':scope > .fig-tools');
       if (!row) { row = el('div', 'fig-tools'); host.insertBefore(row, host.querySelector(':scope > .figcap, :scope > .caption')); }
       row.appendChild(b);
+      // Anheften: die Abbildung bleibt beim Weiterlesen sichtbar (iPad rechts, Handy über der Tab-Leiste)
+      var pb = el('button', 'z-open z-pin', '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 4h6l-1 6 3 3H7l3-3-1-6zM12 13v7"/></svg><span>Anheften</span>');
+      pb.type = 'button'; pb.setAttribute('aria-pressed', 'false');
+      pb.addEventListener('click', function () { pin(svg, host, pb); });
+      row.insertBefore(pb, b);
       // Klick auf die Abbildung selbst öffnet ebenfalls die Lupe (nicht bei Abbildungen mit eigenen Bedienelementen)
       if (!svg.querySelector('a, button, [tabindex]')) svg.addEventListener('click', function () { openZoom(svg, host); });
     });
     var stage = $('.z-stage', dlg), canvas = $('.z-canvas', dlg), pct = $('.z-pct', dlg);
+    var pinned = null;
+    function unpin() {
+      if (!pinned) return;
+      pinned.box.remove(); pinned.btn.setAttribute('aria-pressed', 'false'); pinned.btn.querySelector('span').textContent = 'Anheften';
+      document.documentElement.classList.remove('has-pin'); pinned = null;
+    }
+    function pin(svg, host, btn) {
+      var same = pinned && pinned.svg === svg; unpin(); if (same) return;
+      var box = el('aside', 'pin');
+      box.setAttribute('aria-label', 'Angeheftete Abbildung');
+      var cap = host.querySelector('.figcap, .caption, figcaption'), t = cap && cap.querySelector('b');
+      box.innerHTML = '<div class="pin-bar"><b class="pin-t"></b><button type="button" class="pin-x" aria-label="Lösen"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div><button type="button" class="pin-fig" aria-label="Vergrößern"><span class="wrap pin-wrap"></span></button>';
+      box.querySelector('.pin-t').textContent = t ? t.textContent : 'Abbildung';
+      var c = svg.cloneNode(true); c.removeAttribute('width'); c.removeAttribute('height'); c.style.minWidth = ''; c.setAttribute('aria-hidden', 'true');
+      box.querySelector('.pin-wrap').appendChild(c); // .wrap: die Farbregeln der Abbildungen gelten nur darin (wie in der Lupe)
+      box.querySelector('.pin-fig').addEventListener('click', function () { openZoom(svg, host); });
+      box.querySelector('.pin-x').addEventListener('click', unpin);
+      document.body.appendChild(box); document.documentElement.classList.add('has-pin');
+      btn.setAttribute('aria-pressed', 'true'); btn.querySelector('span').textContent = 'Lösen';
+      pinned = { svg: svg, box: box, btn: btn };
+    }
     Z = { s: 1, x: 0, y: 0, fit: 1, svg: null, vb: null };
     function apply() {
       if (!Z.svg) return;
@@ -281,7 +307,15 @@
     function mid() { var p = Object.keys(pts).map(function (k) { return pts[k]; }); var r = stage.getBoundingClientRect();
       if (p.length === 1) return { x: p[0].x - r.left, y: p[0].y - r.top, d: 0 };
       return { x: (p[0].x + p[1].x) / 2 - r.left, y: (p[0].y + p[1].y) / 2 - r.top, d: Math.hypot(p[0].x - p[1].x, p[0].y - p[1].y) }; }
-    stage.addEventListener('pointerdown', function (e) { stage.setPointerCapture(e.pointerId); pts[e.pointerId] = { x: e.clientX, y: e.clientY }; last = mid(); });
+    var tap = 0, tapX = 0, tapY = 0;
+    stage.addEventListener('pointerdown', function (e) {
+      try { stage.setPointerCapture(e.pointerId); } catch (x) {} pts[e.pointerId] = { x: e.clientX, y: e.clientY }; last = mid();
+      if (e.pointerType === 'touch' && Object.keys(pts).length === 1) {
+        var now = Date.now();
+        if (now - tap < 320 && Math.hypot(e.clientX - tapX, e.clientY - tapY) < 30) { var r = stage.getBoundingClientRect(); zoomAt(Z.s > Z.fit * 1.9 ? Z.fit / Z.s : 2, e.clientX - r.left, e.clientY - r.top); tap = 0; }
+        else { tap = now; tapX = e.clientX; tapY = e.clientY; }
+      }
+    });
     stage.addEventListener('pointermove', function (e) {
       if (!pts[e.pointerId]) return;
       pts[e.pointerId] = { x: e.clientX, y: e.clientY };

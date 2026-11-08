@@ -268,7 +268,7 @@
   function applyRead() {
     var r = state.read || {}, root = document.documentElement;
     root.dataset.size = r.size || 'm';
-    if (r.font === 'sans') root.dataset.font = 'sans'; // Atkinson steht in assets/fonts/fonts.css und lädt erst bei Bedarf
+    if (r.font === 'sans' || r.font === 'zart') root.dataset.font = r.font; // Standard: Literata; Cormorant und Atkinson laden erst bei Bedarf
     else delete root.dataset.font;
     $$('[data-read-font]').forEach(function (b) { b.setAttribute('aria-pressed', (r.font || 'serif') === b.getAttribute('data-read-font')); });
     $$('[data-read-size]').forEach(function (b) { b.setAttribute('aria-pressed', (r.size || 'm') === b.getAttribute('data-read-size')); });

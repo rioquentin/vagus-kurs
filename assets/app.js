@@ -77,6 +77,14 @@
     $$('.done-btn[data-done]').forEach(function (b) {
       var on = !!state.done[b.getAttribute('data-done')];
       b.setAttribute('aria-pressed', on);
+      // Abschluss: Häkchen-Zustand der Karte und wie viel im Kurs noch offen ist
+      var row = b.closest('.done-row'), msg = row && row.querySelector('p');
+      if (msg) {
+        if (!msg.hasAttribute('data-orig')) msg.setAttribute('data-orig', msg.textContent);
+        var k = courseOf(b.getAttribute('data-done')), left = total(k) - count(k);
+        msg.textContent = on ? (left ? 'Abschnitt geschafft. Noch ' + left + ' von ' + total(k) + ' Abschnitten offen.' : 'Abschnitt geschafft. Damit ist der ganze Kurs erledigt.') : msg.getAttribute('data-orig');
+        row.classList.toggle('is-done', on);
+      }
       b.querySelector('span:last-child').textContent = on ? 'Erledigt · zurücknehmen' : 'Als erledigt markieren';
     });
   }
@@ -96,7 +104,7 @@
 
   // ---- Zuletzt gelesen ----
   if (UNITS.indexOf(page) >= 0 || REFS[page]) {
-    if (!REFS[page]) { state[LAST[courseOf(page)]] = page; save(); }
+    if (!REFS[page]) { state[LAST[courseOf(page)]] = page; state.lastAny = page; save(); }
     if (location.hash === '#weiter' && state.scroll[page]) {
       history.replaceState(null, '', location.pathname);
       window.addEventListener('load', function () { window.scrollTo(0, state.scroll[page]); });
@@ -107,7 +115,29 @@
       t = setTimeout(function () { state.scroll[page] = Math.round(window.scrollY); save(); }, 300);
     }, { passive: true });
   }
+  // Startseite: eine Hauptaktion. Zuletzt gelesener Abschnitt (über alle Kurse); ist er erledigt, der nächste offene desselben Kurses
+  function resumeHero() {
+    var hero = document.querySelector('[data-resume-hero]');
+    if (!hero) return;
+    var P = {}; (window.KURS_PAGES || []).forEach(function (p) { P[p.id] = p; });
+    var id = state.lastAny && P[state.lastAny] ? state.lastAny : null;
+    if (!id) REG.some(function (c) { var l = state[c.lastKey]; if (l && P[l]) { id = l; return true; } return false; }); // ältere Stände ohne lastAny
+    hero.hidden = !id;
+    var head = document.querySelector('.home-hero'); if (head) head.classList.toggle('has-resume', !!id);
+    if (!id) return;
+    var c = BY[courseOf(id)], done = state.done || {}, next = null, units = c ? c.units : [];
+    if (done[id]) { for (var i = units.indexOf(id) + 1; i < units.length; i++) if (!done[units[i]] && P[units[i]]) { next = units[i]; break; } }
+    var u = P[next || id], left = c ? c.total - units.filter(function (x) { return done[x]; }).reduce(function (s, x) { return s + weight(x); }, 0) : 0;
+    hero.href = u.file + (next ? '' : '#weiter');
+    hero.querySelector('[data-rh-k]').textContent = next ? 'Als Nächstes' : 'Weiterlesen';
+    hero.querySelector('[data-rh-go]').textContent = next ? 'Abschnitt beginnen' : 'Weiterlesen';
+    hero.querySelector('[data-rh-c]').textContent = c ? c.short : '';
+    if (c) hero.setAttribute('data-course', c.key);
+    hero.querySelector('[data-rh-t]').textContent = u.n + ' · ' + u.t;
+    hero.querySelector('[data-rh-s]').textContent = c ? (left ? 'Noch ' + left + ' von ' + c.total + ' Abschnitten offen' : 'Alle Abschnitte erledigt') : '';
+  }
   function resume() {
+    resumeHero();
     $$('[data-resume]').forEach(function (box) {
       var last = state[LAST[box.getAttribute('data-course') || 'v']];
       var seg = last && box.parentElement.querySelector('[data-unit="' + last + '"]');
@@ -128,20 +158,34 @@
   }
   if (bar && page !== 'home' && !/^kurs-/.test(page)) { window.addEventListener('scroll', readbar, { passive: true }); window.addEventListener('resize', readbar); readbar(); }
 
+  // ---- Restzeit (Handy, Kopfzeile): aus „≈ 25 Minuten“ und wie weit der Text bis zum Abschnittsende gelesen ist ----
+  var leftEl = document.querySelector('[data-left]'), metaMin = document.querySelector('main .meta span'), pagerEl = document.querySelector('.pager');
+  var mins = metaMin && /≈\s*(\d+)(?:\s*[–-]\s*(\d+))?\s*Min/.exec(metaMin.textContent);
+  if (leftEl && mins && pagerEl) {
+    var M = +(mins[2] || mins[1]);
+    var showLeft = function () {
+      var end = pagerEl.getBoundingClientRect().top + window.scrollY - window.innerHeight * 0.6;
+      var p = end > 0 ? Math.min(1, Math.max(0, window.scrollY / end)) : 1, r = Math.ceil(M * (1 - p));
+      leftEl.textContent = p >= 1 ? 'Fertig gelesen' : r <= 1 ? 'Gleich geschafft' : 'Noch ~' + r + ' Min.';
+      leftEl.hidden = false;
+    };
+    window.addEventListener('scroll', showLeft, { passive: true }); window.addEventListener('resize', showLeft); showLeft();
+  }
+
   // ---- Farbschema: System → Hell → Dunkel ----
-  var NAMES = { '': 'System', light: 'Hell', dark: 'Dunkel' };
+  var NAMES = { '': 'System', light: 'Hell', dark: 'Dunkel', night: 'Nacht' };
   function theme(animate) {
     var t = state.theme || '';
     // Beim Umschalten weich überblenden (View Transitions), beim Laden sofort
-    var apply = function () { if (t) root.dataset.theme = t; else delete root.dataset.theme; };
+    var apply = function () { if (t) root.dataset.theme = t === 'night' ? 'dark' : t; else delete root.dataset.theme; if (t === 'night') root.dataset.night = ''; else delete root.dataset.night; }; // Nacht: alle Dunkel-Regeln (auch im Kursinhalt) plus gedämpfte Töne
     if (animate && document.startViewTransition && !(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches)) document.startViewTransition(apply); else apply();
     $$('[data-theme-label]').forEach(function (el) { el.textContent = NAMES[t]; });
     $$('[data-theme-toggle]').forEach(function (b) { b.setAttribute('aria-label', 'Farbschema: ' + NAMES[t] + ' (wechseln)'); });
   }
   $$('[data-theme-toggle]').forEach(function (b) {
     b.addEventListener('click', function () {
-      var order = ['', 'light', 'dark'];
-      state.theme = order[(order.indexOf(state.theme || '') + 1) % 3];
+      var order = ['', 'light', 'dark', 'night'];
+      state.theme = order[(order.indexOf(state.theme || '') + 1) % order.length];
       if (!state.theme) delete state.theme;
       save(); theme(true);
     });
@@ -155,6 +199,7 @@
     if (open) { var c = side.querySelector('[aria-current]') || side.querySelector('a'); c && c.focus(); } else opener.focus();
   }
   opener.addEventListener('click', function () { nav(true); });
+  $$('[data-tab-nav]').forEach(function (b) { b.addEventListener('click', function () { nav(true); }); });
   $$('[data-close-nav]').forEach(function (el) { el.addEventListener('click', function () { nav(false); }); });
   side.addEventListener('click', function (e) { if (e.target.closest('.ctoc-sub a') && side.classList.contains('open')) { side.classList.remove('open'); scrim.classList.remove('open'); opener.setAttribute('aria-expanded', false); } });
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && side.classList.contains('open')) nav(false); });
@@ -230,13 +275,19 @@
   // ---- „Neu im Kurs“: einmal nach einem Update, für alle, die schon gelernt haben ----
   // „Verstanden“ merkt sich die Ausgabe (state.newsSeen, mit dem Konto abgeglichen); „Später“ nur für diesen Besuch.
   // Ausgaben, neueste zuerst. Wer die vorige gesehen hat, bekommt nur die neue; wer länger nicht da war, auch die älteren darunter.
-  var NEWS_ID = '2026-11-07', NEWS_EDITIONS = ['2026-11-07', '2026-11-06', '2026-11-02', '2026-10-30', '2026-10-29'];
+  var NEWS_ID = '2026-11-08', NEWS_EDITIONS = ['2026-11-08', '2026-11-07', '2026-11-06', '2026-11-02', '2026-10-30', '2026-10-29'];
   // Ausgabe 2026-11-06: drei neue Kurse und neue Fassung des Laryngitis-Kurses (Lieferung vom 4. November)
   var NEWS_7 = ['Kleine Verbesserungen', [
+    ['Angenehmer lesen', 'Der Text steht jetzt in einer Schrift, die fürs Lesen am Bildschirm gemacht ist. Die alte zarte Schrift gibt es weiter unter Einstellungen › Schrift › „Zart“.', null],
+    ['Weiterlesen auf einen Tipp', 'Auf der Startseite steht ganz oben der Abschnitt, bei dem du zuletzt warst, oder der nächste, wenn er erledigt ist.', null],
+    ['Am Handy: Leiste unten', 'Start, Inhalt, Karten, Suchen und Einstellungen liegen jetzt unten im Daumenbereich. Am Karten-Tab steht, wie viele Karten fällig sind.', null],
+    ['Wie lange noch?', 'Oben steht beim Lesen, wie viele Minuten der Abschnitt noch ungefähr dauert. Am Ende führt „Weiter“ direkt zum nächsten.', null],
+    ['Abbildung anheften', 'Unter vielen Abbildungen gibt es „Anheften“: Die Abbildung bleibt beim Weiterlesen sichtbar. Antippen vergrößert, × löst sie wieder.', '03-n-laryngeus-recurrens.html'],
+    ['Jeder Kurs hat seine Farbe', 'Ein feiner Farbstrich oben und die Fortschrittspunkte zeigen, in welchem Kurs du gerade bist.', null],
+    ['Nachtmodus', 'Unter Einstellungen › Farbschema gibt es „Nacht“: dunkler und wärmer als „Dunkel“, angenehm abends im Bett.', null],
     ['Echte Bilder in den neuen Kursen', 'Bei vielen Abbildungen in Gutartig, Funktionell und Verletzungen/Hormone zeigt „Echte Bilder“ jetzt Endoskopien und Zeichnungen, zum Beispiel von Knötchen, Polyp und Papillomen.', 'gutartig-02-polyp.html'],
     ['Etwas stimmt nicht?', 'Am Ende jedes Abschnitts kannst du mit einem Tippen melden, wenn etwas unklar oder falsch ist. Ein Wort reicht.', null],
-    ['Zurück zur Startseite', 'Das Haus oben links führt von überall zur Kursauswahl.', null],
-    ['Einstellungen', 'Das Zahnrad oben rechts sammelt alles: Schrift, Farbschema, Sprache, Vorlesen, Erinnerungen und Sicherung.', null],
+    ['Einstellungen', 'Das Zahnrad (am Handy unten rechts) sammelt alles: Schrift, Farbschema, Sprache, Vorlesen, Erinnerungen und Sicherung. Das Haus führt von überall zur Kursauswahl.', null],
     ['Bessere Stimme zum Vorlesen', 'In den Einstellungen wählst du die Stimme. Auf iPad und iPhone klingt eine geladene „verbesserte“ Stimme viel natürlicher; dort steht, wie es geht.', null],
     ['Lernkarten schneller starten', '„Lernen starten“ steht jetzt oben; die Auswahl der Abschnitte ist eingeklappt.', 'lernkarten.html'],
   ]];
@@ -300,7 +351,7 @@
       (function () {
         // Ausgaben, die nach der zuletzt gesehenen kamen (nie gesehen: alle), neueste zuerst
         var seenAt = NEWS_EDITIONS.indexOf(state.newsSeen); // -1: nie gesehen
-        var BY_EDITION = [[NEWS_7], [NEWS_3, NEWS_LV2], [NEWS_L], [NEWS_NEW], NEWS];
+        var BY_EDITION = [[NEWS_7], [], [NEWS_3, NEWS_LV2], [NEWS_L], [NEWS_NEW], NEWS];
         return [].concat.apply([], BY_EDITION.filter(function (g, i) { return seenAt < 0 || i < seenAt; }));
       })().map(function (grp) {
         return '<section class="news-g"><span class="eyebrow">' + esc(grp[0]) + '</span><ul>' + grp[1].map(function (it) {

@@ -3,6 +3,26 @@
 window.KURS_EN = {
   "Echte Bilder": "Real images", "Echte Bilder.": "Real images.", "Bilder urheberrechtlich geschützt, deshalb nur verlinkt.": "Images are copyrighted, so they are linked only.",
   "Startseite: alle Kurse": "Home: all courses", "Start": "Home",
+  // Nachtmodus
+  "Nacht": "Night",
+  // Abbildung anheften
+  "Anheften": "Pin", "Lösen": "Unpin", "Angeheftete Abbildung": "Pinned figure",
+  // Abschluss und Restzeit
+  "Abschnitt geschafft. Noch # von # Abschnitten offen.": "Section done. # of # sections still open.", "Abschnitt geschafft. Damit ist der ganze Kurs erledigt.": "Section done. That completes the whole course.",
+  "Noch ~# Min.": "~# min left", "Gleich geschafft": "Almost done", "Fertig gelesen": "Finished reading", "Noch # von # Abschnitten offen": "# of # sections still open",
+  // Startseite: Hauptaktion
+  "Weiterlesen": "Continue reading", "Als Nächstes": "Up next", "Abschnitt beginnen": "Start section", "Alle Abschnitte erledigt": "All sections done",
+  // Tab-Leiste (Handy)
+  "Schnellzugriff": "Quick access", "Start": "Home", "Inhalt": "Contents", "Karten": "Cards", "Suchen": "Search", "Einstellungen": "Settings",
+  // Neu im Kurs, 8. November 2026 (dieselbe Ausgabe, ergänzt)
+  "Angenehmer lesen": "Easier reading", "Der Text steht jetzt in einer Schrift, die fürs Lesen am Bildschirm gemacht ist. Die alte zarte Schrift gibt es weiter unter Einstellungen › Schrift › „Zart“.": "The text now uses a typeface made for reading on screens. The old delicate font is still available under Settings › Font › “Zart”.",
+  "Weiterlesen auf einen Tipp": "Continue with one tap", "Auf der Startseite steht ganz oben der Abschnitt, bei dem du zuletzt warst, oder der nächste, wenn er erledigt ist.": "At the top of the home page you find the section you were reading last, or the next one if it is done.",
+  "Am Handy: Leiste unten": "On the phone: bar at the bottom", "Start, Inhalt, Karten, Suchen und Einstellungen liegen jetzt unten im Daumenbereich. Am Karten-Tab steht, wie viele Karten fällig sind.": "Home, contents, cards, search and settings are now at the bottom, within thumb reach. The cards tab shows how many cards are due.",
+  "Wie lange noch?": "How much longer?", "Oben steht beim Lesen, wie viele Minuten der Abschnitt noch ungefähr dauert. Am Ende führt „Weiter“ direkt zum nächsten.": "While reading, the top bar shows roughly how many minutes are left in the section. At the end, “Weiter” takes you straight to the next one.",
+  "Abbildung anheften": "Pin a figure", "Unter vielen Abbildungen gibt es „Anheften“: Die Abbildung bleibt beim Weiterlesen sichtbar. Antippen vergrößert, × löst sie wieder.": "Many figures now have “Pin”: the figure stays visible while you keep reading. Tap to enlarge, × to unpin.",
+  "Jeder Kurs hat seine Farbe": "Each course has its colour", "Ein feiner Farbstrich oben und die Fortschrittspunkte zeigen, in welchem Kurs du gerade bist.": "A thin coloured line at the top and the progress dots show which course you are in.",
+  "Nachtmodus": "Night mode", "Unter Einstellungen › Farbschema gibt es „Nacht“: dunkler und wärmer als „Dunkel“, angenehm abends im Bett.": "Under Settings › Colour scheme there is “Nacht”: darker and warmer than “Dunkel”, pleasant in bed at night.",
+  "Das Zahnrad (am Handy unten rechts) sammelt alles: Schrift, Farbschema, Sprache, Vorlesen, Erinnerungen und Sicherung. Das Haus führt von überall zur Kursauswahl.": "The gear (bottom right on the phone) gathers everything: font, colour scheme, language, read aloud, reminders and backup. The house takes you back to the course choice from anywhere.",
   // Neu im Kurs, 7. November 2026
   "Kleine Verbesserungen": "Small improvements", "Echte Bilder in den neuen Kursen": "Real images in the new courses",
   "Bei vielen Abbildungen in Gutartig, Funktionell und Verletzungen/Hormone zeigt „Echte Bilder“ jetzt Endoskopien und Zeichnungen, zum Beispiel von Knötchen, Polyp und Papillomen.": "For many figures in Benign, Functional and Injuries/Hormones, “Echte Bilder” now shows endoscopies and drawings, for example of nodules, polyps and papillomas.",
@@ -275,7 +295,7 @@ window.KURS_EN = {
   // ---- Lesemodus
   'Lesemodus': 'Reading mode', 'Farbschema': 'Colour scheme', 'Sprache der Oberfläche': 'Interface language', 'Deutsch': 'Deutsch', 'English': 'English',
   'Menüs, Knöpfe und Hinweise. Der Kurstext bleibt auf Deutsch.': 'Menus, buttons and hints. The course text stays in German.',
-  'Schrift': 'Font', 'Gentle (Cormorant)': 'Gentle (Cormorant)', 'Ruhig (Atkinson, serifenlos)': 'Calm (Atkinson, sans-serif)',
+  'Schrift': 'Font', 'Gentle (Cormorant)': 'Gentle (Cormorant)', 'Buch (Literata)': 'Book (Literata)', 'Zart (Cormorant)': 'Delicate (Cormorant)', '„Buch“ ist für langes Lesen am Bildschirm gemacht. Wer es serifenlos mag, nimmt „Ruhig“.': '“Book” is made for long reading on screens. If you prefer sans-serif, choose “Calm”.', 'Ruhig (Atkinson, serifenlos)': 'Calm (Atkinson, sans-serif)',
   'Für lange Lernsitzungen, am Handy oder abends ist die serifenlose Schrift oft angenehmer.': 'For long sessions, on a phone or in the evening, the sans-serif font is often easier.',
   'Textgröße': 'Text size', 'klein': 'small', 'normal': 'normal', 'groß': 'large', 'sehr groß': 'very large',
   'Abbildungen behalten ihre Größe; zum Vergrößern auf die Abbildung tippen.': 'Figures keep their size; tap a figure to enlarge it.',

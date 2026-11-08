@@ -3339,3 +3339,131 @@ a.xref-l{white-space:normal} /* lange Kursnamen („Kurs „Gutartige Veränderu
 .course-body h2{font-family:var(--f-display);font-weight:600;line-height:1.12;font-size:clamp(26px,3.6vw,30px);hyphens:auto;font-size-adjust:none!important}
 body[data-course] .brand .b-long{font-family:var(--f-display);font-weight:600}
 @media screen and (min-width:768px){main .wrap section>p,main .wrap section>ul>li,main .wrap section>ol>li{max-width:41rem}}
+
+/* ---- UX-Runde 3 · Lesetext in Literata (für Bildschirmlesen gezeichnet, große x-Höhe). Cormorant bleibt für Titel und als Option „Zart“ ---- */
+:root{--f-body:"Literata",Georgia,"Times New Roman",serif}
+:root[data-font="zart"]{--f-body:"Cormorant Garamond",Georgia,"Times New Roman",serif}
+:root:not([data-font]) body{font-weight:400}
+.rd-lit{font-family:"Literata",Georgia,serif;font-style:normal}
+.rd-zart{font-family:"Cormorant Garamond",Georgia,serif}
+/* Literata hat eine größere x-Höhe als Cormorant: der für Cormorant gewählte Zeilenabstand wirkte luftig. Etwa 1,65 × sichtbare Größe, für jede Textgröße */
+:root:not([data-font]) :where(main .wrap) :is(p,li,dd,td,blockquote,figcaption){line-height:calc(var(--fsa) * 3.3)}
+
+/* ---- UX-Runde 3 · Handy: Tab-Leiste unten (Daumenbereich). Oben bleiben Kursname und Konto; Menü, Haus, Suche, Zahnrad wandern nach unten ---- */
+.tabbar{display:none}
+@media (max-width:699px){
+  :root{--tab-h:58px}
+  .tabbar{position:fixed;z-index:45;left:0;right:0;bottom:0;display:grid;grid-template-columns:repeat(5,1fr);
+    padding:0 4px env(safe-area-inset-bottom,0px);background:var(--plate);
+    box-shadow:0 -6px 18px rgba(40,20,24,.06);border-top:1.5px solid var(--rule);
+    transition:transform .28s cubic-bezier(.2,.8,.2,1)}
+  :root.bar-away .tabbar{transform:translateY(100%)}
+  .tab{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;min-width:0;height:var(--tab-h);
+    padding:0;border:0;background:transparent;color:var(--ink-2);text-decoration:none;cursor:pointer;
+    font:600 10.5px/1 var(--f-label);letter-spacing:.01em;font-size-adjust:none}
+  .tab span{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .tab svg{width:23px;height:23px;flex:none;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+  .tab[aria-current]{color:var(--rose-deep)}
+  .tab[aria-current] svg{stroke-width:2.1}
+  .tab:active{transform:scale(.94)}
+  .tab-due{position:absolute;top:6px;left:calc(50% + 7px);min-width:18px;padding:2px 5px;border-radius:9px;background:var(--btn-bg);color:var(--btn-fg);
+    font:700 10.5px/14px var(--f-label);font-style:normal;text-align:center;font-size-adjust:none}
+  /* oben doppelt: weg */
+  .topbar .menu-btn,.topbar .home-btn,.topbar [data-open-search],.topbar [data-open-reading]{display:none}
+  /* Platz unten: Seitenende, schwebende Leisten und Hinweise über der Tab-Leiste */
+  body{padding-bottom:calc(var(--tab-h) + env(safe-area-inset-bottom,0px))}
+  .ui-toast,.nb-undo{bottom:calc(var(--tab-h) + 14px + env(safe-area-inset-bottom,0px))}
+  .tts-bar,.exam-clock{bottom:calc(var(--tab-h) + 12px + env(safe-area-inset-bottom,0px));transition:bottom .28s cubic-bezier(.2,.8,.2,1)}
+  :root.bar-away :is(.tts-bar,.exam-clock){bottom:calc(14px + env(safe-area-inset-bottom,0px))}
+}
+@media (prefers-reduced-motion:reduce){.tabbar,.tts-bar,.exam-clock{transition:none}}
+@media print{.tabbar{display:none!important}body{padding-bottom:0}}
+
+/* ---- UX-Runde 3 · Startseite: eine Hauptaktion („Weiterlesen“) gleich unter dem Titel; die Einleitung braucht es beim Wiederkommen nicht mehr ---- */
+.home-hero.has-resume>p{display:none}
+.resume-hero{display:grid;gap:6px;margin:-22px 0 0;padding:22px 22px 20px;border:1.5px solid var(--rule);border-radius:20px;background:var(--plate);color:var(--ink);text-decoration:none;
+  box-shadow:0 10px 30px rgba(40,20,24,.07);transition:transform .2s cubic-bezier(.2,.8,.2,1),box-shadow .2s}
+.resume-hero[hidden]{display:none}
+.resume-hero .eyebrow{color:var(--rose-deep)}
+.rh-t{font:600 clamp(26px,6.4vw,34px)/1.1 var(--f-display);text-wrap:balance;hyphens:auto;font-size-adjust:none}
+.rh-s{font:italic 400 16px/1.35 var(--f-body);color:var(--ink-2)}
+.rh-go{justify-self:start;margin-top:12px;min-height:48px;padding:0 26px;font-size:17px}
+@media (max-width:699px){.rh-go{justify-self:stretch;justify-content:center}}
+@media (hover:hover){.resume-hero:hover{transform:translateY(-2px);box-shadow:0 14px 34px rgba(40,20,24,.1)}}
+.resume-hero:active{transform:scale(.985)}
+@media (prefers-reduced-motion:reduce){.resume-hero{transition:none}.resume-hero:hover,.resume-hero:active{transform:none}}
+/* neben „Weiterlesen“ ist die Runde die zweite Aktion: umrandet statt gefüllt */
+.home-hero.has-resume ~ .today .cta:not(.ghost){background:transparent;color:var(--ink);border:1.5px solid var(--ink)}
+
+/* ---- UX-Runde 3 · Lesefluss: Restzeit oben (Handy), dickerer Lesebalken, Abschluss mit klarer nächster Aktion ---- */
+.tb-left{display:none}
+@media (max-width:699px){
+  .tb-left:not([hidden]){display:block;margin-left:auto;padding:0 6px;font:italic 400 14px/1 var(--f-body);font-size-adjust:none;color:var(--ink-2);white-space:nowrap;font-variant-numeric:lining-nums tabular-nums}
+  .readbar{height:3px;bottom:-1.5px}
+}
+.pager .print-row{margin:-4px 0 4px}
+/* Erledigt: die Karte wechselt in einen ruhigen Rosé-Zustand */
+.done-row{transition:background-color .35s,border-color .35s}
+.done-row.is-done{background:color-mix(in srgb,var(--rose-deep) 9%,var(--plate));border-color:color-mix(in srgb,var(--rose-deep) 45%,var(--rule))}
+.done-row.is-done p{color:var(--ink);font-weight:600}
+/* Weiter: gefüllte Hauptkarte zuerst, Zurück als leiser Link */
+.nav2{grid-template-columns:minmax(0,1fr)!important;gap:6px}
+.nav2 a.next{grid-column:1;order:-1;text-align:left;padding:18px 20px;background:var(--btn-bg);border-color:var(--btn-bg);color:var(--btn-fg)}
+.nav2 a.next .eyebrow{color:inherit;opacity:.8}
+.nav2 a.next b{font:600 clamp(21px,5vw,24px)/1.2 var(--f-display);font-size-adjust:none}
+.nav2 a.next:hover{border-color:var(--btn-bg);filter:brightness(1.06)}
+.nav2 a.prev{justify-self:start;background:transparent;border:0;padding:8px 2px;gap:0}
+.nav2 a.prev b{font-weight:400;font-size:15px;color:var(--ink-2)}
+
+/* ---- UX-Runde 3 · Eine Farbe pro Kurs: nur im Rahmen (Kopfzeile, Lesebalken, Fortschritt, Karten der Startseite), nie im Farbcode des Inhalts ---- */
+:root{--accent:var(--rose-deep);--c-v:var(--rose-deep);--c-l:#a9542f;--c-f:#81509a;--c-g:#4f6f2c;--c-t:#8a6512;--c-s:#3f6493}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--c-l:#e8a080;--c-f:#c9a0dc;--c-g:#a9c98a;--c-t:#dcb867;--c-s:#9fbbe0}}
+:root[data-theme="dark"]{--c-l:#e8a080;--c-f:#c9a0dc;--c-g:#a9c98a;--c-t:#dcb867;--c-s:#9fbbe0}
+[data-course="v"],[data-course-card="v"]{--accent:var(--c-v)}
+[data-course="l"],[data-course-card="l"]{--accent:var(--c-l)}
+[data-course="f"],[data-course-card="f"]{--accent:var(--c-f)}
+[data-course="g"],[data-course-card="g"]{--accent:var(--c-g)}
+[data-course="t"],[data-course-card="t"]{--accent:var(--c-t)}
+[data-course="s"],[data-course-card="s"]{--accent:var(--c-s)}
+body[data-course] .topbar{box-shadow:inset 0 -2px 0 var(--accent)}
+.readbar{background:var(--accent)}
+.prog i::after{background:var(--accent)}
+.tab[aria-current]{color:var(--accent)}
+.side-course{color:var(--accent)}
+.done-row.is-done{--rose-deep:var(--accent);background:color-mix(in srgb,var(--accent) 9%,var(--plate));border-color:color-mix(in srgb,var(--accent) 45%,var(--rule))}
+.resume-hero{box-shadow:inset 0 4px 0 var(--accent),0 10px 30px rgba(40,20,24,.07)}
+.resume-hero .eyebrow{color:var(--accent)}
+.course-card{border-top:4px solid var(--accent)}
+.course-card .course-body>.eyebrow{color:var(--accent)}
+.segs a.is-done{background:var(--accent);border-color:var(--accent);color:var(--plate)}
+
+/* ---- UX-Runde 3 · Abbildung anheften: bleibt beim Lesen sichtbar. Antippen öffnet die Lupe ---- */
+.fig-tools .z-pin{margin-left:auto}
+.fig-tools .z-pin + .z-open{margin-left:0}
+.z-pin[aria-pressed="true"]{border-color:var(--accent);color:var(--accent)}
+.pin{position:fixed;z-index:44;right:16px;top:calc(var(--bar-h) + 14px);width:min(40vw,420px);display:grid;grid-template-rows:auto minmax(0,1fr);
+  max-height:calc(100vh - var(--bar-h) - 40px);background:var(--plate);border:1.5px solid var(--rule);border-radius:16px;box-shadow:0 14px 40px rgba(40,20,24,.18);overflow:hidden;
+  animation:pin-in .3s cubic-bezier(.2,.8,.2,1)}
+.pin-bar{display:flex;align-items:center;gap:8px;padding:6px 6px 6px 14px;border-bottom:1px solid var(--rule);box-shadow:inset 0 3px 0 var(--accent)}
+.pin-t{flex:1;min-width:0;font:600 14px/1.2 var(--f-body);font-size-adjust:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pin-x{flex:none;display:grid;place-items:center;width:40px;height:40px;border:0;border-radius:999px;background:transparent;color:var(--ink);cursor:pointer}
+.pin-x svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round}
+.pin-fig{display:block;min-height:0;padding:8px;border:0;background:transparent;cursor:zoom-in}
+.pin .pin-wrap{display:block;max-width:none;margin:0;padding:0;height:100%}
+.pin-wrap>svg,.pin-wrap>img{display:block;width:100%;height:100%;max-height:calc(100vh - var(--bar-h) - 100px);object-fit:contain}
+:root.bar-away .pin{top:14px}
+@media (max-width:899px){
+  .pin{left:12px;right:12px;top:auto;bottom:calc(var(--tab-h,0px) + 12px + env(safe-area-inset-bottom,0px));width:auto;max-height:36vh;transition:bottom .28s cubic-bezier(.2,.8,.2,1)}
+  :root.bar-away .pin{top:auto;bottom:calc(12px + env(safe-area-inset-bottom,0px))}
+  .pin-wrap>svg,.pin-wrap>img{max-height:calc(36vh - 64px)}
+  :root.has-pin body{padding-bottom:calc(var(--tab-h,0px) + 38vh)}
+}
+@keyframes pin-in{from{opacity:0;transform:translateY(12px) scale(.97)}}
+@media (prefers-reduced-motion:reduce){.pin{animation:none;transition:none}}
+@media print{.pin{display:none!important}}
+
+/* ---- UX-Runde 3 · Nacht: wie Dunkel, aber tiefer und wärmer, weniger Kontrast und Blau – zum Lernen im Bett ---- */
+:root[data-night]{--paper:#1c1412;--paper-2:#261b18;--plate:#231916;--ink:#e3cbc2;--ink-2:#b0948b;--rule:#43322d;--muted:#7d655c;--muted-fill:#30231f;
+  --q-fill:#2a1e1b;--action-fill:#231916;--flag-fill:#3a2124;--rose-deep:#cf8794;--btn-bg:#cf8794;--btn-fg:#1c1412;color-scheme:dark}
+:root[data-night] body::after{opacity:.08}
+:root[data-night] :where(main) img{filter:brightness(.82) sepia(.12)}
