@@ -275,7 +275,7 @@
   // ---- „Neu im Kurs“: einmal nach einem Update, für alle, die schon gelernt haben ----
   // „Verstanden“ merkt sich die Ausgabe (state.newsSeen, mit dem Konto abgeglichen); „Später“ nur für diesen Besuch.
   // Ausgaben, neueste zuerst. Wer die vorige gesehen hat, bekommt nur die neue; wer länger nicht da war, auch die älteren darunter.
-  var NEWS_ID = '2026-11-08', NEWS_EDITIONS = ['2026-11-08', '2026-11-07', '2026-11-06', '2026-11-02', '2026-10-30', '2026-10-29'];
+  var NEWS_ID = '2026-11-08b', NEWS_EDITIONS = ['2026-11-08b', '2026-11-08', '2026-11-07', '2026-11-06', '2026-11-02', '2026-10-30', '2026-10-29'];
   // Ausgabe 2026-11-06: drei neue Kurse und neue Fassung des Laryngitis-Kurses (Lieferung vom 4. November)
   var NEWS_7 = ['Kleine Verbesserungen', [
     ['Angenehmer lesen', 'Der Text steht jetzt in einer Schrift, die fürs Lesen am Bildschirm gemacht ist. Die alte zarte Schrift gibt es weiter unter Einstellungen › Schrift › „Zart“.', null],
@@ -349,9 +349,10 @@
     dlg.innerHTML = '<i class="orn tl" aria-hidden="true">❦</i><i class="orn tr" aria-hidden="true">❦</i><i class="orn bl" aria-hidden="true">❦</i><i class="orn br" aria-hidden="true">❦</i>' +
       '<div class="lg-head"><h2 id="news-t">Neu im Kurs</h2></div><div class="lg-body"><p class="news-lead">Seit deinem letzten Besuch ist einiges dazugekommen. Die neuen Werkzeuge sind freiwillig.</p>' +
       (function () {
-        // Ausgaben, die nach der zuletzt gesehenen kamen (nie gesehen: alle), neueste zuerst
+        // Ausgaben, die nach der zuletzt gesehenen kamen (nie gesehen: alle), neueste zuerst.
+        // 8. Nov.: EIN Fenster – neue Kurse + Laryngitis überarbeitet + kleine Verbesserungen (Wunsch von Quentin); 11-08, 11-07, 11-06 leer, damit nichts doppelt kommt
         var seenAt = NEWS_EDITIONS.indexOf(state.newsSeen); // -1: nie gesehen
-        var BY_EDITION = [[NEWS_7], [], [NEWS_3, NEWS_LV2], [NEWS_L], [NEWS_NEW], NEWS];
+        var BY_EDITION = [[NEWS_3, NEWS_LV2, NEWS_7], [], [], [], [NEWS_L], [NEWS_NEW], NEWS];
         return [].concat.apply([], BY_EDITION.filter(function (g, i) { return seenAt < 0 || i < seenAt; }));
       })().map(function (grp) {
         return '<section class="news-g"><span class="eyebrow">' + esc(grp[0]) + '</span><ul>' + grp[1].map(function (it) {
