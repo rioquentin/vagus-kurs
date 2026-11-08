@@ -46,7 +46,7 @@ for (const [en, eng] of [['Chromium', chromium], ['Safari (WebKit)', webkit]]) {
         await Promise.race([document.fonts.ready, new Promise((ok) => setTimeout(ok, 8000))]);
         const vw = document.documentElement.clientWidth;
         return { over: document.documentElement.scrollWidth - vw, main: !!document.querySelector('main h1'),
-          fonts: ['Cormorant Garamond', 'UnifrakturMaguntia'].filter((f) => ![...document.fonts].some((x) => x.family.replace(/"/g, '') === f && x.status === 'loaded')),
+          fonts: ['Literata', 'UnifrakturMaguntia'].concat([...document.querySelectorAll('main h1, main h2')].some((h) => /Cormorant/.test(getComputedStyle(h).fontFamily)) ? ['Cormorant Garamond'] : []).filter((f) => ![...document.fonts].some((x) => x.family.replace(/"/g, '') === f && x.status === 'loaded')),
           kurs: !!window.Kurs, sync: !!window.KURS_SYNC };
       }), 20000, 'Seite').catch((e) => { bad.push(`${where(pg)}: ${e.message.split('\n')[0]}`); return null; });
       if (!r) continue;
@@ -60,9 +60,9 @@ for (const [en, eng] of [['Chromium', chromium], ['Safari (WebKit)', webkit]]) {
     cur = 'Bedienung';
     const step = async (name, fn) => { try { const r = await within(fn(), 45000, name); if (r && r !== 'ok') bad.push(`${where(name)}: ${r}`); } catch (e) { bad.push(`${where(name)}: ${e.message.split('\n')[0]}`); } };
     await p.goto(B + 'index.html', { waitUntil: 'networkidle' }).catch(() => {});
-    await step('Suche', async () => { await p.locator('[data-open-search]').first().click(); await p.keyboard.type('recurrens'); await p.waitForTimeout(600);
+    await step('Suche', async () => { await p.locator('[data-open-search]:visible').first().click(); await p.keyboard.type('recurrens'); await p.waitForTimeout(600);
       const n = await p.locator('#search [role=option], #search a').count(); const f = await p.evaluate(fits, '#search'); await p.evaluate(() => document.querySelectorAll('dialog[open]').forEach((d) => d.close())); return n ? f : 'keine Treffer für „recurrens“'; });
-    await step('Lesemodus', async () => { await p.locator('[data-open-reading]').first().click(); await p.waitForTimeout(400); const f = await p.evaluate(fits, '#reading'); await p.evaluate(() => document.querySelectorAll('dialog[open]').forEach((d) => d.close())); return f; });
+    await step('Lesemodus', async () => { await p.locator('[data-open-reading]:visible').first().click(); await p.waitForTimeout(400); const f = await p.evaluate(fits, '#reading'); await p.evaluate(() => document.querySelectorAll('dialog[open]').forEach((d) => d.close())); return f; });
     await p.goto(B + '01-gelenke-muskeln.html', { waitUntil: 'networkidle' }).catch(() => {});
     await step('Legende', async () => { await p.evaluate(() => document.querySelector('#legend').showModal()); await p.waitForTimeout(300); return p.evaluate(fits, '#legend'); });
     await p.goto(B + 'lernkarten.html', { waitUntil: 'networkidle' }).catch(() => {});
@@ -80,7 +80,7 @@ for (const [en, eng] of [['Chromium', chromium], ['Safari (WebKit)', webkit]]) {
         return { n: imgs.length, bad: imgs.filter((i) => !i.naturalWidth).length, over: document.documentElement.scrollWidth - document.documentElement.clientWidth }; });
       return !r.n ? 'Panel „Echte Bilder“ fehlt' : r.bad ? r.bad + ' Bild(er) laden nicht' : r.over > 1 ? 'Panel ragt ' + r.over + 'px heraus' : 'ok';
     });
-    await step('Suche Laryngitis', async () => { await p.locator('[data-open-search]').first().click(); await p.keyboard.type('Pseudokrupp'); await p.waitForTimeout(600);
+    await step('Suche Laryngitis', async () => { await p.locator('[data-open-search]:visible').first().click(); await p.keyboard.type('Pseudokrupp'); await p.waitForTimeout(600);
       const hits = await p.locator('#search .eyebrow').allTextContents(); await p.evaluate(() => document.querySelectorAll('dialog[open]').forEach((d) => d.close()));
       return hits.some((h) => /^Laryngitis · /.test(h)) ? 'ok' : 'Suche findet keinen Laryngitis-Abschnitt'; });
     if (en === 'Chromium' && dev === 'Handy') {
